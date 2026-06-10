@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+  <title>Control de Stock - Gestión de usuarios</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="tema-claro">
+  <div class="app">
+    <header class="header">
+      <h1>📦 Control de Stock</h1>
+      <p class="subtitle">Gestión de entradas y salidas</p>
+      <a href="dashboard.html" class="btn btn-secondary btn-sm" style="margin-top: 0.5rem;">← Volver al inicio</a>
+    </header>
+
+    <main class="page standalone-page">
+      <div class="panel-header">
+        <h2 class="page-title">Gestión de usuarios</h2>
+      </div>
+      <p class="panel-desc">Administra tu cuenta y contraseña.</p>
+
+      <div id="usuarios-info" class="usuarios-info"></div>
+
+      <section class="panel panel-usuario-propio">
+        <form id="form-cambiar-password" class="form-movimiento form-cambiar-password">
+          <h3>Cambiar mi contraseña</h3>
+          <div class="form-group">
+            <label for="password-actual">Contraseña actual</label>
+            <input type="password" id="password-actual" required placeholder="Contraseña actual" autocomplete="current-password">
+          </div>
+          <div class="form-group">
+            <label for="password-nueva">Nueva contraseña</label>
+            <input type="password" id="password-nueva" required minlength="4" placeholder="Mínimo 4 caracteres" autocomplete="new-password">
+          </div>
+          <div class="form-group">
+            <label for="password-nueva2">Repetir nueva contraseña</label>
+            <input type="password" id="password-nueva2" required minlength="4" placeholder="Repetir" autocomplete="new-password">
+          </div>
+          <button type="submit" class="btn btn-primary">Cambiar mi contraseña</button>
+        </form>
+      </section>
+
+      <section id="panel-admin-usuarios" class="panel panel-admin-usuarios" style="margin-top: 2rem; display: none;">
+        <h3>Administración de usuarios (solo admin)</h3>
+        <p class="panel-desc">Como administrador podés ver los usuarios, cambiar nombre/contraseña y gestionar pendientes. Solo <strong>admin1</strong> puede autorizar o rechazar cuentas pendientes.</p>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Usuario</th>
+                <th>Rol</th>
+                <th>Creado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-usuarios-admin"></tbody>
+          </table>
+        </div>
+
+        <form id="form-admin-rename" class="form-movimiento form-admin-rename" style="margin-top: 1.5rem;">
+          <h4>Cambiar nombre de usuario</h4>
+          <div class="form-group">
+            <label for="admin-rename-usuario-select">Usuario actual</label>
+            <select id="admin-rename-usuario-select" required></select>
+          </div>
+          <div class="form-group">
+            <label for="admin-rename-username-nuevo">Nuevo nombre de usuario</label>
+            <input type="text" id="admin-rename-username-nuevo" required minlength="3" placeholder="Ej: usuario_nuevo">
+          </div>
+          <button type="submit" class="btn btn-secondary">Cambiar nombre del usuario</button>
+        </form>
+
+        <form id="form-admin-reset" class="form-movimiento form-admin-reset" style="margin-top: 1.5rem;">
+          <h4>Resetear contraseña de un usuario</h4>
+          <div class="form-group">
+            <label for="admin-usuario-select">Usuario</label>
+            <select id="admin-usuario-select" required></select>
+          </div>
+          <div class="form-group">
+            <label for="admin-password-nueva">Nueva contraseña</label>
+            <input type="password" id="admin-password-nueva" required minlength="4" placeholder="Mínimo 4 caracteres">
+          </div>
+          <button type="submit" class="btn btn-secondary">Cambiar contraseña del usuario</button>
+        </form>
+      </section>
+    </main>
+  </div>
+  <script src="usuarios.js"></script>
+  <script src="session-idle.js"></script>
+  <script src="realtime-sync.js"></script>
+</body>
+</html>

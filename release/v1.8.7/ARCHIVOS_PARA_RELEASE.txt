@@ -1,0 +1,28 @@
+# Archivos listos para el Release v1.8.7 en GitHub
+
+## Código (repositorio)
+Subir la carpeta `stock respaldo` sin `node_modules/` ni `dist/` (opcional excluir `dist/` del commit).
+
+Archivos de versión:
+- package.json
+- package-lock.json
+- CHANGELOG.md
+- release/v1.8.7/NOTAS_RELEASE_GITHUB.txt
+- release/v1.8.7/MANUAL_SUBIDA_GITHUB.md
+
+## Assets del Release (adjuntar en GitHub → Releases → v1.8.7)
+
+Ruta local: `stock respaldo/dist/`
+
+1. Bienes.y.Patrimoniales.Setup.1.8.7.exe          (~83 MB) — instalador
+2. Bienes.y.Patrimoniales.Setup.1.8.7.exe.blockmap — actualización delta
+3. latest.yml                                       — auto-actualización (electron-updater)
+
+## Pasos rápidos
+
+1. Commit + push del código con tag `v1.8.7`
+2. Crear Release en GitHub con título `v1.8.7`
+3. Pegar descripción desde NOTAS_RELEASE_GITHUB.txt
+4. Arrastrar los 3 archivos de `dist/` como assets
+
+Generado: 2026-05-19

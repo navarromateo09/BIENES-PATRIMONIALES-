@@ -1,0 +1,13 @@
+## v1.8.5
+
+### Matafuegos
+- **Número de serie duplicado**: al cargar un matafuego, si la serie ya existe aparece un modal con marca y ubicación (Disponibles, Para recarga, Entregados, Inservibles).
+- **Entrega múltiple** a una dependencia: seleccionar varios disponibles y confirmar en un solo paso.
+- **Alta masiva** con cantidad y un Nº de serie por unidad.
+- Corrección del campo **Cantidad** en el alta (ya no bloquea borrar el valor al escribir).
+- Quitado el botón **"+ Agregar para recarga"** (los vencidos van solos a recarga).
+- Quitado el aviso superior **"Hay X matafuegos en recarga"**.
+
+### Nota
+- Reiniciar la aplicación tras actualizar para cargar los cambios.
+- Subir al Release de GitHub: `Bienes.y.Patrimoniales.Setup.1.8.5.exe`, `latest.yml` y, si usás actualizaciones delta, el `.blockmap`.

@@ -1,0 +1,34 @@
+## v1.9.4
+
+### Migración completa a React
+- Todos los módulos operativos en React: Login, Dashboard, Depósito, Inventario, Expedientes, Entregas, TXT, Dependencias, Actas, Matafuegos, Auditoría, Usuarios.
+- Eliminado el cargador legacy (`LegacyHostPage`); la app ya no depende de HTML/JS embebidos en runtime.
+
+### Auto-actualización
+- Corrección de `realtime-sync` y verificación de actualizaciones desde el menú de usuario.
+- Versión **1.9.4** — las PCs con versión rota deben instalar manualmente esta versión una vez; luego las actualizaciones siguientes serán automáticas.
+
+### Entregas (guardia)
+- Paso 2 rediseñado: catálogo y carrito en pantalla sin scroll horizontal.
+- Columnas Serie / Expediente / Producto sin solapamiento.
+- Paso 4 (acta): vista previa con fondo blanco legible (ya no aparece oscura).
+
+### Actas
+- Módulo Actas migrado a React: filtros, carpetas por expediente, ver/imprimir, adjuntos, modificar.
+
+### TXT
+- Corrección del formulario «Nuevo registro» (ya no quedaba en blanco por CSS).
+
+### Dashboard / admin
+- Exportar y restaurar backup desde el menú de usuario (solo admin).
+
+### Instalador
+- `Bienes.y.Patrimoniales.Setup.1.9.4.exe`
+
+### Auto-actualización en otras PCs
+Subir al Release de GitHub estos **3 archivos** (obligatorios):
+1. `Bienes.y.Patrimoniales.Setup.1.9.4.exe`
+2. `Bienes.y.Patrimoniales.Setup.1.9.4.exe.blockmap`
+3. `latest.yml`
+
+Los datos (Supabase + carpeta del usuario) **no se pierden** al actualizar.

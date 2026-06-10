@@ -1,0 +1,12 @@
+REPORTE DE MATAFUEGOS DUPLICADOS (mismo Nº de serie)
+Fuente: Supabase
+Generado: 21/5/2026, 08:31:40
+
+Total matafuegos en base: 145
+Sin número de serie: 0
+Series con duplicados: 0
+Registros a eliminar (copias extra): 0
+
+— Mantener el primero de cada grupo (más antiguo por created_at/id); eliminar el resto desde la app (admin) o Supabase.
+
+No hay duplicados por número de serie.

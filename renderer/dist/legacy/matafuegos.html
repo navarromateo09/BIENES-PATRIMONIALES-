@@ -1,0 +1,675 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+  <title>Control de Stock - Matafuegos</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="app-page-theme">
+  <div class="dashboard-layout">
+    <aside class="dashboard-sidebar">
+      <nav class="sidebar-nav">
+        <p class="sidebar-section-label">Operaciones</p>
+        <a href="dashboard.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1"></rect><rect x="13" y="3" width="8" height="8" rx="1"></rect><rect x="3" y="13" width="8" height="8" rx="1"></rect><rect x="13" y="13" width="8" height="8" rx="1"></rect></svg></span> Inicio</a>
+        <a href="deposito.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h4l2-4h7l2 4h3v7H3v-7z"></path><path d="M10 18h4"></path></svg></span> Depósito</a>
+        <a href="productos.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9l8-5 8 5v10H4V9z"></path><path d="M4 9l8 5 8-5"></path><path d="M12 4v10"></path></svg></span> Inventario</a>
+        <a href="expedientes.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h7l2 2h7v10H4V6z"></path><path d="M11 6v2"></path></svg></span> Expedientes</a>
+        <a href="guardia.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9l3 3h4v7H4V7z"></path><path d="M4 12h16"></path><path d="M8 16h4"></path></svg></span> Entregas</a>
+        <a href="txt.html" class="sidebar-link" aria-label="TXT">
+          <span class="sidebar-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <path d="M14 2v6h6"></path>
+              <path d="M8 13h8"></path>
+              <path d="M8 17h5"></path>
+            </svg>
+          </span>
+          TXT
+        </a>
+        <p class="sidebar-section-label">Control y soporte</p>
+        <a href="dependencias.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="9" width="16" height="11" rx="1"></rect><path d="M9 9V5h6v4"></path><path d="M9 13h2"></path><path d="M13 13h2"></path><path d="M9 17h2"></path><path d="M13 17h2"></path></svg></span> Dependencias</a>
+        <a href="actas.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="1"></rect><path d="M9 7h6"></path><path d="M9 11h6"></path><path d="M9 15h4"></path></svg></span> Actas</a>
+        <a href="matafuegos.html" class="sidebar-link active"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4h4l3-2"></path><path d="M10 4v3"></path><rect x="8" y="7" width="8" height="11" rx="2"></rect><path d="M12 11v3"></path></svg></span> Matafuegos</a>
+        <a href="auditoria.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg></span> Auditoría</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="dashboard.html" class="sidebar-link">← Volver al inicio</a>
+      </div>
+    </aside>
+    <main class="dashboard-main">
+      <div class="content-panel matafuegos-content">
+        <header class="matafuegos-hero">
+          <div class="matafuegos-hero-text">
+            <h1 class="matafuegos-hero-title">MATAFUEGOS</h1>
+            <p class="matafuegos-hero-sub">Gestión y control de matafuegos</p>
+          </div>
+          <div class="matafuegos-hero-actions">
+            <button type="button" id="btn-entregar-matafuego-header" class="btn btn-secondary btn-sm">Entregar matafuego</button>
+            <button type="button" id="btn-agregar-matafuego" class="btn btn-primary btn-sm">+ Agregar nuevo matafuego</button>
+          </div>
+        </header>
+
+        <div id="matafuegos-resumen-stack" class="matafuegos-resumen-stack">
+        <section class="dashboard-metrics matafuegos-metrics-row" aria-label="Resumen">
+          <div id="card-matafuegos-disponible" class="metric-card mf-metric mf-metric--green metric-card-clickable" role="button" tabindex="0" title="Ver disponibles">
+            <span class="metric-icon metric-icon-svg" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 6h6l4-3"></path>
+                <path d="M14 6v4"></path>
+                <rect x="10" y="10" width="12" height="14" rx="3"></rect>
+                <path d="M16 15v4"></path>
+              </svg>
+            </span>
+            <div class="metric-content">
+              <p class="metric-label mf-metric-label">Disponibles</p>
+              <p class="metric-value" id="matafuegos-disponible">0</p>
+              <p class="metric-hint">En condiciones de uso</p>
+            </div>
+          </div>
+          <div id="card-matafuegos-recarga" class="metric-card mf-metric mf-metric--orange metric-card-clickable" role="button" tabindex="0" title="Ver recarga">
+            <span class="metric-icon metric-icon-svg" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 9a6 6 0 0 1 10.39-3.89L23 8"></path>
+                <path d="M22 15a6 6 0 0 1-10.39 3.89L9 16"></path>
+                <path d="M16 20v5"></path>
+                <path d="M13 25h6"></path>
+              </svg>
+            </span>
+            <div class="metric-content">
+              <p class="metric-label mf-metric-label">Para recarga</p>
+              <p class="metric-value" id="matafuegos-recarga">0</p>
+              <p class="metric-hint">Vencidos / pendientes</p>
+            </div>
+          </div>
+          <div id="card-matafuegos-inservibles" class="metric-card mf-metric mf-metric--red metric-card-clickable" role="button" tabindex="0" title="Ver inservibles">
+            <span class="metric-icon metric-icon-svg" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 9l14 14"></path>
+                <path d="M23 9L9 23"></path>
+                <rect x="10" y="10" width="12" height="14" rx="3"></rect>
+              </svg>
+            </span>
+            <div class="metric-content">
+              <p class="metric-label mf-metric-label">Inservibles</p>
+              <p class="metric-value" id="matafuegos-inservibles">0</p>
+              <p class="metric-hint">Fuera de servicio</p>
+            </div>
+          </div>
+          <div id="card-matafuegos-historial" class="metric-card mf-metric mf-metric--violet metric-card-clickable" role="button" tabindex="0" title="Ver historial">
+            <span class="metric-icon metric-icon-svg" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 9h16"></path>
+                <path d="M8 16h16"></path>
+                <path d="M8 23h10"></path>
+                <circle cx="24" cy="23" r="1.5"></circle>
+              </svg>
+            </span>
+            <div class="metric-content">
+              <p class="metric-label mf-metric-label">Historial</p>
+              <p class="metric-value" id="matafuegos-historial-count">0</p>
+              <p class="metric-hint">Ingresos y cambios</p>
+            </div>
+          </div>
+          <div id="card-matafuegos-entregados" class="metric-card mf-metric mf-metric--blue metric-card-clickable" role="button" tabindex="0" title="Ver entregados">
+            <span class="metric-icon metric-icon-svg" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 10h20v14H6z"></path>
+                <path d="M11 7h10"></path>
+                <path d="M10 16l4 4 8-8"></path>
+              </svg>
+            </span>
+            <div class="metric-content">
+              <p class="metric-label mf-metric-label">Entregados</p>
+              <p class="metric-value" id="matafuegos-entregados">0</p>
+              <p class="metric-hint">Con destino asignado</p>
+            </div>
+          </div>
+        </section>
+
+        <div class="matafuegos-alerts" role="region" aria-label="Avisos">
+          <div class="matafuegos-alert matafuegos-alert--info">
+            <span class="matafuegos-alert-icon" aria-hidden="true">📅</span>
+            <div class="matafuegos-alert-body">
+              <p class="matafuegos-alert-text" id="mf-alert-proximos-text">Próximo vencimiento: 0 matafuegos en 30 días.</p>
+              <button type="button" id="mf-alert-btn-proximos" class="btn btn-secondary btn-sm">Ver próximos</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="matafuegos-global-search-wrap" class="matafuegos-search-wrap">
+          <div class="matafuegos-search-combo">
+            <div class="search-bar">
+              <span class="search-icon" aria-hidden="true">🔎</span>
+              <input
+                type="search"
+                id="matafuegos-search"
+                placeholder="Buscar por serie, marca, características, vencimiento, estado..."
+                autocomplete="off"
+                aria-autocomplete="list"
+                aria-controls="matafuegos-search-suggestions"
+                aria-expanded="false">
+              <button type="button" id="matafuegos-search-clear" class="search-clear" aria-label="Limpiar búsqueda">✕</button>
+            </div>
+            <div id="matafuegos-search-suggestions" class="matafuegos-search-suggestions" role="listbox" aria-label="Coincidencias de búsqueda" hidden></div>
+          </div>
+        </div>
+        </div>
+
+        <div id="matafuegos-main-tabs" class="matafuegos-main-tabs">
+          <div class="matafuegos-detail-nav" aria-label="Navegación de listado">
+            <button type="button" id="mf-btn-volver-resumen" class="btn btn-secondary btn-sm">← Volver al resumen</button>
+            <button type="button" id="mf-btn-exportar-excel" class="btn btn-secondary btn-sm" title="Exportar listado visible (pestaña actual, búsqueda y filtros)">📥 Exportar Excel</button>
+          </div>
+          <nav class="matafuegos-tabs" role="tablist" aria-label="Secciones matafuegos">
+            <button type="button" class="matafuegos-tab is-active" role="tab" data-tab="disponibles" aria-selected="true">Disponibles</button>
+            <button type="button" class="matafuegos-tab" role="tab" data-tab="recarga" aria-selected="false">Para recarga</button>
+            <button type="button" class="matafuegos-tab" role="tab" data-tab="inservibles" aria-selected="false">Inservibles</button>
+            <button type="button" class="matafuegos-tab" role="tab" data-tab="entregados" aria-selected="false">Entregados</button>
+            <button type="button" class="matafuegos-tab" role="tab" data-tab="historial" aria-selected="false">Historial</button>
+          </nav>
+          <div id="panel-matafuegos-disponible" class="matafuegos-tab-panel is-active" data-panel="disponibles" role="tabpanel">
+            <div class="matafuegos-tab-head">
+              <h3 class="matafuegos-tab-title">Matafuegos disponibles</h3>
+              <p class="matafuegos-tab-sub">Matafuegos en condiciones de uso y operativos</p>
+              <div class="matafuegos-toolbar-row">
+                <button type="button" id="mf-btn-filtros-disponibles" class="btn btn-secondary btn-sm mf-btn-filtros-tab" data-mf-filtros-tab="disponibles" aria-expanded="false" aria-controls="mf-filtros-drawer">Filtros</button>
+              </div>
+              <div id="mf-filtros-drawer" class="mf-filtros-drawer" data-mf-filtros-tab="disponibles" hidden>
+                <div class="mf-filtros-grid">
+                  <div class="mf-filtro-field">
+                    <label for="mf-filtro-marca">Marca</label>
+                    <select id="mf-filtro-marca" data-mf-filtro="marca" data-mf-filtros-tab="disponibles" class="input-select-sm mf-filtro-select">
+                      <option value="">Todas las marcas</option>
+                    </select>
+                  </div>
+                  <div class="mf-filtro-field">
+                    <label for="mf-filtro-vencimiento">Vencimiento</label>
+                    <select id="mf-filtro-vencimiento" data-mf-filtro="vencimiento" data-mf-filtros-tab="disponibles" class="input-select-sm mf-filtro-select">
+                      <option value="">Todos</option>
+                      <option value="prox30">Próximos 30 días</option>
+                      <option value="vencidos">Ya vencidos</option>
+                      <option value="sin_fecha">Sin fecha / vencido sin fecha</option>
+                      <option value="rango">Rango de fechas…</option>
+                    </select>
+                  </div>
+                  <div class="mf-filtro-field mf-filtro-rango mf-filtro-rango-wrap" id="mf-filtro-rango-wrap" data-mf-filtros-tab="disponibles" hidden>
+                    <label for="mf-filtro-venc-desde">Desde</label>
+                    <input type="date" id="mf-filtro-venc-desde" data-mf-filtro="vencimientoDesde" data-mf-filtros-tab="disponibles" class="input-select-sm mf-filtro-date">
+                  </div>
+                  <div class="mf-filtro-field mf-filtro-rango mf-filtro-rango-hasta-wrap" id="mf-filtro-rango-hasta-wrap" data-mf-filtros-tab="disponibles" hidden>
+                    <label for="mf-filtro-venc-hasta">Hasta</label>
+                    <input type="date" id="mf-filtro-venc-hasta" data-mf-filtro="vencimientoHasta" data-mf-filtros-tab="disponibles" class="input-select-sm mf-filtro-date">
+                  </div>
+                  <div class="mf-filtro-field">
+                    <label for="mf-filtro-orden">Ordenar por</label>
+                    <select id="mf-filtro-orden" data-mf-filtro="orden" data-mf-filtros-tab="disponibles" class="input-select-sm mf-filtro-select">
+                      <option value="">Por defecto</option>
+                      <option value="ultimos_agregados">Últimos agregados</option>
+                      <option value="vencimiento_asc">Vencimiento más próximo</option>
+                      <option value="vencimiento_desc">Vencimiento más lejano</option>
+                      <option value="marca_asc">Marca (A → Z)</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="mf-filtros-actions">
+                  <button type="button" id="mf-filtro-aplicar" class="btn btn-primary btn-sm mf-filtro-aplicar-tab" data-mf-filtros-tab="disponibles">Aplicar filtros</button>
+                  <button type="button" id="mf-filtro-limpiar" class="btn btn-secondary btn-sm mf-filtro-limpiar-tab" data-mf-filtros-tab="disponibles">Limpiar</button>
+                  <span id="mf-filtros-resumen" class="mf-filtros-resumen mf-muted" data-mf-filtros-tab="disponibles" aria-live="polite"></span>
+                </div>
+              </div>
+            </div>
+            <div class="search-bar mf-recarga-search" role="search">
+              <span class="search-icon" aria-hidden="true">🔍</span>
+              <input type="search" id="disponibles-panel-search" placeholder="Buscar en disponibles…" autocomplete="off">
+              <button type="button" class="search-clear" data-search-clear="disponibles-panel-search" aria-label="Limpiar búsqueda" style="display:none;">&times;</button>
+            </div>
+            <div class="table-wrap matafuegos-table-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Marca</th>
+                    <th>Nº de serie</th>
+                    <th>Capacidad</th>
+                    <th>Tipo</th>
+                    <th>Última recarga</th>
+                    <th>Próximo vencimiento</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="lista-matafuegos-disponible">
+                  <tr>
+                    <td colspan="7" class="empty-state">No hay matafuegos disponibles registrados.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="matafuegos-table-footer mf-table-footer">
+              <div id="pag-matafuegos-disponible"></div>
+              <div class="mf-pag-size-wrap">
+                <label for="mf-pag-size-1">Por página</label>
+                <select id="mf-pag-size-1" class="mf-pag-size input-select-sm" aria-label="Registros por página">
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div id="panel-matafuegos-recarga" class="matafuegos-tab-panel" data-panel="recarga" role="tabpanel">
+            <div class="matafuegos-tab-head">
+              <h3 class="matafuegos-tab-title">Matafuegos para recarga</h3>
+              <p class="matafuegos-tab-sub">Ingresos pendientes de recarga. Los matafuegos vencidos pasan aquí automáticamente al registrarlos.</p>
+            </div>
+            <div class="search-bar mf-recarga-search" role="search">
+              <span class="search-icon" aria-hidden="true">🔍</span>
+              <input type="search" id="recarga-search" placeholder="Buscar en recarga…" autocomplete="off">
+              <button type="button" class="search-clear" data-search-clear="recarga-search" aria-label="Limpiar búsqueda" style="display:none;">&times;</button>
+            </div>
+            <div class="table-wrap matafuegos-table-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Fecha de ingreso</th>
+                    <th>Marca</th>
+                    <th>Nº de serie</th>
+                    <th>Características</th>
+                    <th>Fecha de vencimiento</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="lista-matafuegos-recarga">
+                  <tr>
+                    <td colspan="7" class="empty-state">No hay ingresos a recarga registrados.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="matafuegos-table-footer mf-table-footer">
+              <div id="pag-matafuegos-recarga"></div>
+              <div class="mf-pag-size-wrap">
+                <label for="mf-pag-size-2">Por página</label>
+                <select id="mf-pag-size-2" class="mf-pag-size input-select-sm" aria-label="Registros por página">
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div id="panel-matafuegos-inservibles" class="matafuegos-tab-panel" data-panel="inservibles" role="tabpanel">
+            <div class="matafuegos-tab-head">
+              <h3 class="matafuegos-tab-title">Matafuegos inservibles</h3>
+              <p class="matafuegos-tab-sub">Unidades fuera de servicio o no aptas para uso.</p>
+              <div class="matafuegos-toolbar-row">
+                <button type="button" id="btn-agregar-inservible" class="btn btn-primary btn-sm">+ Agregar inservible</button>
+              </div>
+            </div>
+            <div class="search-bar mf-recarga-search" role="search">
+              <span class="search-icon" aria-hidden="true">🔍</span>
+              <input type="search" id="inservibles-panel-search" placeholder="Buscar en inservibles…" autocomplete="off">
+              <button type="button" class="search-clear" data-search-clear="inservibles-panel-search" aria-label="Limpiar búsqueda" style="display:none;">&times;</button>
+            </div>
+            <div class="table-wrap matafuegos-table-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Marca</th>
+                    <th>Nº de serie</th>
+                    <th>Características</th>
+                    <th>Fecha de vencimiento</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="lista-matafuegos-inservibles">
+                  <tr>
+                    <td colspan="5" class="empty-state">No hay matafuegos inservibles registrados.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="matafuegos-table-footer mf-table-footer">
+              <div id="pag-matafuegos-inservibles"></div>
+              <div class="mf-pag-size-wrap">
+                <label for="mf-pag-size-3">Por página</label>
+                <select id="mf-pag-size-3" class="mf-pag-size input-select-sm" aria-label="Registros por página">
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div id="panel-matafuegos-entregados" class="matafuegos-tab-panel" data-panel="entregados" role="tabpanel">
+            <div class="matafuegos-tab-head">
+              <h3 class="matafuegos-tab-title">Matafuegos entregados</h3>
+              <p class="matafuegos-tab-sub">Listado de unidades entregadas con detalle de destino.</p>
+            </div>
+            <div class="search-bar mf-recarga-search" role="search">
+              <span class="search-icon" aria-hidden="true">🔍</span>
+              <input type="search" id="entregados-panel-search" placeholder="Buscar en entregados…" autocomplete="off">
+              <button type="button" class="search-clear" data-search-clear="entregados-panel-search" aria-label="Limpiar búsqueda" style="display:none;">&times;</button>
+            </div>
+            <div class="table-wrap matafuegos-table-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Fecha de entrega</th>
+                    <th>Dependencia destino</th>
+                    <th>Marca</th>
+                    <th>Nº de serie</th>
+                    <th>Características</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="lista-matafuegos-entregados">
+                  <tr>
+                    <td colspan="6" class="empty-state">No hay matafuegos entregados registrados.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="matafuegos-table-footer mf-table-footer">
+              <div id="pag-matafuegos-entregados"></div>
+              <div class="mf-pag-size-wrap">
+                <label for="mf-pag-size-4">Por página</label>
+                <select id="mf-pag-size-4" class="mf-pag-size input-select-sm" aria-label="Registros por página">
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div id="panel-matafuegos-historial" class="matafuegos-tab-panel" data-panel="historial" role="tabpanel">
+            <div class="matafuegos-tab-head">
+              <h3 class="matafuegos-tab-title">Historial de matafuegos</h3>
+              <p class="matafuegos-tab-sub">Movimientos registrados de matafuegos.</p>
+            </div>
+            <div class="search-bar mf-recarga-search" role="search">
+              <span class="search-icon" aria-hidden="true">🔍</span>
+              <input type="search" id="historial-panel-search" placeholder="Buscar en historial…" autocomplete="off">
+              <button type="button" class="search-clear" data-search-clear="historial-panel-search" aria-label="Limpiar búsqueda" style="display:none;">&times;</button>
+            </div>
+            <div class="table-wrap matafuegos-table-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Movimiento</th>
+                    <th>Marca</th>
+                    <th>Nº de serie</th>
+                  </tr>
+                </thead>
+                <tbody id="lista-matafuegos-historial">
+                  <tr>
+                    <td colspan="4" class="empty-state">No hay movimientos de matafuegos registrados.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="matafuegos-table-footer mf-table-footer">
+              <div id="pag-matafuegos-historial"></div>
+              <div class="mf-pag-size-wrap">
+                <label for="mf-pag-size-5">Por página</label>
+                <select id="mf-pag-size-5" class="mf-pag-size input-select-sm" aria-label="Registros por página">
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="panel-matafuegos-entregar" class="matafuegos-panel matafuegos-entregar-sheet">
+          <div class="matafuegos-panel-header">
+            <div class="matafuegos-entrega-header-row">
+              <button type="button" id="mf-btn-volver-entrega" class="btn btn-secondary btn-sm">← Volver al panel</button>
+              <h3 class="panel-title matafuegos-entrega-panel-title">Entregar matafuego</h3>
+            </div>
+            <div class="matafuegos-panel-actions">
+              <button type="button" class="btn btn-secondary btn-sm cerrar-panel-entregar" aria-label="Cerrar">&times;</button>
+            </div>
+          </div>
+          <p class="panel-desc matafuegos-panel-desc">Completar los datos para registrar la entrega de uno o más matafuegos.</p>
+
+          <form id="form-entregar-matafuego">
+            <div class="form-group matafuegos-entrega-dos-columnas">
+              <p class="panel-desc matafuegos-entrega-intro" style="margin: 0 0 0.65rem; font-size: 0.88rem;">Elegí la dependencia destino y los matafuegos disponibles (podés marcar varios). Podés buscar en ambas listas.</p>
+
+              <div class="matafuegos-entrega-dep-wrap">
+                <label for="entrega-buscar-dependencia">Dependencia a la cual se va a entregar</label>
+                <p class="panel-desc" style="margin: 0 0 0.65rem; font-size: 0.88rem;">Buscá por nombre, código o número y seleccioná la principal o una división.</p>
+                <div class="search-bar" role="search">
+                  <span class="search-icon" aria-hidden="true">🔍</span>
+                  <input type="search" id="entrega-buscar-dependencia" placeholder="Buscar dependencias…" autocomplete="off">
+                  <button type="button" class="search-clear" data-search-clear="entrega-buscar-dependencia" aria-label="Limpiar búsqueda" style="display:none;">&times;</button>
+                </div>
+                <div class="table-wrap matafuegos-entrega-dep-table-wrap">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>Identificador</th>
+                        <th>Nombre</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody id="entrega-tabla-dependencias">
+                      <tr><td colspan="3" class="empty-state">Cargando dependencias…</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p id="entrega-dep-seleccion-resumen" class="entrega-dep-seleccion-resumen" role="status" aria-live="polite" hidden></p>
+                <select id="entrega-dependencia" class="matafuegos-entrega-dep-select-hidden" aria-hidden="true" tabindex="-1">
+                  <option value="">— Seleccionar dependencia —</option>
+                </select>
+              </div>
+
+              <div class="matafuegos-entrega-mf-wrap">
+                <label for="entrega-buscar-matafuego">Matafuegos a entregar (disponibles)</label>
+                <p class="panel-desc" style="margin: 0 0 0.65rem; font-size: 0.88rem;">Buscá por marca, serie o características. Pulsá Seleccionar en cada fila; podés elegir varios. Usá Quitar para desmarcar.</p>
+                <div class="search-bar" role="search">
+                  <span class="search-icon" aria-hidden="true">🔍</span>
+                  <input type="search" id="entrega-buscar-matafuego" placeholder="Buscar matafuegos disponibles…" autocomplete="off">
+                  <button type="button" class="search-clear" data-search-clear="entrega-buscar-matafuego" aria-label="Limpiar búsqueda" style="display:none;">&times;</button>
+                </div>
+                <div class="table-wrap matafuegos-entrega-mf-table-wrap">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>Marca</th>
+                        <th>Nº de serie</th>
+                        <th>Características</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody id="entrega-tabla-matafuegos">
+                      <tr><td colspan="4" class="empty-state">Cargando matafuegos…</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p id="entrega-mf-seleccion-resumen" class="entrega-dep-seleccion-resumen entrega-mf-seleccion-resumen" role="status" aria-live="polite" hidden></p>
+              </div>
+            </div>
+            <select id="entrega-matafuego" class="matafuegos-entrega-dep-select-hidden" aria-hidden="true" tabindex="-1">
+              <option value="">— Seleccionar matafuego disponible —</option>
+            </select>
+            <div class="modal-actions">
+              <button type="submit" id="btn-confirmar-entrega" class="btn btn-primary">Confirmar entrega</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal: Agregar nuevo Matafuego -->
+  <div id="modal-agregar-matafuego" class="modal modal-tema-clara">
+    <div class="modal-content modal-content-wide">
+      <div class="modal-header">
+        <h3>Agregar nuevo Matafuego</h3>
+        <button type="button" class="modal-close modal-agregar-matafuego-close" aria-label="Cerrar">&times;</button>
+      </div>
+      <form id="form-agregar-matafuego">
+        <div class="form-row form-row-2">
+          <div class="form-group">
+            <label for="matafuego-marca">Marca</label>
+            <input type="text" id="matafuego-marca" required placeholder="Ej: Metalúrgica">
+          </div>
+          <div class="form-group">
+            <label for="matafuego-cantidad">Cantidad</label>
+            <input type="number" id="matafuego-cantidad" min="1" max="100" value="1" required placeholder="Ej: 5">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Nº de serie</label>
+          <p class="form-hint" id="matafuego-series-hint" style="margin: 0 0 0.5rem;">Ingresá el número de serie del matafuego. Si ya existe en el sistema, verás un aviso antes de guardar.</p>
+          <div id="matafuego-series-container" class="series-inputs-container"></div>
+        </div>
+        <div class="form-group">
+          <label for="matafuego-caracteristicas">Características</label>
+          <input type="text" id="matafuego-caracteristicas" placeholder="Ej: 5 kg, polvo ABC">
+        </div>
+        <div class="form-group">
+          <label for="matafuego-vencimiento">Fecha de vencimiento</label>
+          <input type="date" id="matafuego-vencimiento" required>
+        </div>
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="matafuego-vencido-sin-fecha">
+            Vencido sin fecha
+          </label>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary modal-agregar-matafuego-close">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar Matafuego</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Agregar matafuego inservible -->
+  <div id="modal-agregar-inservible" class="modal modal-tema-clara">
+    <div class="modal-content modal-content-wide">
+      <div class="modal-header">
+        <h3>Agregar matafuego inservible</h3>
+        <button type="button" class="modal-close modal-agregar-inservible-close" aria-label="Cerrar">&times;</button>
+      </div>
+      <form id="form-agregar-inservible">
+        <div class="form-row form-row-2">
+          <div class="form-group">
+            <label for="inservible-marca">Marca</label>
+            <input type="text" id="inservible-marca" required placeholder="Ej: Metalúrgica">
+          </div>
+          <div class="form-group">
+            <label for="inservible-serie">Nº de serie</label>
+            <input type="text" id="inservible-serie" required placeholder="Ej: 12345" autocomplete="off">
+            <p class="form-hint" style="margin:0.25rem 0 0;">Si el número ya existe, verás un aviso antes de guardar.</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inservible-caracteristicas">Características</label>
+          <input type="text" id="inservible-caracteristicas" placeholder="Ej: 5 kg, polvo ABC">
+        </div>
+        <div class="form-group">
+          <label for="inservible-vencimiento">Fecha de vencimiento</label>
+          <input type="date" id="inservible-vencimiento" required>
+        </div>
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="inservible-vencido-sin-fecha">
+            Vencido sin fecha
+          </label>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary modal-agregar-inservible-close">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar inservible</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Editar vencimiento de matafuego -->
+  <div id="modal-editar-vencimiento-matafuego" class="modal modal-tema-clara">
+    <div class="modal-content modal-content-wide">
+      <div class="modal-header">
+        <h3>Editar vencimiento</h3>
+        <button type="button" class="modal-close modal-editar-vencimiento-close" aria-label="Cerrar">&times;</button>
+      </div>
+      <form id="form-editar-vencimiento-matafuego">
+        <div class="form-group">
+          <label for="editar-vencimiento-matafuego">Fecha de vencimiento</label>
+          <input type="date" id="editar-vencimiento-matafuego" required>
+        </div>
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="editar-vencido-sin-fecha-matafuego">
+            Vencido sin fecha
+          </label>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary modal-editar-vencimiento-close">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: número de serie ya cargado (duplicado) -->
+  <div id="modal-matafuego-serie-duplicada" class="modal modal-tema-clara modal-matafuego-serie-duplicada">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Número de serie duplicado</h3>
+        <button type="button" class="modal-close modal-serie-duplicada-close" aria-label="Cerrar">&times;</button>
+      </div>
+      <p class="panel-desc mf-duplicado-intro" style="margin-top:0;">
+        El número de serie que ingresaste ya está registrado. No podés cargar el mismo matafuego dos veces.
+      </p>
+      <div id="mf-serie-duplicada-list" class="mf-duplicado-list"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-primary modal-serie-duplicada-close">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: nuevo vencimiento al pasar recarga → disponible (Listo) -->
+  <div id="modal-recarga-listo-vencimiento" class="modal modal-tema-clara">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Recarga completada</h3>
+        <button type="button" class="modal-close modal-recarga-listo-close" aria-label="Cerrar">&times;</button>
+      </div>
+      <form id="form-recarga-listo-vencimiento">
+        <p id="recarga-listo-resumen" class="panel-desc" style="margin-top:0;">Indicá la nueva fecha de vencimiento del matafuego tras la recarga.</p>
+        <div class="form-group">
+          <label for="recarga-listo-vencimiento-fecha">Nueva fecha de vencimiento</label>
+          <input type="date" id="recarga-listo-vencimiento-fecha" required>
+          <small class="form-hint">Debe ser posterior a hoy. El matafuego pasará a <strong>disponible</strong>.</small>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary modal-recarga-listo-close">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Pasar a disponible</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="logo-fallback.js"></script>
+  <script src="sidebar-active.js"></script>
+  <script src="loading.js"></script>
+  <script src="sidebar-roles.js"></script>
+  <script src="paginacion.js"></script>
+  <script src="matafuegos.js"></script>
+  <script src="session-idle.js"></script>
+  <script src="sidebar-version.js"></script>
+  <script src="realtime-sync.js"></script>
+</body>
+</html>

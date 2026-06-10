@@ -1,0 +1,29 @@
+# Archivos para Release v1.9.1 en GitHub
+
+Repositorio: https://github.com/navarromateo09/BIENES-PATRIMONIALES-.git
+
+## Generar instalador (en esta PC)
+
+1. Cerrar la app si está abierta.
+2. Ejecutar: ACTUALIZAR-EJECUTABLE.bat
+   (o: npm run dist:win)
+
+## Assets del Release (adjuntar en GitHub → Releases → v1.9.1)
+
+Ruta local: stock respaldo\release\
+
+1. Bienes.y.Patrimoniales.Setup.1.9.1.exe
+2. Bienes.y.Patrimoniales.Setup.1.9.1.exe.blockmap
+3. latest.yml
+
+## Pasos en GitHub
+
+1. Crear Release con tag v1.9.1
+2. Título: v1.9.1
+3. Descripción: pegar NOTAS_RELEASE_GITHUB.txt
+4. Arrastrar los 3 archivos de release\
+
+## Otras PCs
+
+- Con auto-actualización: abrir la app → si hay Release publicado, descargará v1.9.1.
+- Sin internet / manual: copiar el .exe e instalar encima (conserva datos).

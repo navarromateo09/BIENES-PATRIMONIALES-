@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+  <title>Control de Stock - Guardia</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="app-page-theme page-guardia">
+  <div class="dashboard-layout">
+    <aside class="dashboard-sidebar">
+      <nav class="sidebar-nav">
+        <p class="sidebar-section-label">Operaciones</p>
+        <a href="dashboard.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1"></rect><rect x="13" y="3" width="8" height="8" rx="1"></rect><rect x="3" y="13" width="8" height="8" rx="1"></rect><rect x="13" y="13" width="8" height="8" rx="1"></rect></svg></span> Inicio</a>
+        <a href="deposito.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h4l2-4h7l2 4h3v7H3v-7z"></path><path d="M10 18h4"></path></svg></span> Depósito</a>
+        <a href="productos.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9l8-5 8 5v10H4V9z"></path><path d="M4 9l8 5 8-5"></path><path d="M12 4v10"></path></svg></span> Inventario</a>
+        <a href="expedientes.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h7l2 2h7v10H4V6z"></path><path d="M11 6v2"></path></svg></span> Expedientes</a>
+        <a href="guardia.html" class="sidebar-link active"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9l3 3h4v7H4V7z"></path><path d="M4 12h16"></path><path d="M8 16h4"></path></svg></span> Entregas</a>
+        <a href="txt.html" class="sidebar-link" aria-label="TXT">
+          <span class="sidebar-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <path d="M14 2v6h6"></path>
+              <path d="M8 13h8"></path>
+              <path d="M8 17h5"></path>
+            </svg>
+          </span>
+          TXT
+        </a>
+        <p class="sidebar-section-label">Control y soporte</p>
+        <a href="dependencias.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="9" width="16" height="11" rx="1"></rect><path d="M9 9V5h6v4"></path><path d="M9 13h2"></path><path d="M13 13h2"></path><path d="M9 17h2"></path><path d="M13 17h2"></path></svg></span> Dependencias</a>
+        <a href="actas.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="1"></rect><path d="M9 7h6"></path><path d="M9 11h6"></path><path d="M9 15h4"></path></svg></span> Actas</a>
+        <a href="matafuegos.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4h4l3-2"></path><path d="M10 4v3"></path><rect x="8" y="7" width="8" height="11" rx="2"></rect><path d="M12 11v3"></path></svg></span> Matafuegos</a>
+        <a href="auditoria.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg></span> Auditoría</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="dashboard.html" class="sidebar-link">← Volver al inicio</a>
+      </div>
+    </aside>
+    <main class="dashboard-main">
+      <div class="content-panel guardia-content-panel">
+      <div class="guardia-page-header">
+        <h2 class="page-title">Control de entregas</h2>
+        <p class="panel-desc">Seguí los pasos para registrar una entrega: elegí la dependencia destino, los productos, confirmá y generá el acta.</p>
+      </div>
+
+      <div id="guardia-wizard-root" class="guardia-wizard-root">
+        <ol class="guardia-stepper" id="guardia-stepper" aria-label="Pasos para realizar una entrega">
+          <li class="guardia-stepper-item active" data-step="1">
+            <span class="guardia-stepper-num" aria-hidden="true">1</span>
+            <span class="guardia-stepper-label">Dependencia</span>
+          </li>
+          <li class="guardia-stepper-item" data-step="2">
+            <span class="guardia-stepper-num" aria-hidden="true">2</span>
+            <span class="guardia-stepper-label">Productos</span>
+          </li>
+          <li class="guardia-stepper-item" data-step="3">
+            <span class="guardia-stepper-num" aria-hidden="true">3</span>
+            <span class="guardia-stepper-label">Confirmar</span>
+          </li>
+          <li class="guardia-stepper-item" data-step="4">
+            <span class="guardia-stepper-num" aria-hidden="true">4</span>
+            <span class="guardia-stepper-label">Acta e imprimir</span>
+          </li>
+        </ol>
+
+        <div id="guardia-wizard-toolbar" class="guardia-wizard-toolbar" hidden>
+          <button type="button" id="guardia-wizard-atras" class="btn btn-secondary btn-sm">← Paso anterior</button>
+          <span id="guardia-wizard-dep-chip" class="guardia-wizard-chip" hidden></span>
+          <button type="button" id="guardia-wizard-nueva" class="btn btn-primary btn-sm">+ Nueva entrega</button>
+        </div>
+
+        <div id="guardia-wizard-step-1" class="guardia-wizard-step is-active">
+          <div class="guardia-step-card">
+            <h3 class="guardia-step-title">Paso 1 · Seleccionar dependencia</h3>
+            <p class="guardia-step-desc">Buscá por nombre, código o número. Elegí la dependencia principal o una división como destino.</p>
+            <div class="form-group guardia-search-wrap">
+              <div class="search-bar" role="search">
+                <span class="search-icon" aria-hidden="true">🔍</span>
+                <input type="search" id="guardia-buscar-dependencia" placeholder="Buscar dependencias…" autocomplete="off">
+                <button type="button" class="search-clear" data-search-clear="guardia-buscar-dependencia" aria-label="Limpiar búsqueda" style="display:none;">&times;</button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Identificador</th>
+                    <th>Nombre</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="guardia-lista-dependencias"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="guardia-wizard-step-2" class="guardia-wizard-step" hidden></div>
+        <div id="guardia-wizard-step-3" class="guardia-wizard-step" hidden></div>
+        <div id="guardia-wizard-step-4" class="guardia-wizard-step" hidden></div>
+      </div>
+
+      <div id="guardia-tabla-wrap" class="table-wrap guardia-historial-wrap" style="margin-top: 1.5rem; display: none;">
+        <h3 class="page-title" style="font-size: 1rem;">Productos provistos a esta dependencia</h3>
+
+        <div class="filtros-avanzados">
+          <div class="filtros-row">
+            <div class="filtro-grupo">
+              <label for="filtro-guardia-buscar">Buscar</label>
+              <input type="text" id="filtro-guardia-buscar" placeholder="Producto, concepto…" autocomplete="off">
+            </div>
+            <div class="filtro-grupo">
+              <label for="filtro-guardia-desde">Desde</label>
+              <input type="date" id="filtro-guardia-desde">
+            </div>
+            <div class="filtro-grupo">
+              <label for="filtro-guardia-hasta">Hasta</label>
+              <input type="date" id="filtro-guardia-hasta">
+            </div>
+            <div class="filtro-grupo filtro-grupo-btn">
+              <button type="button" id="filtro-guardia-limpiar" class="btn btn-secondary btn-sm">Limpiar filtros</button>
+            </div>
+          </div>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Producto / Expediente</th>
+              <th>Fecha asignación</th>
+              <th class="num-col">Cantidad</th>
+              <th>Concepto</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="guardia-lista-provisiones"></tbody>
+        </table>
+      </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal: buscar y seleccionar producto para proveer -->
+  <div id="modal-guardia-producto" class="modal modal-tema-clara">
+    <div class="modal-content modal-content-wide modal-content-expediente">
+      <div class="modal-header">
+        <h3>Proveer producto a: <span id="guardia-modal-dep-label"></span></h3>
+        <button type="button" class="modal-close modal-guardia-producto-close" aria-label="Cerrar">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="guardia-modal-paso-inicial">
+          <p class="panel-desc" style="margin-bottom: 1.25rem;">Asignar productos a esta dependencia.</p>
+          <button type="button" id="guardia-btn-abrir-proveer" class="btn btn-primary btn-lg">Proveer producto</button>
+        </div>
+        <div id="guardia-modal-paso-productos" class="guardia-paso-productos" style="display: none;">
+          <div class="guardia-paso-productos-top">
+            <p class="guardia-paso-productos-hint">Solo se listan productos con stock. Si buscás uno agotado, te avisamos.</p>
+            <div class="form-group guardia-buscar-producto-wrap">
+              <label for="guardia-buscar-producto">Buscar producto</label>
+              <div class="search-bar" role="search">
+                <span class="search-icon" aria-hidden="true">🔍</span>
+                <input type="search" id="guardia-buscar-producto" placeholder="Nombre, código o serie…" autocomplete="off">
+              </div>
+            </div>
+            <p id="guardia-modal-agotado" class="guardia-agotado-msg" hidden role="alert"></p>
+            <p id="guardia-modal-empty" class="guardia-empty-msg" style="display: none;" data-msg-empty="No hay productos con stock disponible. Usá el buscador para consultar agotados."></p>
+          </div>
+
+          <div class="guardia-productos-layout">
+            <section class="guardia-productos-lista" aria-label="Productos disponibles">
+              <h4 class="guardia-subsection-title">Disponibles</h4>
+              <div class="table-wrap guardia-productos-table-wrap">
+                <table class="data-table data-table-compact">
+                  <thead>
+                    <tr>
+                      <th>Código</th>
+                      <th>Exp.</th>
+                      <th>Nombre</th>
+                      <th class="num-col">Disp.</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="guardia-modal-lista-productos"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <section id="guardia-panel-carrito" class="guardia-panel-carrito" style="display: flex;" aria-label="Carrito de entrega">
+              <h4 class="guardia-subsection-title">En esta entrega</h4>
+              <div class="table-wrap guardia-carrito-table-wrap">
+                <table class="data-table data-table-compact">
+                  <thead>
+                    <tr>
+                      <th>Producto</th>
+                      <th class="num-col">Cant.</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="guardia-carrito-tbody"></tbody>
+                </table>
+              </div>
+              <p id="guardia-carrito-vacio" class="guardia-empty-msg" style="display: none;">Agregá productos con «Seleccionar».</p>
+              <div class="guardia-meta-row">
+                <div class="form-group">
+                  <label for="guardia-provision-fecha">Fecha</label>
+                  <input type="datetime-local" id="guardia-provision-fecha">
+                </div>
+                <div class="form-group">
+                  <label for="guardia-provision-concepto">Descripción</label>
+                  <input type="text" id="guardia-provision-concepto" placeholder="Opcional">
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="guardia-btn-vaciar-carrito" class="btn btn-secondary" style="display: none;">Vaciar carrito</button>
+        <button type="button" id="guardia-btn-asignar" class="btn btn-primary" style="display: none;">Continuar a confirmación →</button>
+        <button type="button" class="btn btn-secondary modal-guardia-producto-close guardia-wizard-hide-inline">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Confirmar provisión antes de asignar (estilo ejemplo) -->
+  <div id="modal-confirmar-provision" class="modal modal-tema-clara modal-confirmar-estilo">
+    <div class="modal-content modal-confirmar-content">
+      <button type="button" class="modal-close modal-confirmar-provision-close modal-confirmar-close-top" aria-label="Cerrar">&times;</button>
+      <div class="modal-confirmar-icono" aria-hidden="true">!</div>
+      <h3 class="modal-confirmar-titulo">¿Seguro que desea proveer el producto?</h3>
+      <div class="modal-body modal-confirmar-body">
+        <table class="modal-confirmar-tabla">
+          <thead>
+            <tr>
+              <th class="modal-confirmar-th">Concepto</th>
+              <th class="modal-confirmar-th">Dato</th>
+            </tr>
+          </thead>
+          <tbody id="confirmar-provision-tbody">
+            <!-- Filas rellenadas por JS: Producto, N.º de serie, Cantidad, Destino -->
+          </tbody>
+        </table>
+        <p class="modal-confirmar-pregunta">¿Confirma la provisión?</p>
+      </div>
+      <div class="modal-actions modal-confirmar-actions">
+        <button type="button" id="guardia-btn-confirmar-no" class="btn btn-secondary modal-confirmar-provision-close">No</button>
+        <button type="button" id="guardia-btn-confirmar-si" class="btn btn-primary modal-confirmar-btn-si">Sí</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Confirmar eliminación de dependencia -->
+  <div id="modal-confirmar-eliminar-dep" class="modal modal-tema-clara modal-confirmar-estilo">
+    <div class="modal-content modal-confirmar-content">
+      <button type="button" class="modal-close modal-confirmar-eliminar-dep-close modal-confirmar-close-top" aria-label="Cerrar">&times;</button>
+      <div class="modal-confirmar-icono" aria-hidden="true">!</div>
+      <h3 class="modal-confirmar-titulo">Confirmar eliminación</h3>
+      <div class="modal-body modal-confirmar-body">
+        <p id="confirmar-eliminar-dep-texto" class="modal-confirmar-pregunta">¿Seguro que desea eliminar esta dependencia?</p>
+      </div>
+      <div class="modal-actions modal-confirmar-actions">
+        <button type="button" id="guardia-btn-eliminar-dep-cancelar" class="btn btn-secondary modal-confirmar-eliminar-dep-close">Cancelar</button>
+        <button type="button" id="guardia-btn-eliminar-dep-aceptar" class="btn btn-danger">Aceptar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Editar dependencia/división -->
+  <div id="modal-editar-dep-guardia" class="modal modal-tema-clara">
+    <div class="modal-content modal-content-wide">
+      <div class="modal-header">
+        <h3 id="editar-dep-guardia-titulo">Editar dependencia</h3>
+        <button type="button" class="modal-close modal-editar-dep-guardia-close" aria-label="Cerrar">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row form-row-3">
+          <div class="form-group">
+            <label for="editar-dep-guardia-nombre">Nombre</label>
+            <input type="text" id="editar-dep-guardia-nombre" placeholder="Nombre">
+          </div>
+          <div class="form-group">
+            <label for="editar-dep-guardia-numero">Número</label>
+            <input type="text" id="editar-dep-guardia-numero" placeholder="Ej: 1">
+          </div>
+          <div class="form-group">
+            <label for="editar-dep-guardia-codigo">Código</label>
+            <input type="text" id="editar-dep-guardia-codigo" readonly>
+          </div>
+        </div>
+
+        <div class="form-row form-row-3" style="margin-top: 0.5rem;">
+          <div class="form-group">
+            <label id="editar-dep-guardia-child-label" for="editar-dep-guardia-child-nombre">Agregar división</label>
+            <input type="text" id="editar-dep-guardia-child-nombre" placeholder="Nombre">
+          </div>
+          <div class="form-group">
+            <label for="editar-dep-guardia-child-numero">Número</label>
+            <input type="text" id="editar-dep-guardia-child-numero" placeholder="Ej: 1">
+          </div>
+          <div class="form-group form-group-actions" style="align-self:flex-end;">
+            <button type="button" id="guardia-btn-editar-dep-agregar" class="btn btn-secondary">Agregar</button>
+          </div>
+        </div>
+
+        <div class="table-wrap" style="margin-top: 0.75rem;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Tipo</th>
+                <th>Nombre</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="editar-dep-guardia-hijos-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary modal-editar-dep-guardia-close">Cancelar</button>
+        <button type="button" id="guardia-btn-editar-dep-guardar" class="btn btn-primary">Guardar cambios</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Elegir tipo de acta (una sola vs una por expediente) -->
+  <div id="modal-elegir-tipo-acta" class="modal modal-tema-clara">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>¿Cómo querés generar el acta?</h3>
+        <button type="button" class="modal-close modal-elegir-acta-close" aria-label="Cerrar">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="panel-desc" style="margin-bottom: 1rem;">Hay ítems de más de un expediente. Podés generar una sola acta con todo o una acta por cada expediente.</p>
+        <div class="modal-actions" style="flex-wrap: wrap; gap: 0.5rem;">
+          <button type="button" id="guardia-btn-acta-una" class="btn btn-primary">Una sola acta con todos los ítems</button>
+          <button type="button" id="guardia-btn-acta-por-expediente" class="btn btn-secondary">Una acta por expediente</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Acta de entrega (tras asignar a repartición) -->
+  <div id="modal-acta-entrega" class="modal modal-tema-clara">
+    <div class="modal-content modal-content-wide modal-acta-content">
+      <div class="modal-header">
+        <h3>Acta de entrega</h3>
+        <button type="button" class="modal-close modal-acta-close" aria-label="Cerrar">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="acta-entrega-contenido" class="acta-entrega-print-area">
+          <!-- El contenido del acta se rellena por JS con los datos de la provisión -->
+          <p class="panel-desc">Se generará el acta con los datos de la entrega.</p>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="guardia-btn-imprimir-acta" class="btn btn-primary">🖨 Imprimir acta</button>
+        <button type="button" id="guardia-btn-finalizar-entrega" class="btn btn-secondary">Finalizar y nueva entrega</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="logo-fallback.js"></script>
+  <script src="loading.js"></script>
+  <script src="sidebar-roles.js"></script>
+  <script src="guardia.js"></script>
+  <script src="session-idle.js"></script>
+  <script src="sidebar-version.js"></script>
+  <script src="realtime-sync.js"></script>
+</body>
+</html>

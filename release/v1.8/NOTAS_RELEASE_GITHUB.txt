@@ -1,0 +1,15 @@
+## v1.8.0
+
+### Matafuegos
+- Ajustes de entrega y compatibilidad con restricciones de estado en base de datos (Supabase).
+- Panel de recarga: búsqueda, estado pendiente/recargando, botón Listo para pasar a disponible.
+- Sincronización del estado "recargando" entre PCs vía auditoría.
+- Tarjeta y panel de historial de matafuegos (movimientos con fecha, tipo, marca y serie).
+- Eliminación de matafuegos: solo administrador y confirmación antes de borrar.
+
+### Técnico
+- Registro de movimientos en auditoría para historial y estado recargando.
+- IPC adicional en preload para sincronización.
+
+### Nota
+- Tras actualizar, reiniciar la aplicación en todas las PCs para cargar `main.js` / `preload.js`.

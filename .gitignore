@@ -1,0 +1,14 @@
+node_modules/
+supabase-config.js
+*.log
+.DS_Store
+
+# Build / instalador (se publican en GitHub Releases, no en el repo)
+release/win-unpacked/
+release/*.exe
+release/*.blockmap
+release/*.7z
+_asar_extract_tmp/
+dist/app_patch/
+dist/win-unpacked/
+dist/builder-debug.yml

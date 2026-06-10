@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+  <title>Control de Stock - Gestión de productos</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="app-page-theme">
+  <div class="dashboard-layout">
+    <aside class="dashboard-sidebar">
+      <nav class="sidebar-nav">
+        <p class="sidebar-section-label">Operaciones</p>
+        <a href="dashboard.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1"></rect><rect x="13" y="3" width="8" height="8" rx="1"></rect><rect x="3" y="13" width="8" height="8" rx="1"></rect><rect x="13" y="13" width="8" height="8" rx="1"></rect></svg></span> Inicio</a>
+        <a href="deposito.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h4l2-4h7l2 4h3v7H3v-7z"></path><path d="M10 18h4"></path></svg></span> Depósito</a>
+        <a href="productos.html" class="sidebar-link active"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9l8-5 8 5v10H4V9z"></path><path d="M4 9l8 5 8-5"></path><path d="M12 4v10"></path></svg></span> Inventario</a>
+        <a href="expedientes.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h7l2 2h7v10H4V6z"></path><path d="M11 6v2"></path></svg></span> Expedientes</a>
+        <a href="guardia.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9l3 3h4v7H4V7z"></path><path d="M4 12h16"></path><path d="M8 16h4"></path></svg></span> Entregas</a>
+        <a href="txt.html" class="sidebar-link" aria-label="TXT">
+          <span class="sidebar-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <path d="M14 2v6h6"></path>
+              <path d="M8 13h8"></path>
+              <path d="M8 17h5"></path>
+            </svg>
+          </span>
+          TXT
+        </a>
+        <p class="sidebar-section-label">Control y soporte</p>
+        <a href="dependencias.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="9" width="16" height="11" rx="1"></rect><path d="M9 9V5h6v4"></path><path d="M9 13h2"></path><path d="M13 13h2"></path><path d="M9 17h2"></path><path d="M13 17h2"></path></svg></span> Dependencias</a>
+        <a href="actas.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="1"></rect><path d="M9 7h6"></path><path d="M9 11h6"></path><path d="M9 15h4"></path></svg></span> Actas</a>
+        <a href="matafuegos.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4h4l3-2"></path><path d="M10 4v3"></path><rect x="8" y="7" width="8" height="11" rx="2"></rect><path d="M12 11v3"></path></svg></span> Matafuegos</a>
+        <a href="auditoria.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg></span> Auditoría</a>
+      </nav>
+      <!-- Footer del sidebar sin Configuración ni Cerrar sesión (esas acciones están en el menú de usuario del header del dashboard) -->
+      <div class="sidebar-footer">
+        <a href="dashboard.html" id="productos-btn-volver" class="sidebar-link">← Volver al inicio</a>
+      </div>
+    </aside>
+    <main class="dashboard-main">
+      <div class="content-panel">
+        <span id="backend-badge" class="backend-badge" title="Dónde se guardan los datos" style="margin-bottom: 0.5rem; display: inline-block;"></span>
+        <nav class="tabs">
+        <button class="tab active" data-tab="productos">Productos</button>
+        <button class="tab" data-tab="historial">Historial</button>
+      </nav>
+      <div class="content content-in-page">
+        <section id="panel-productos" class="panel active">
+          <div class="panel-header">
+            <h2>Inventario</h2>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button type="button" id="btn-agregar-producto-inventario" class="btn btn-primary">+ Agregar producto</button>
+              <button type="button" id="btn-exportar-inventario" class="btn btn-secondary" title="Exportar listado a Excel (CSV)">📥 Exportar a Excel</button>
+            </div>
+          </div>
+          <p class="panel-desc">Vista de todos los productos recibidos (entradas).</p>
+          <div class="form-group" style="max-width: 520px; margin-bottom: 1rem;">
+            <div class="search-bar" role="search">
+              <span class="search-icon" aria-hidden="true">🔍</span>
+              <input type="search" id="buscar-inventario" placeholder="Buscar en inventario…" autocomplete="off">
+              <button type="button" class="search-clear" data-search-clear="buscar-inventario" aria-label="Limpiar búsqueda" style="display:none;">&times;</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Expediente</th>
+                  <th>Tipo de elemento</th>
+                  <th>Marca</th>
+                  <th>Nº de serie</th>
+                  <th class="num-col">Cantidad</th>
+                  <th class="num-col">Disponible</th>
+                  <th>Fecha</th>
+                  <th>Concepto</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="lista-inventario"></tbody>
+            </table>
+            <div id="pag-inventario"></div>
+          </div>
+        </section>
+
+        <section id="panel-historial" class="panel">
+          <div class="panel-header">
+            <h2>Historial de movimientos</h2>
+            <button type="button" id="btn-exportar-movimientos" class="btn btn-secondary" title="Exportar historial a Excel (CSV)">📥 Exportar a Excel</button>
+          </div>
+          <p class="panel-desc">Registro de ingresos al inventario, salidas y entregas o provisiones a dependencias o divisiones.</p>
+
+          <div class="filtros-avanzados">
+            <div class="filtros-row">
+              <div class="filtro-grupo">
+                <label for="filtro-mov-buscar">Buscar</label>
+                <input type="text" id="filtro-mov-buscar" placeholder="Producto, expediente, destino, concepto…" autocomplete="off">
+              </div>
+              <div class="filtro-grupo">
+                <label for="filtro-mov-tipo">Tipo</label>
+                <select id="filtro-mov-tipo">
+                  <option value="">Todos</option>
+                  <option value="entrada">Entrada</option>
+                  <option value="salida">Salida</option>
+                  <option value="provision">Provisión / Entrega</option>
+                </select>
+              </div>
+              <div class="filtro-grupo">
+                <label for="filtro-mov-desde">Desde</label>
+                <input type="date" id="filtro-mov-desde">
+              </div>
+              <div class="filtro-grupo">
+                <label for="filtro-mov-hasta">Hasta</label>
+                <input type="date" id="filtro-mov-hasta">
+              </div>
+              <div class="filtro-grupo">
+                <label for="filtro-mov-usuario">Usuario</label>
+                <input type="text" id="filtro-mov-usuario" placeholder="Nombre de usuario…" autocomplete="off">
+              </div>
+              <div class="filtro-grupo filtro-grupo-btn">
+                <button type="button" id="filtro-mov-limpiar" class="btn btn-secondary btn-sm">Limpiar filtros</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Tipo</th>
+                  <th>Expediente</th>
+                  <th>Producto</th>
+                  <th>Destino</th>
+                  <th class="num-col">Cantidad</th>
+                  <th class="col-mov-usuario-th">Usuario</th>
+                  <th>Concepto</th>
+                </tr>
+              </thead>
+              <tbody id="lista-movimientos"></tbody>
+            </table>
+            <div id="pag-movimientos"></div>
+          </div>
+        </section>
+      </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal: agregar producto (desde Inventario) -->
+  <div id="modal-agregar-producto" class="modal modal-tema-clara modal-inventario-add">
+    <div class="modal-content modal-content-wide modal-inventario-add-content">
+      <div class="modal-header modal-inventario-add-header">
+        <div>
+          <h3>Agregar producto al inventario</h3>
+          <p class="modal-inventario-add-sub">Completá los datos del producto y su expediente de destino.</p>
+        </div>
+        <button type="button" class="modal-close modal-agregar-producto-close" aria-label="Cerrar">&times;</button>
+      </div>
+      <form id="form-agregar-producto-inventario" class="modal-inventario-add-form">
+        <div class="modal-inventario-add-scroll">
+          <section class="modal-form-section">
+            <h4 class="modal-form-section-title">Expediente</h4>
+            <div class="form-row form-row-2 modal-inventario-exp-row">
+              <div class="form-group">
+                <label for="agregar-producto-expediente">Seleccionar expediente</label>
+                <select id="agregar-producto-expediente">
+                  <option value="">— Crear nuevo expediente —</option>
+                </select>
+              </div>
+              <div class="form-group wrap-nuevo-expediente" id="wrap-nuevo-expediente-numero">
+                <label for="agregar-producto-nuevo-expediente-numero">Nº o nombre del nuevo expediente</label>
+                <input type="text" id="agregar-producto-nuevo-expediente-numero" placeholder="Ej: 211/200">
+                <small class="form-hint">Solo si creás un expediente nuevo.</small>
+              </div>
+            </div>
+          </section>
+
+          <section class="modal-form-section">
+            <h4 class="modal-form-section-title">Producto</h4>
+            <div class="form-row form-row-3 modal-inventario-producto-row">
+              <div class="form-group">
+                <label for="agregar-producto-nombre">Nombre / Tipo</label>
+                <input type="text" id="agregar-producto-nombre" placeholder="Nombre del producto">
+              </div>
+              <div class="form-group">
+                <label for="agregar-producto-marca">Marca</label>
+                <input type="text" id="agregar-producto-marca" placeholder="Ej: Samsung, HP">
+              </div>
+              <div class="form-group">
+                <label for="agregar-producto-cantidad">Cantidad</label>
+                <input type="number" id="agregar-producto-cantidad" min="1" required placeholder="1">
+              </div>
+            </div>
+          </section>
+
+          <section class="modal-form-section">
+            <h4 class="modal-form-section-title">Nº de serie <span class="text-muted">(opcional)</span></h4>
+            <p class="form-hint modal-inventario-series-hint">Un casillero por unidad. Si quedan vacíos, se numeran automáticamente.</p>
+            <div class="modal-inventario-series-tools">
+              <label class="modal-inventario-check">
+                <input type="checkbox" id="agregar-producto-generar-codigo" checked>
+                Generar código único en vacíos
+              </label>
+              <button type="button" id="btn-generar-codigos-serie" class="btn btn-secondary btn-sm">Generar códigos</button>
+            </div>
+            <div id="agregar-producto-series-container" class="series-inputs-container modal-inventario-series-box"></div>
+          </section>
+
+          <section class="modal-form-section modal-form-section-last">
+            <div class="form-row form-row-2">
+              <div class="form-group">
+                <label for="agregar-producto-fecha">Fecha</label>
+                <input type="datetime-local" id="agregar-producto-fecha">
+              </div>
+              <div class="form-group">
+                <label for="agregar-producto-descripcion">Descripción / Concepto</label>
+                <input type="text" id="agregar-producto-descripcion" placeholder="Ej: Recepción por compra">
+              </div>
+            </div>
+          </section>
+        </div>
+        <div class="modal-actions modal-inventario-add-actions">
+          <label class="modal-inventario-check modal-inventario-check-footer">
+            <input type="checkbox" id="agregar-producto-imprimir-etiquetas" checked>
+            Imprimir etiquetas al guardar
+          </label>
+          <div class="modal-inventario-add-btns">
+            <button type="button" class="btn btn-secondary modal-agregar-producto-close">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: productos dentro del expediente -->
+  <div id="modal-productos-expediente" class="modal modal-tema-clara">
+    <div class="modal-content modal-content-wide modal-content-expediente">
+      <div class="modal-header">
+        <h3 id="modal-productos-expediente-titulo">Productos del expediente</h3>
+        <button type="button" class="modal-close modal-productos-expediente-close" aria-label="Cerrar">&times;</button>
+      </div>
+      <div class="modal-body-table">
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Nº serie</th>
+                <th>Nombre</th>
+                <th>Marca</th>
+                <th title="Recibido / Disponible">Cantidad</th>
+                <th>Unidad</th>
+                <th>Concepto</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="modal-lista-productos-expediente"></tbody>
+          </table>
+        </div>
+        <p id="modal-productos-expediente-empty" class="empty-state" style="display: none;">No hay productos en este expediente. Usa "Agregar producto" para buscar por número de serie.</p>
+        <div class="modal-productos-expediente-actions">
+          <button type="button" id="modal-btn-abrir-buscar-serie" class="btn btn-primary">+ Agregar producto</button>
+          <button type="button" class="btn btn-secondary modal-productos-expediente-close">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: buscar producto por nº de serie para agregar al expediente -->
+  <div id="modal-buscar-serie-expediente" class="modal">
+    <div class="modal-content modal-content-wide">
+      <div class="modal-header">
+        <h3>Agregar producto al expediente</h3>
+        <button type="button" class="modal-close modal-buscar-serie-close" aria-label="Cerrar">&times;</button>
+      </div>
+      <div class="modal-body-table">
+        <p class="panel-desc">Busca por número de serie un producto ya creado en el inventario y agrégalo a este expediente.</p>
+        <div class="form-row form-row-inline" style="margin-bottom: 1rem;">
+          <div class="form-group" style="flex: 1; margin-bottom: 0;">
+            <label for="buscar-serie-input">Nº de serie</label>
+            <input type="text" id="buscar-serie-input" placeholder="Ej: SN-12345 o parte del número">
+          </div>
+          <div class="form-group form-group-actions" style="margin-bottom: 0;">
+            <label>&nbsp;</label>
+            <button type="button" id="btn-buscar-serie" class="btn btn-primary">Buscar</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Nº serie</th>
+                <th>Nombre</th>
+                <th>Marca</th>
+                <th>Cantidad</th>
+                <th>Expediente actual</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody id="modal-buscar-serie-resultados"></tbody>
+          </table>
+        </div>
+        <p id="modal-buscar-serie-empty" class="empty-state" style="display: none;">Ingresa un número de serie y pulsa Buscar, o no hay resultados.</p>
+        <div class="modal-productos-expediente-actions">
+          <button type="button" class="btn btn-secondary modal-buscar-serie-close">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-producto" class="modal modal-tema-clara">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-producto-titulo">Nuevo Expediente</h3>
+        <button type="button" class="modal-close" aria-label="Cerrar">&times;</button>
+      </div>
+      <form id="form-producto">
+        <input type="hidden" id="producto-id">
+        <div class="form-group">
+          <label for="producto-codigo">Número de expediente</label>
+          <input type="text" id="producto-codigo" required placeholder="Ej: 208/2020">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary modal-cancel">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-editar-movimiento" class="modal modal-tema-clara">
+    <div class="modal-content modal-content-wide">
+      <div class="modal-header">
+        <h3>Editar producto</h3>
+        <button type="button" class="modal-close modal-editar-mov-close" aria-label="Cerrar">&times;</button>
+      </div>
+      <form id="form-editar-movimiento">
+        <input type="hidden" id="edit-mov-id">
+        <div class="form-row form-row-3">
+          <div class="form-group">
+            <label for="edit-mov-numero-serie">Nº de serie</label>
+            <input type="text" id="edit-mov-numero-serie" placeholder="Ej: SN-12345">
+          </div>
+          <div class="form-group">
+            <label for="edit-mov-nombre">Nombre</label>
+            <input type="text" id="edit-mov-nombre" placeholder="Nombre del producto">
+          </div>
+          <div class="form-group">
+            <label for="edit-mov-marca">Marca</label>
+            <input type="text" id="edit-mov-marca" placeholder="Ej: Samsung, HP">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-mov-cantidad">Cantidad</label>
+            <input type="number" id="edit-mov-cantidad" min="1" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-mov-fecha">Fecha</label>
+            <input type="datetime-local" id="edit-mov-fecha">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="edit-mov-descripcion">Descripción / Concepto</label>
+          <input type="text" id="edit-mov-descripcion" placeholder="Ej: Recepción por compra">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary modal-editar-mov-cancel">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: información de entregas (solo si el ítem fue entregado/provisionado) -->
+  <div id="modal-info-entregas" class="modal modal-tema-clara" aria-hidden="true">
+    <div class="modal-content modal-content-wide">
+      <div class="modal-header">
+        <h3>Información de entrega</h3>
+        <button type="button" class="modal-close modal-info-entregas-close" aria-label="Cerrar">&times;</button>
+      </div>
+      <div class="modal-body-table">
+        <p id="info-entregas-desc" class="panel-desc" style="margin-top:0;">Entregas registradas para este producto.</p>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Dependencia</th>
+                <th class="num-col">Cant.</th>
+                <th>Concepto</th>
+                <th>Usuario</th>
+              </tr>
+            </thead>
+            <tbody id="info-entregas-tbody"></tbody>
+          </table>
+        </div>
+        <p id="info-entregas-empty" class="empty-state" style="display:none;">No hay entregas registradas para este ítem.</p>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary modal-info-entregas-close">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="logo-fallback.js"></script>
+  <script src="sidebar-active.js"></script>
+  <script src="loading.js"></script>
+  <script src="sidebar-roles.js"></script>
+  <script src="paginacion.js"></script>
+  <script src="productos.js"></script>
+  <script src="session-idle.js"></script>
+  <script src="sidebar-version.js"></script>
+  <script src="realtime-sync.js"></script>
+</body>
+</html>

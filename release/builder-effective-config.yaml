@@ -1,0 +1,39 @@
+directories:
+  output: release
+  buildResources: build
+appId: com.bienesypatrimoniales.controlstock
+productName: Bienes y Patrimoniales
+asar: true
+files:
+  - filter:
+      - '**/*'
+      - '!renderer/src/**'
+      - '!renderer/index.html'
+      - '!renderer/public/**'
+      - '!**/*.map'
+      - '!dist/**'
+      - '!scripts/**'
+      - '!*.md'
+      - '!import-dependencias-*.txt'
+      - '!supabase-*.sql'
+  - from: node_modules/electron-updater
+    to: node_modules/electron-updater
+    filter:
+      - '**/*'
+win:
+  icon: build/icon.ico
+  artifactName: Bienes.y.Patrimoniales.Setup.${version}.${ext}
+  target:
+    - target: nsis
+      arch:
+        - x64
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  perMachine: false
+  shortcutName: BYP
+publish:
+  - provider: github
+    owner: navarromateo09
+    repo: BIENES-PATRIMONIALES-
+electronVersion: 28.3.3

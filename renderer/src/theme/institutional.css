@@ -1,0 +1,916 @@
+/* ============================================================
+   Tema institucional — Policía de Tucumán · Bienes y Patrimoniales
+   ============================================================ */
+
+:root {
+  --inst-navy: #0a2540;
+  --inst-navy-mid: #123456;
+  --inst-navy-light: #1a4466;
+  --inst-gold: #c5a028;
+  --inst-gold-soft: #e8d48a;
+  /* Canvas claro institucional (no gris plano) */
+  --inst-bg: #f8fafc;
+  --inst-bg-soft: #f0f5fa;
+  --inst-surface: #ffffff;
+  --inst-border: #e2e8f0;
+  --inst-border-light: #eef2f7;
+  --inst-text: #1a2b3c;
+  --inst-text-muted: #64748b;
+  --inst-accent: #1565a8;
+  --inst-accent-hover: #0d4f8a;
+  --inst-success: #1a6b45;
+  --inst-sidebar-w: 252px;
+  --inst-radius: 6px;
+  --inst-shadow: 0 1px 2px rgba(10, 37, 64, 0.05), 0 2px 8px rgba(10, 37, 64, 0.04);
+  --inst-shadow-lg: 0 4px 20px rgba(10, 37, 64, 0.08);
+}
+
+/* ── Base: canvas institucional claro ── */
+body.app-institutional {
+  background: #ffffff !important;
+  color: var(--inst-text);
+}
+
+body.app-institutional.dashboard-page,
+body.app-institutional.app-page-theme {
+  background: #ffffff !important;
+  background-image: none !important;
+}
+
+body.app-institutional.dashboard-page::before,
+body.app-institutional.app-page-theme::before {
+  display: none !important;
+}
+
+body.app-institutional .dashboard-page .dashboard-main::before,
+body.app-institutional .app-page-theme .dashboard-main::before {
+  display: none !important;
+}
+
+body.app-institutional .dashboard-main {
+  background: transparent;
+  padding: 0 !important;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Franja decorativa bajo el encabezado — acento institucional sutil */
+body.app-institutional .inst-content-wrap {
+  flex: 0 0 auto;
+  width: 100%;
+  padding: 1.5rem 2rem 2rem;
+  overflow-x: auto;
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #fafcfe 8%,
+    #f5f9fc 100%
+  );
+}
+
+body.app-institutional .inst-content-wrap::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--inst-navy) 0%,
+    var(--inst-accent) 40%,
+    var(--inst-gold) 70%,
+    var(--inst-navy) 100%
+  );
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+body.app-institutional .inst-content-wrap > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Sidebar ── */
+body.app-institutional .dashboard-sidebar {
+  width: var(--inst-sidebar-w);
+  min-width: var(--inst-sidebar-w);
+  background: linear-gradient(180deg, var(--inst-navy) 0%, #071e33 100%);
+  border-right: none;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+  padding: 0;
+}
+
+body.app-institutional .inst-sidebar-brand {
+  padding: 1.25rem 1rem 1rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.12);
+}
+
+body.app-institutional .inst-sidebar-logo {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  margin: 0 auto 0.65rem;
+  display: block;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+}
+
+body.app-institutional .inst-sidebar-org {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--inst-gold-soft);
+  line-height: 1.4;
+  margin-bottom: 0.2rem;
+}
+
+body.app-institutional .inst-sidebar-app {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+}
+
+body.app-institutional .sidebar-nav {
+  padding: 0.75rem 0.65rem 0.5rem;
+  flex: 1;
+  overflow-y: auto;
+}
+
+body.app-institutional .sidebar-nav::before {
+  display: none;
+}
+
+body.app-institutional .sidebar-section-label {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  padding: 0.75rem 0.6rem 0.3rem;
+  margin-top: 0.25rem;
+}
+
+body.app-institutional .sidebar-section-label::before,
+body.app-institutional .sidebar-section-label::after {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+body.app-institutional .sidebar-link {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.55rem 0.7rem;
+  border-radius: var(--inst-radius);
+  border-left: 3px solid transparent;
+  transition:
+    background 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.28s ease,
+    border-left-color 0.28s ease,
+    box-shadow 0.28s ease,
+    transform 0.18s ease;
+}
+
+body.app-institutional .sidebar-link::before {
+  display: none;
+}
+
+body.app-institutional .sidebar-link .sidebar-icon {
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body.app-institutional .sidebar-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  transform: translateX(3px);
+}
+
+body.app-institutional .sidebar-link:hover .sidebar-icon {
+  transform: scale(1.06);
+}
+
+body.app-institutional .sidebar-link:active {
+  transform: translateX(1px) scale(0.99);
+}
+
+body.app-institutional .sidebar-link.active {
+  background: rgba(21, 101, 168, 0.42);
+  color: #fff;
+  border-left-color: var(--inst-gold);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 4px 14px rgba(0, 0, 0, 0.12);
+  font-weight: 600;
+  transform: translateX(2px);
+}
+
+body.app-institutional .sidebar-link.active .sidebar-icon-svg {
+  color: var(--inst-gold-soft);
+  stroke: var(--inst-gold-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.app-institutional .sidebar-link,
+  body.app-institutional .sidebar-link .sidebar-icon {
+    transition: none;
+  }
+
+  body.app-institutional .sidebar-link:hover,
+  body.app-institutional .sidebar-link:active,
+  body.app-institutional .sidebar-link.active {
+    transform: none;
+  }
+}
+
+body.app-institutional .sidebar-footer {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.72rem;
+  text-align: center;
+}
+
+body.app-institutional .sidebar-footer small {
+  display: block;
+}
+
+body.app-institutional .inst-sidebar-footer-line {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--inst-gold), transparent);
+  margin-bottom: 0.5rem;
+  opacity: 0.6;
+}
+
+body.app-institutional .inst-sidebar-secure {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 0.35rem;
+  font-weight: 600;
+}
+
+body.app-institutional .inst-secure-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 6px rgba(74, 222, 128, 0.6);
+}
+
+/* ── Header institucional ── */
+body.app-institutional .inst-header-bar {
+  background: var(--inst-surface);
+  border-bottom: 1px solid var(--inst-border-light);
+  box-shadow: none;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 200;
+}
+
+body.app-institutional .dashboard-main > .inst-content-wrap {
+  z-index: 1;
+}
+
+body.app-institutional .inst-header-strip {
+  background: var(--inst-navy);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.4rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+body.app-institutional .inst-header-strip::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--inst-gold);
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+body.app-institutional .dashboard-header {
+  margin-bottom: 0 !important;
+  padding: 1.25rem 2rem 1rem;
+  background: var(--inst-surface);
+  border-bottom: 1px solid var(--inst-border);
+}
+
+body.app-institutional .header-greeting h1 {
+  font-size: 1.35rem !important;
+  font-weight: 700 !important;
+  color: var(--inst-navy) !important;
+  text-shadow: none !important;
+  margin-bottom: 0.15rem;
+}
+
+body.app-institutional .inst-header-subtitle {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--inst-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.2rem;
+}
+
+body.app-institutional .header-greeting .header-date,
+body.app-institutional #dashboard-date {
+  color: var(--inst-text-muted) !important;
+  text-shadow: none !important;
+  font-size: 0.875rem;
+  text-transform: capitalize;
+}
+
+body.app-institutional .header-actions .btn-secondary {
+  background: var(--inst-bg);
+  border: 1px solid var(--inst-border);
+  color: var(--inst-navy);
+  font-weight: 600;
+  font-size: 0.82rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--inst-radius);
+}
+
+body.app-institutional .header-actions .btn-secondary:hover {
+  background: var(--inst-navy);
+  color: #fff;
+  border-color: var(--inst-navy);
+}
+
+body.app-institutional .header-usuario-dropdown {
+  background: var(--inst-surface) !important;
+  border: 1px solid var(--inst-border) !important;
+  box-shadow: var(--inst-shadow-lg) !important;
+  border-radius: var(--inst-radius) !important;
+}
+
+body.app-institutional .header-usuario-dropdown--portal {
+  position: fixed !important;
+  min-width: 210px;
+  z-index: 10060 !important;
+  padding: 0.35rem 0 !important;
+  display: block !important;
+  margin: 0 !important;
+}
+
+body.app-institutional .header-usuario-dropdown-item {
+  color: var(--inst-text) !important;
+  font-size: 0.875rem;
+}
+
+body.app-institutional .header-usuario-dropdown-item:hover {
+  background: var(--inst-bg) !important;
+  color: var(--inst-navy) !important;
+}
+
+body.app-institutional .header-usuario-dropdown-separator {
+  height: 1px;
+  background: var(--inst-border);
+  margin: 0.3rem 0.65rem;
+}
+
+body.app-institutional .header-usuario-dropdown-logout {
+  color: #b91c1c !important;
+  font-weight: 600;
+}
+
+body.app-institutional .header-usuario-dropdown-logout:hover {
+  background: #fef2f2 !important;
+  color: #991b1b !important;
+}
+
+/* ── Métricas dashboard ── */
+body.app-institutional .dashboard-metrics {
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+body.app-institutional .metric-card {
+  background: var(--inst-surface) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid var(--inst-border) !important;
+  border-radius: var(--inst-radius) !important;
+  box-shadow: var(--inst-shadow) !important;
+  border-left: 4px solid var(--inst-accent) !important;
+  padding: 1.15rem 1.25rem !important;
+  min-height: auto !important;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+body.app-institutional .metric-card:hover {
+  box-shadow: var(--inst-shadow-lg) !important;
+  transform: translateY(-1px);
+}
+
+body.app-institutional .metric-card:nth-child(2) { border-left-color: var(--inst-success) !important; }
+body.app-institutional .metric-card:nth-child(3) { border-left-color: var(--inst-gold) !important; }
+body.app-institutional .metric-card:nth-child(4) { border-left-color: var(--inst-navy-light) !important; }
+
+body.app-institutional .metric-card h3,
+body.app-institutional .metric-card .metric-label {
+  color: var(--inst-text-muted) !important;
+  text-shadow: none !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.35rem;
+}
+
+body.app-institutional .metric-card .metric-value,
+body.app-institutional .metric-value {
+  color: var(--inst-navy) !important;
+  text-shadow: none !important;
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  line-height: 1.1;
+}
+
+body.app-institutional .inst-metric-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--inst-radius);
+  background: var(--inst-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--inst-accent);
+}
+
+body.app-institutional .metric-card:nth-child(2) .inst-metric-icon { color: var(--inst-success); }
+body.app-institutional .metric-card:nth-child(3) .inst-metric-icon { color: #9a7b1a; }
+body.app-institutional .metric-card:nth-child(4) .inst-metric-icon { color: var(--inst-navy-light); }
+
+/* ── Módulos legacy embebidos ── */
+body.app-institutional .legacy-host-root {
+  min-height: auto;
+  width: 100%;
+}
+
+body.app-institutional .legacy-host-root .content-panel {
+  background: var(--inst-surface) !important;
+  border: 1px solid var(--inst-border) !important;
+  border-radius: var(--inst-radius) !important;
+  box-shadow: var(--inst-shadow) !important;
+  padding: 1.25rem 1.5rem !important;
+}
+
+body.app-institutional .legacy-host-root .tabs {
+  background: var(--inst-bg) !important;
+  border: 1px solid var(--inst-border) !important;
+  border-radius: var(--inst-radius) !important;
+  padding: 0.25rem !important;
+  margin-bottom: 1rem !important;
+}
+
+body.app-institutional .legacy-host-root .tabs .tab {
+  color: var(--inst-text-muted) !important;
+  background: transparent !important;
+  font-weight: 500;
+}
+
+body.app-institutional .legacy-host-root .tabs .tab:hover {
+  color: var(--inst-navy) !important;
+  background: rgba(255, 255, 255, 0.6) !important;
+}
+
+body.app-institutional .legacy-host-root .tabs .tab.active {
+  background: var(--inst-surface) !important;
+  color: var(--inst-navy) !important;
+  font-weight: 700 !important;
+  box-shadow: var(--inst-shadow) !important;
+  border: 1px solid var(--inst-border) !important;
+}
+
+body.app-institutional .legacy-host-root .panel-header h2,
+body.app-institutional .legacy-host-root .page-title {
+  color: var(--inst-navy) !important;
+}
+
+body.app-institutional .legacy-host-root .panel-desc {
+  color: var(--inst-text-muted) !important;
+}
+
+body.app-institutional .legacy-host-root .search-bar,
+body.app-institutional .legacy-host-root .search-bar input {
+  background: var(--inst-surface) !important;
+  border-color: var(--inst-border) !important;
+  color: var(--inst-text) !important;
+}
+
+/* Entregas (guardia) en React */
+body.app-institutional.page-guardia .guardia-content-panel .data-table .btn-dep-guardia,
+body.app-institutional.page-guardia .guardia-content-panel .data-table .btn-seleccionar-producto,
+body.app-institutional.page-guardia .legacy-host-root .data-table .btn-dep-guardia,
+body.app-institutional.page-guardia .legacy-host-root .data-table .btn-seleccionar-producto {
+  background: var(--inst-accent) !important;
+  border-color: var(--inst-accent) !important;
+  color: #fff !important;
+}
+
+body.app-institutional.page-guardia .guardia-content-panel .btn-primary,
+body.app-institutional.page-guardia .legacy-host-root .modal .btn-primary {
+  color: #fff !important;
+}
+
+/* ── Paneles y tablas ── */
+body.app-institutional .content-panel,
+body.app-institutional .dashboard-movimientos-section.content-panel {
+  background: var(--inst-surface) !important;
+  border: 1px solid var(--inst-border) !important;
+  border-radius: var(--inst-radius) !important;
+  box-shadow: var(--inst-shadow) !important;
+  padding: 1.25rem 1.5rem !important;
+  backdrop-filter: none !important;
+}
+
+body.app-institutional .dashboard-movimientos-section .dashboard-movimientos-panel {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  padding: 0 !important;
+}
+
+body.app-institutional .page-title,
+body.app-institutional .panel-header h2,
+body.app-institutional .dashboard-movimientos-heading {
+  color: var(--inst-navy) !important;
+  text-shadow: none !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+body.app-institutional .panel-header {
+  border-bottom: 1px solid var(--inst-border);
+  padding-bottom: 0.85rem;
+  margin-bottom: 1rem !important;
+}
+
+body.app-institutional .dashboard-movimientos-filters .btn-sm {
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: var(--inst-radius);
+  padding: 0.35rem 0.75rem;
+}
+
+body.app-institutional .dashboard-movimientos-filters .btn-primary {
+  background: var(--inst-navy);
+  border-color: var(--inst-navy);
+}
+
+body.app-institutional .dashboard-movimientos-filters .btn-secondary {
+  background: var(--inst-bg);
+  border: 1px solid var(--inst-border);
+  color: var(--inst-text-muted);
+}
+
+/* Tabla movimientos — visible (legacy tenía display:none) */
+body.app-institutional .inst-table-wrap,
+body.app-institutional .dashboard-movimientos-table-wrap {
+  display: block !important;
+  margin-top: 0.25rem;
+  border: 1px solid var(--inst-border);
+  border-radius: var(--inst-radius);
+  overflow: hidden;
+  background: var(--inst-surface);
+}
+
+body.app-institutional .inst-empty-state {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--inst-text-muted);
+  border: 1px dashed var(--inst-border-light);
+  border-radius: var(--inst-radius);
+  background: #fff;
+  margin-top: 0.25rem;
+}
+
+body.app-institutional .inst-empty-state #dashboard-movimientos-empty {
+  color: var(--inst-text) !important;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+body.app-institutional .inst-empty-hint {
+  font-size: 0.85rem;
+  color: var(--inst-text-muted);
+}
+
+body.app-institutional .inst-movimientos-table {
+  margin: 0;
+}
+
+body.app-institutional .data-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.875rem;
+}
+
+body.app-institutional .data-table thead th {
+  background: var(--inst-navy) !important;
+  color: #fff !important;
+  text-shadow: none !important;
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.65rem 0.85rem;
+  border: none !important;
+}
+
+body.app-institutional .data-table tbody td {
+  color: var(--inst-text) !important;
+  text-shadow: none !important;
+  padding: 0.6rem 0.85rem;
+  border-bottom: 1px solid var(--inst-border);
+  background: var(--inst-surface) !important;
+}
+
+body.app-institutional .data-table tbody tr:nth-child(even) td {
+  background: #f8fafc !important;
+}
+
+body.app-institutional .data-table tbody tr:hover td {
+  background: #edf4fb !important;
+}
+
+body.app-institutional #dashboard-movimientos-empty {
+  color: var(--inst-text-muted) !important;
+  text-shadow: none !important;
+}
+
+/* ── Módulos legacy (depósito, inventario, etc.) ── */
+body.app-institutional.app-page-theme .dashboard-main .content-panel {
+  background: var(--inst-surface) !important;
+  border: 1px solid var(--inst-border) !important;
+  border-radius: var(--inst-radius) !important;
+  box-shadow: var(--inst-shadow) !important;
+}
+
+body.app-institutional.app-page-theme .dashboard-main .page-title,
+body.app-institutional.app-page-theme .dashboard-main h1.page-title,
+body.app-institutional.app-page-theme .dashboard-main .panel-header h2 {
+  color: var(--inst-navy) !important;
+}
+
+body.app-institutional.app-page-theme .dashboard-main .panel-desc,
+body.app-institutional.app-page-theme .dashboard-main .page-desc {
+  color: var(--inst-text-muted) !important;
+}
+
+body.app-institutional.app-page-theme .dashboard-main .data-table thead th {
+  background: var(--inst-navy) !important;
+  color: #fff !important;
+}
+
+body.app-institutional.app-page-theme .dashboard-main .data-table tbody td {
+  color: var(--inst-text) !important;
+  background: var(--inst-surface) !important;
+}
+
+body.app-institutional.app-page-theme .dashboard-main .data-table tbody tr:nth-child(even) {
+  background: #f8fafc !important;
+}
+
+body.app-institutional.app-page-theme .dashboard-main .data-table tbody tr:hover {
+  background: #edf4fb !important;
+}
+
+body.app-institutional .resumen-cards {
+  gap: 1rem;
+}
+
+body.app-institutional .resumen-card {
+  background: var(--inst-surface) !important;
+  border: 1px solid var(--inst-border) !important;
+  border-radius: var(--inst-radius) !important;
+  box-shadow: var(--inst-shadow) !important;
+  color: var(--inst-text) !important;
+}
+
+body.app-institutional .resumen-card strong {
+  color: var(--inst-navy) !important;
+}
+
+/* ── Botones ── */
+body.app-institutional .btn-primary {
+  background: var(--inst-accent) !important;
+  border-color: var(--inst-accent) !important;
+  color: #fff !important;
+  font-weight: 600;
+  border-radius: var(--inst-radius);
+}
+
+body.app-institutional .btn-primary:hover {
+  background: var(--inst-accent-hover) !important;
+  border-color: var(--inst-accent-hover) !important;
+}
+
+body.app-institutional .btn-success {
+  background: var(--inst-success) !important;
+  border-color: var(--inst-success) !important;
+  border-radius: var(--inst-radius);
+}
+
+/* ── Inputs ── */
+body.app-institutional input[type="text"],
+body.app-institutional input[type="password"],
+body.app-institutional input[type="number"],
+body.app-institutional input[type="search"],
+body.app-institutional select,
+body.app-institutional textarea {
+  border: 1px solid var(--inst-border) !important;
+  border-radius: var(--inst-radius) !important;
+  background: var(--inst-surface) !important;
+  color: var(--inst-text) !important;
+}
+
+body.app-institutional input:focus,
+body.app-institutional select:focus,
+body.app-institutional textarea:focus {
+  border-color: var(--inst-accent) !important;
+  outline: 2px solid rgba(21, 101, 168, 0.2) !important;
+  outline-offset: 0;
+}
+
+/* ── Login institucional ── */
+body.app-institutional.tema-claro {
+  background: var(--inst-navy) !important;
+}
+
+body.app-institutional .pantalla-login {
+  background: linear-gradient(135deg, var(--inst-navy) 0%, #071e33 50%, var(--inst-navy-mid) 100%) !important;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+body.app-institutional .pantalla-login::before {
+  display: none;
+}
+
+body.app-institutional .pantalla-login::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('./emblemalogin.png') center / 420px no-repeat;
+  opacity: 0.04;
+  pointer-events: none;
+}
+
+body.app-institutional .login-box {
+  background: var(--inst-surface) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  border-top: 4px solid var(--inst-gold) !important;
+  border-radius: var(--inst-radius) !important;
+  box-shadow: var(--inst-shadow-lg) !important;
+  max-width: 420px;
+  padding: 2rem 2.25rem !important;
+}
+
+body.app-institutional .login-titulo {
+  color: var(--inst-navy) !important;
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+}
+
+body.app-institutional .login-subtitulo {
+  color: var(--inst-text-muted) !important;
+  font-size: 0.85rem;
+  border-bottom: 1px solid var(--inst-border);
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.25rem !important;
+}
+
+body.app-institutional .login-form h2 {
+  color: var(--inst-navy);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+body.app-institutional .login-form label,
+body.app-institutional .form-group label {
+  color: var(--inst-text);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+body.app-institutional .login-switch a {
+  color: var(--inst-accent);
+}
+
+body.app-institutional .inst-login-org {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+body.app-institutional .inst-login-org-line1 {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--inst-gold);
+  margin-bottom: 0.25rem;
+}
+
+body.app-institutional .inst-login-org-line2 {
+  font-size: 0.78rem;
+  color: var(--inst-text-muted);
+}
+
+body.app-institutional .login-version-footer {
+  margin-top: 1.25rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--inst-border);
+  text-align: center;
+}
+
+body.app-institutional .login-version-label {
+  margin: 0 0 0.4rem;
+  font-size: 0.78rem;
+  color: var(--inst-text-muted);
+}
+
+body.app-institutional .login-version-footer-btn {
+  background: none;
+  border: none;
+  color: var(--inst-accent);
+  cursor: pointer;
+  font-size: 0.78rem;
+  text-decoration: underline;
+  padding: 0.15rem 0.35rem;
+}
+
+body.app-institutional .login-version-footer-btn:hover:not(:disabled) {
+  color: var(--inst-navy);
+}
+
+body.app-institutional .login-version-footer-btn:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+body.app-institutional .login-version-dev-warning {
+  margin: 0.5rem 0 0;
+  font-size: 0.72rem;
+  color: #b45309;
+  line-height: 1.35;
+}
+
+/* ── Modales ── */
+body.app-institutional .modal-content {
+  border-radius: var(--inst-radius);
+  border-top: 3px solid var(--inst-navy);
+}
+
+body.app-institutional .modal-header h3 {
+  color: var(--inst-navy);
+}
+
+/* ── Tabs ── */
+body.app-institutional .tabs .tab.active {
+  background: var(--inst-surface) !important;
+  color: var(--inst-navy) !important;
+  border: 1px solid var(--inst-border) !important;
+  box-shadow: var(--inst-shadow) !important;
+}
+
+/* ── Quitar text-shadow global del dashboard viejo ── */
+body.app-institutional .dashboard-page .dashboard-main .header-title,
+body.app-institutional .dashboard-page .dashboard-main .header-date,
+body.app-institutional .dashboard-page .dashboard-main .header-user,
+body.app-institutional .dashboard-page .dashboard-main .metric-label,
+body.app-institutional .dashboard-page .dashboard-main .metric-value,
+body.app-institutional .dashboard-page .dashboard-main .metric-hint,
+body.app-institutional .dashboard-page .dashboard-main .dashboard-content-grid .panel-title,
+body.app-institutional .dashboard-page .dashboard-main .dashboard-panel-table .dashboard-table th,
+body.app-institutional .dashboard-page .dashboard-main .dashboard-panel-table .dashboard-table td {
+  text-shadow: none !important;
+}
+
+body.app-institutional .dashboard-page .dashboard-main .header-title,
+body.app-institutional .dashboard-page .dashboard-main .header-date {
+  color: var(--inst-navy) !important;
+}
+
+body.app-institutional .dashboard-page .dashboard-main .metric-label,
+body.app-institutional .dashboard-page .dashboard-main .metric-value {
+  color: var(--inst-navy) !important;
+}

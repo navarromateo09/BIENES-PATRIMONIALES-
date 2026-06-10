@@ -1,0 +1,21 @@
+.app-boot-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  color: #374151;
+}
+
+.legacy-host-root {
+  min-height: 200px;
+}
+
+/* Modales legacy: se montan en document.body desde LegacyHostPage */
+body > .modal[data-legacy-module].open {
+  z-index: 10050;
+}
+
+.legacy-host-root .dashboard-header {
+  display: none;
+}
+

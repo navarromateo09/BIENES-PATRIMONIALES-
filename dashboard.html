@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+  <title>Control de Stock - Inicio</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dashboard-page">
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="dashboard-sidebar">
+      <nav class="sidebar-nav">
+        <p class="sidebar-section-label">Operaciones</p>
+        <a href="dashboard.html" class="sidebar-link active" aria-current="page">
+          <span class="sidebar-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="8" height="8" rx="1"></rect>
+              <rect x="13" y="3" width="8" height="8" rx="1"></rect>
+              <rect x="3" y="13" width="8" height="8" rx="1"></rect>
+              <rect x="13" y="13" width="8" height="8" rx="1"></rect>
+            </svg>
+          </span>
+          Inicio
+        </a>
+        <a href="deposito.html" class="sidebar-link">
+          <span class="sidebar-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 11h4l2-4h7l2 4h3v7H3v-7z"></path>
+              <path d="M10 18h4"></path>
+            </svg>
+          </span>
+          Depósito
+        </a>
+        <a href="productos.html" class="sidebar-link">
+          <span class="sidebar-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 9l8-5 8 5v10H4V9z"></path>
+              <path d="M4 9l8 5 8-5"></path>
+              <path d="M12 4v10"></path>
+            </svg>
+          </span>
+          Inventario
+        </a>
+        <a href="expedientes.html" class="sidebar-link">
+          <span class="sidebar-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 6h7l2 2h7v10H4V6z"></path>
+              <path d="M11 6v2"></path>
+            </svg>
+          </span>
+          Expedientes
+        </a>
+        <a href="guardia.html" class="sidebar-link">
+          <span class="sidebar-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 7h9l3 3h4v7H4V7z"></path>
+              <path d="M4 12h16"></path>
+              <path d="M8 16h4"></path>
+            </svg>
+          </span>
+          Entregas
+        </a>
+        <a href="txt.html" class="sidebar-link" aria-label="TXT">
+          <span class="sidebar-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <path d="M14 2v6h6"></path>
+              <path d="M8 13h8"></path>
+              <path d="M8 17h5"></path>
+            </svg>
+          </span>
+          TXT
+        </a>
+        <p class="sidebar-section-label">Control y soporte</p>
+        <a href="dependencias.html" class="sidebar-link">
+          <span class="sidebar-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4" y="9" width="16" height="11" rx="1"></rect>
+              <path d="M9 9V5h6v4"></path>
+              <path d="M9 13h2"></path>
+              <path d="M13 13h2"></path>
+              <path d="M9 17h2"></path>
+              <path d="M13 17h2"></path>
+            </svg>
+          </span>
+          Dependencias
+        </a>
+        <a href="actas.html" class="sidebar-link">
+          <span class="sidebar-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="3" width="14" height="18" rx="1"></rect>
+              <path d="M9 7h6"></path>
+              <path d="M9 11h6"></path>
+              <path d="M9 15h4"></path>
+            </svg>
+          </span>
+          Actas
+        </a>
+        <a href="matafuegos.html" class="sidebar-link">
+          <span class="sidebar-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10 4h4l3-2"></path>
+              <path d="M10 4v3"></path>
+              <rect x="8" y="7" width="8" height="11" rx="2"></rect>
+              <path d="M12 11v3"></path>
+            </svg>
+          </span>
+          Matafuegos
+        </a>
+        <a href="auditoria.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg></span> Auditoría</a>
+      </nav>
+      <!-- Footer del sidebar sin acciones (Config y Cerrar sesión se manejan desde el menú de usuario del header) -->
+      <div class="sidebar-footer"></div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="dashboard-main">
+      <header class="dashboard-header">
+        <div class="header-greeting">
+          <p class="header-subtitle">DIVISIÓN DE BIENES Y PATRIMONIALES</p>
+          <h1 class="header-title">Hola <span id="dashboard-username">Usuario</span>, ¡Bienvenido!</h1>
+          <p class="header-date" id="dashboard-date"></p>
+        </div>
+        <div class="header-actions">
+          <div class="header-notificaciones-wrap" title="Notificaciones">
+            <button type="button" id="header-btn-notificaciones" class="header-notificaciones-btn" aria-expanded="false" aria-haspopup="true" aria-label="Ver notificaciones">
+              <span class="header-notificaciones-icono">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              </span>
+              <span id="notificaciones-badge" class="notificaciones-badge" aria-label="Cantidad de notificaciones">0</span>
+            </button>
+          </div>
+          <div class="header-user-wrap">
+            <button type="button" id="header-btn-usuario" class="header-user-btn" aria-expanded="false" aria-haspopup="true" aria-label="Menú de usuario">
+              <span class="header-user-avatar-icon" aria-hidden="true">
+                <!-- Usuario minimalista -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21a8 8 0 1 0-16 0"></path>
+                  <circle cx="12" cy="8" r="3.5"></circle>
+                </svg>
+              </span>
+              <span id="header-user-label" class="header-user-label"></span>
+              <span class="header-user-chevron" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Tarjetas de métricas -->
+      <section class="dashboard-metrics">
+        <div class="metric-card metric-card-teal">
+          <span class="metric-icon metric-icon-svg" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M16 5L4 13v12h24V13L16 5z"/><path d="M4 13l12-8 12 8"/><path d="M16 5v8"/><path d="M4 13h24"/><path d="M16 13v12"/></svg>
+          </span>
+          <div class="metric-content">
+            <p class="metric-label">Total en inventario</p>
+            <p class="metric-value" id="metric-inventario">0</p>
+            <p class="metric-hint">unidades disponibles</p>
+          </div>
+        </div>
+        <div class="metric-card metric-card-blue">
+          <span class="metric-icon metric-icon-svg" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="20" height="24" rx="1"/><path d="M12 4v2h8V4"/><path d="M10 12h12"/><path d="M10 16h12"/><path d="M10 20h8"/><path d="M9 11l2 2 4-4"/><path d="M9 15l2 2 4-4"/><path d="M9 19l2 2 3-3"/></svg>
+          </span>
+          <div class="metric-content">
+            <p class="metric-label">Recibidos (este mes)</p>
+            <p class="metric-value" id="metric-recibidos">0</p>
+            <p class="metric-hint">entradas</p>
+          </div>
+        </div>
+        <div class="metric-card metric-card-pink">
+          <span class="metric-icon metric-icon-svg" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4L4 10v12l12 6 12-6V10L16 4z"/><path d="M4 10l12 6 12-6"/><path d="M16 16v12"/></svg>
+          </span>
+          <div class="metric-content">
+            <p class="metric-label">Entregas (este mes)</p>
+            <p class="metric-value" id="metric-entregas">0</p>
+            <p class="metric-hint">provisiones</p>
+          </div>
+        </div>
+        <div class="metric-card metric-card-purple">
+          <span class="metric-icon metric-icon-svg" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h10l4 4h10v14H4V8z"/><path d="M14 8v4"/></svg>
+          </span>
+          <div class="metric-content">
+            <p class="metric-label">Expedientes</p>
+            <p class="metric-value" id="metric-expedientes">0</p>
+            <p class="metric-hint">activos</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Movimientos recientes -->
+      <section class="dashboard-movimientos-section">
+        <div class="dashboard-panel dashboard-movimientos-panel">
+          <div class="panel-title-row dashboard-movimientos-title-row">
+            <h2 class="panel-title dashboard-movimientos-heading">Movimientos recientes</h2>
+            <div class="dashboard-movimientos-toolbar">
+              <div class="dashboard-mov-filtros" role="group" aria-label="Filtro de movimientos recientes">
+                <button type="button" class="dashboard-mov-filtro active" data-range="hoy">Hoy</button>
+                <button type="button" class="dashboard-mov-filtro" data-range="7">7 días</button>
+                <button type="button" class="dashboard-mov-filtro" data-range="30">30 días</button>
+              </div>
+            </div>
+          </div>
+          <div class="table-wrap dashboard-movimientos-table-wrap">
+            <table class="data-table dashboard-table dashboard-movimientos-table">
+              <thead>
+                <tr>
+                  <th scope="col">Fecha</th>
+                  <th scope="col">Tipo</th>
+                  <th scope="col">Expediente</th>
+                  <th scope="col">Producto</th>
+                  <th scope="col" class="col-mov-usuario-th">Usuario</th>
+                  <th scope="col" class="num-col">Cantidad</th>
+                  <th scope="col">Dependencia</th>
+                </tr>
+              </thead>
+              <tbody id="dashboard-movimientos"></tbody>
+            </table>
+          </div>
+          <p id="dashboard-movimientos-empty" class="empty-state dashboard-movimientos-empty" style="display: none;">No hay movimientos recientes.</p>
+          <div class="dashboard-movimientos-footer" id="dashboard-movimientos-footer">
+            <a href="productos.html#historial" class="dashboard-movimientos-link-all">Ver todos los movimientos</a>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Capa global de notificaciones, fuera del contenido del dashboard -->
+  <div id="header-notificaciones-dropdown" class="header-notificaciones-dropdown" hidden>
+    <div class="header-notificaciones-dropdown-title">
+      <div class="header-notificaciones-title-row">
+        <div>
+          <div class="header-notificaciones-title">Notificaciones</div>
+          <div id="dashboard-notificaciones-meta" class="header-notificaciones-subtitle">—</div>
+        </div>
+        <div class="header-notificaciones-title-actions">
+          <a href="matafuegos.html" class="header-notificaciones-link">Ver matafuegos</a>
+          <button type="button" id="header-btn-notificaciones-cerrar" class="header-notificaciones-close" aria-label="Cerrar notificaciones">&times;</button>
+        </div>
+      </div>
+    </div>
+    <div id="dashboard-notificaciones" class="notificaciones-list">
+      <p class="empty-state" id="dashboard-notificaciones-empty">No hay notificaciones.</p>
+    </div>
+  </div>
+
+  <!-- Capa global para el menú de usuario (admin1 (Admin)), también fuera del contenido -->
+  <div id="header-usuario-dropdown" class="header-usuario-dropdown" hidden>
+    <button type="button" id="header-dropdown-config" class="header-usuario-dropdown-item header-usuario-dropdown-btn-ghost">
+      <span class="header-usuario-dropdown-icon" aria-hidden="true">
+        <!-- Engranaje minimalista -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path>
+          <path d="M19.4 15a7.97 7.97 0 0 0 .1-1 7.97 7.97 0 0 0-.1-1l2-1.5-2-3.5-2.4 1a8.3 8.3 0 0 0-1.7-1l-.3-2.6H10l-.3 2.6a8.3 8.3 0 0 0-1.7 1l-2.4-1-2 3.5 2 1.5a7.97 7.97 0 0 0-.1 1c0 .34.03.67.1 1l-2 1.5 2 3.5 2.4-1c.53.4 1.1.73 1.7 1l.3 2.6h4.2l.3-2.6c.6-.27 1.17-.6 1.7-1l2.4 1 2-3.5-2-1.5z"></path>
+        </svg>
+      </span>
+      <span class="header-usuario-dropdown-text">Configuración</span>
+    </button>
+    <a href="usuarios.html" id="header-dropdown-gestion-usuarios" class="header-usuario-dropdown-item" style="display:none;">
+      <span class="header-usuario-dropdown-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="8.5" cy="7" r="4"></circle>
+          <path d="M20 8v6"></path>
+          <path d="M23 11h-6"></path>
+        </svg>
+      </span>
+      <span class="header-usuario-dropdown-text">Gestión de usuarios</span>
+    </a>
+    <div class="header-usuario-dropdown-separator"></div>
+    <button type="button" id="btn-exportar-backup" class="header-usuario-dropdown-item">
+      <span class="header-usuario-dropdown-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+      </span>
+      <span class="header-usuario-dropdown-text">Exportar backup</span>
+    </button>
+    <button type="button" id="btn-restaurar-backup" class="header-usuario-dropdown-item">
+      <span class="header-usuario-dropdown-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="17 8 12 3 7 8"></polyline>
+          <line x1="12" y1="3" x2="12" y2="15"></line>
+        </svg>
+      </span>
+      <span class="header-usuario-dropdown-text">Restaurar backup</span>
+    </button>
+    <div class="header-usuario-dropdown-separator"></div>
+    <button type="button" id="header-btn-cerrar-sesion" class="header-usuario-dropdown-item header-usuario-dropdown-btn">
+      <span class="header-usuario-dropdown-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2v10"></path>
+          <path d="M7.5 4.7a8 8 0 1 0 9 0"></path>
+        </svg>
+      </span>
+      <span class="header-usuario-dropdown-text">Cerrar sesión</span>
+    </button>
+  </div>
+
+  <div id="modal-configuracion" class="modal modal-tema-clara" aria-hidden="true">
+    <div class="modal-content modal-configuracion-dashboard">
+      <div class="modal-header">
+        <h3>Configuración de cuenta</h3>
+        <button type="button" class="modal-close modal-configuracion-close" aria-label="Cerrar">&times;</button>
+      </div>
+      <form id="form-configuracion-password" class="modal-configuracion-form">
+        <div class="modal-body">
+          <p class="panel-desc modal-configuracion-desc">Cambiar contraseña</p>
+          <div class="form-group">
+            <label for="config-pass-actual">Contraseña actual</label>
+            <div class="config-pass-field">
+              <input type="password" id="config-pass-actual" required autocomplete="current-password" placeholder="Ingresá tu contraseña actual">
+              <button type="button" class="config-pass-toggle" data-target="config-pass-actual" aria-label="Mostrar contraseña">Mostrar</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="config-pass-nueva">Nueva contraseña</label>
+            <div class="config-pass-field">
+              <input type="password" id="config-pass-nueva" required minlength="4" autocomplete="new-password" placeholder="Mínimo 4 caracteres">
+              <button type="button" class="config-pass-toggle" data-target="config-pass-nueva" aria-label="Mostrar contraseña">Mostrar</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="config-pass-nueva2">Repetir nueva contraseña</label>
+            <div class="config-pass-field">
+              <input type="password" id="config-pass-nueva2" required minlength="4" autocomplete="new-password" placeholder="Repetir nueva contraseña">
+              <button type="button" class="config-pass-toggle" data-target="config-pass-nueva2" aria-label="Mostrar contraseña">Mostrar</button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="submit" id="config-pass-guardar" class="btn btn-primary">Guardar contraseña</button>
+          <button type="button" class="btn btn-secondary modal-configuracion-close">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="logo-fallback.js"></script>
+  <script src="loading.js"></script>
+  <script src="session-idle.js"></script>
+  <script src="sidebar-version.js"></script>
+  <script src="dashboard.js"></script>
+  <script src="realtime-sync.js"></script>
+</body>
+</html>

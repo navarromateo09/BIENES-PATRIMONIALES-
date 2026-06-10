@@ -1,0 +1,19 @@
+## v1.8.9
+
+### TXT — Nuevo registro
+- Pantalla **Nuevo registro** a pantalla completa (pestaña), formulario más compacto y tabla con más espacio.
+- **Cantidad** = valor por fila; **Líneas repetidas** + **Agregar repetidas** para N filas con orden correlativo.
+- Por defecto: repartición **250** y **DPTO GENERAL DE POLICIA** (podés cambiarlos).
+- Corregido el campo **Líneas repetidas** para poder borrar y escribir otro número.
+
+### TXT — Word
+- Hasta **17 líneas por hoja** con varias páginas si hace falta.
+- Columna **NR** siempre **1**.
+
+### TXT — Finalizado / Realizados
+- Si la nube (Supabase) bloquea por permisos, guarda en **esta PC** sin mostrar error falso.
+- Ejecutar `supabase-txt-realizados.sql` en Supabase para sincronizar en la nube.
+
+### Nota
+- Reiniciar la aplicación tras actualizar.
+- Subir al Release: `Bienes.y.Patrimoniales.Setup.1.8.9.exe`, `latest.yml` y el `.blockmap` (actualizaciones automáticas).

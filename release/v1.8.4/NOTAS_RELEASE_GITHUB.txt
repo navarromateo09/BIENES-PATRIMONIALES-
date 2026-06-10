@@ -1,0 +1,13 @@
+## v1.8.4
+
+### Foco y clics (Electron / Windows)
+- Tras cerrar diálogos nativos (`alert`, `confirm`, `prompt`), la app ya no queda “muda” hasta minimizar: se re-enfoca la ventana y el contenido web (`loading.js`, `main.js`).
+- Overlay de carga: al ocultarse no puede quedar bloqueando clics (`pointer-events`).
+- Dashboard: incluye `loading.js` como el resto de pantallas.
+
+### Matafuegos
+- Quien no es administrador puede guardar si **solo** se actualiza la **fecha de vencimiento**; el resto de ediciones sigue limitado a admin.
+
+### Nota
+- Reiniciar la aplicación tras actualizar para cargar `main.js` / páginas.
+- Subir al Release de GitHub: `Bienes.y.Patrimoniales.Setup.1.8.4.exe`, `latest.yml` y, si usás actualizaciones delta, el `.blockmap`.

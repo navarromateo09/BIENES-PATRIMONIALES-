@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+  <title>Control de Stock - Depósito</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="app-page-theme">
+  <div class="dashboard-layout">
+    <aside class="dashboard-sidebar">
+      <nav class="sidebar-nav">
+        <p class="sidebar-section-label">Operaciones</p>
+        <a href="dashboard.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1"></rect><rect x="13" y="3" width="8" height="8" rx="1"></rect><rect x="3" y="13" width="8" height="8" rx="1"></rect><rect x="13" y="13" width="8" height="8" rx="1"></rect></svg></span> Inicio</a>
+        <a href="deposito.html" class="sidebar-link active" aria-current="page"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h4l2-4h7l2 4h3v7H3v-7z"></path><path d="M10 18h4"></path></svg></span> Depósito</a>
+        <a href="productos.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9l8-5 8 5v10H4V9z"></path><path d="M4 9l8 5 8-5"></path><path d="M12 4v10"></path></svg></span> Inventario</a>
+        <a href="expedientes.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h7l2 2h7v10H4V6z"></path><path d="M11 6v2"></path></svg></span> Expedientes</a>
+        <a href="guardia.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9l3 3h4v7H4V7z"></path><path d="M4 12h16"></path><path d="M8 16h4"></path></svg></span> Entregas</a>
+        <a href="txt.html" class="sidebar-link" aria-label="TXT">
+          <span class="sidebar-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <path d="M14 2v6h6"></path>
+              <path d="M8 13h8"></path>
+              <path d="M8 17h5"></path>
+            </svg>
+          </span>
+          TXT
+        </a>
+        <p class="sidebar-section-label">Control y soporte</p>
+        <a href="dependencias.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="9" width="16" height="11" rx="1"></rect><path d="M9 9V5h6v4"></path><path d="M9 13h2"></path><path d="M13 13h2"></path><path d="M9 17h2"></path><path d="M13 17h2"></path></svg></span> Dependencias</a>
+        <a href="actas.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="1"></rect><path d="M9 7h6"></path><path d="M9 11h6"></path><path d="M9 15h4"></path></svg></span> Actas</a>
+        <a href="matafuegos.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4h4l3-2"></path><path d="M10 4v3"></path><rect x="8" y="7" width="8" height="11" rx="2"></rect><path d="M12 11v3"></path></svg></span> Matafuegos</a>
+        <a href="auditoria.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg></span> Auditoría</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="dashboard.html" class="sidebar-link">← Volver al inicio</a>
+      </div>
+    </aside>
+    <main class="dashboard-main">
+      <div class="content-panel">
+        <span id="backend-badge" class="backend-badge" title="Dónde se guardan los datos" style="margin-bottom: 0.5rem; display: inline-block;"></span>
+        <div class="panel-header">
+          <div>
+            <h2 class="page-title" style="margin:0;">DEPÓSITO</h2>
+            <p class="panel-desc" style="margin:0.35rem 0 0;">Inventario físico del depósito (independiente del inventario general).</p>
+          </div>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button type="button" id="btn-agregar-deposito" class="btn btn-primary">+ Agregar producto</button>
+            <button type="button" id="btn-exportar-deposito" class="btn btn-secondary" title="Exportar listado a Excel">📥 Exportar a Excel</button>
+          </div>
+        </div>
+
+        <section class="deposito-resumen-section" aria-label="Resumen por tipo de elemento">
+          <div class="deposito-resumen-header">
+            <h3 class="deposito-resumen-title">Resumen por tipo</h3>
+            <button type="button" id="btn-deposito-ver-todos" class="btn btn-secondary btn-sm" hidden>Ver todos</button>
+          </div>
+          <div id="deposito-tarjetas-grid" class="deposito-tarjetas-grid dashboard-metrics"></div>
+        </section>
+
+        <h3 class="deposito-detalle-title">Detalle por unidad</h3>
+        <div class="form-group deposito-buscar-wrap">
+          <div class="search-bar" role="search">
+            <span class="search-icon" aria-hidden="true">🔍</span>
+            <input type="search" id="buscar-deposito-inventario" placeholder="Buscar por serie, nombre, marca…" autocomplete="off">
+            <button type="button" class="search-clear" data-search-clear="buscar-deposito-inventario" aria-label="Limpiar búsqueda" style="display:none;">&times;</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Expediente</th>
+                <th>Tipo de elemento</th>
+                <th>Marca</th>
+                <th>Nº de serie</th>
+                <th class="num-col">Cantidad</th>
+                <th class="num-col">Disponible</th>
+                <th>Fecha</th>
+                <th>Concepto</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="lista-deposito-inventario"></tbody>
+          </table>
+          <div id="pag-deposito-inventario"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="modal-agregar-deposito" class="modal modal-tema-clara">
+    <div class="modal-content modal-content-wide">
+      <div class="modal-header">
+        <h3 id="modal-deposito-titulo">Agregar producto al depósito</h3>
+        <button type="button" class="modal-close modal-deposito-close" aria-label="Cerrar">&times;</button>
+      </div>
+      <form id="form-agregar-deposito">
+        <div class="form-group">
+          <label for="deposito-expediente">Expediente</label>
+          <input type="text" id="deposito-expediente" value="DEPOSITO" placeholder="Ej: DEPOSITO">
+        </div>
+        <div class="form-row form-row-3">
+          <div class="form-group">
+            <label for="deposito-nombre">Nombre / Tipo de elemento</label>
+            <input type="text" id="deposito-nombre" required placeholder="Ej: MONITOR">
+          </div>
+          <div class="form-group">
+            <label for="deposito-marca">Marca</label>
+            <input type="text" id="deposito-marca" placeholder="Marca">
+          </div>
+          <div class="form-group">
+            <label for="deposito-cantidad">Cantidad</label>
+            <input type="number" id="deposito-cantidad" min="1" value="1" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="deposito-serie">Nº de serie <span class="text-muted">(opcional)</span></label>
+          <input type="text" id="deposito-serie" placeholder="Opcional">
+        </div>
+        <div class="form-group">
+          <label for="deposito-fecha">Fecha</label>
+          <input type="datetime-local" id="deposito-fecha">
+        </div>
+        <div class="form-group">
+          <label for="deposito-concepto">Concepto</label>
+          <input type="text" id="deposito-concepto" placeholder="Ej: Ingreso a depósito">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary modal-deposito-close">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-editar-deposito" class="modal modal-tema-clara">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Editar producto en depósito</h3>
+        <button type="button" class="modal-close modal-editar-deposito-close" aria-label="Cerrar">&times;</button>
+      </div>
+      <form id="form-editar-deposito">
+        <input type="hidden" id="editar-deposito-id">
+        <div class="form-group">
+          <label for="editar-deposito-expediente">Expediente</label>
+          <input type="text" id="editar-deposito-expediente">
+        </div>
+        <div class="form-row form-row-2">
+          <div class="form-group">
+            <label for="editar-deposito-nombre">Tipo de elemento</label>
+            <input type="text" id="editar-deposito-nombre" required>
+          </div>
+          <div class="form-group">
+            <label for="editar-deposito-marca">Marca</label>
+            <input type="text" id="editar-deposito-marca">
+          </div>
+        </div>
+        <div class="form-row form-row-2">
+          <div class="form-group">
+            <label for="editar-deposito-serie">Nº de serie</label>
+            <input type="text" id="editar-deposito-serie">
+          </div>
+          <div class="form-group">
+            <label for="editar-deposito-cantidad">Cantidad</label>
+            <input type="number" id="editar-deposito-cantidad" min="1" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="editar-deposito-fecha">Fecha</label>
+          <input type="datetime-local" id="editar-deposito-fecha">
+        </div>
+        <div class="form-group">
+          <label for="editar-deposito-concepto">Concepto</label>
+          <input type="text" id="editar-deposito-concepto">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary modal-editar-deposito-close">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="loading.js"></script>
+  <script src="paginacion.js"></script>
+  <script src="sidebar-roles.js"></script>
+  <script src="sidebar-active.js"></script>
+  <script src="deposito.js"></script>
+  <script src="session-idle.js"></script>
+  <script src="sidebar-version.js"></script>
+  <script src="realtime-sync.js"></script>
+</body>
+</html>

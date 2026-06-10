@@ -1,0 +1,14 @@
+## v1.8.7
+
+### Matafuegos
+- **Apertura más rápida**: la pantalla ya no espera a cargar todo el inventario; solo los datos de matafuegos.
+- **Filtros** en Recarga, Entregados e Inservibles (marca, vencimiento, orden), como en Disponibles.
+- Mejor aviso si intentás guardar un **Nº de serie** que ya existe.
+
+### Mantenimiento (administrador de base)
+- Nuevo SQL `supabase-matafuegos-serie-unica.sql` para impedir series duplicadas en Supabase (ejecutar cuando no haya duplicados).
+- Documentación de scripts en `scripts/README.md`.
+
+### Nota
+- Reiniciar la aplicación tras actualizar.
+- Subir al Release de GitHub: `Bienes.y.Patrimoniales.Setup.1.8.7.exe`, `latest.yml` y, si usás actualizaciones delta, el `.blockmap`.

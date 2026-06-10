@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' file: data: blob:">
+  <title>Bienes y Patrimoniales - Iniciar sesión</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="tema-claro">
+  <div id="pantalla-login" class="pantalla-login">
+    <div class="login-box">
+      <div class="login-logo-wrap">
+        <img data-logo alt="Bienes y Patrimoniales" class="login-logo" style="max-width: 160px; max-height: 120px;">
+      </div>
+      <h1 class="login-titulo">📦 Bienes y Patrimoniales</h1>
+      <p class="login-subtitulo">Gestión de entradas y salidas</p>
+
+      <form id="form-login" class="login-form">
+        <h2>Iniciar sesión</h2>
+        <div class="form-group">
+          <label for="login-usuario">Usuario</label>
+          <input type="text" id="login-usuario" required placeholder="Usuario" autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label for="login-password">Contraseña</label>
+          <input type="password" id="login-password" required placeholder="Contraseña" autocomplete="current-password">
+          <label class="password-toggle-inline" for="login-show-password">
+            <input type="checkbox" id="login-show-password">
+            Mostrar contraseña
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+        <p class="login-switch" style="margin-top:0.65rem;"><a href="#" id="link-olvide-password">Olvidé mi contraseña</a></p>
+        <p class="login-switch"><a href="#" id="link-registrarme">¿No tienes cuenta? Regístrate</a></p>
+      </form>
+
+      <div id="panel-olvide-password" class="login-form" style="display:none;">
+        <h2>Recuperar contraseña</h2>
+        <p class="login-hint">
+          Por seguridad, este sistema no envía correos ni tiene recuperación automática.
+          <br>
+          Pedile al <strong>administrador</strong> que te restablezca la contraseña desde <strong>Configuración → Usuarios</strong>.
+        </p>
+        <button type="button" class="btn btn-secondary btn-block" id="btn-volver-login">Volver</button>
+      </div>
+
+      <form id="form-crear-cuenta" class="login-form" style="display: none;">
+        <h2>Crear cuenta</h2>
+        <p class="login-hint">Define usuario y contraseña para acceder.</p>
+        <div class="form-group">
+          <label for="crear-usuario">Usuario</label>
+          <input type="text" id="crear-usuario" required placeholder="Usuario" autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label for="crear-password">Contraseña</label>
+          <input type="password" id="crear-password" required minlength="4" placeholder="Mínimo 4 caracteres" autocomplete="new-password">
+        </div>
+        <div class="form-group">
+          <label for="crear-password2">Repetir contraseña</label>
+          <input type="password" id="crear-password2" required minlength="4" placeholder="Repetir contraseña" autocomplete="new-password">
+        </div>
+        <button type="submit" class="btn btn-success btn-block">Crear cuenta y entrar</button>
+        <p class="login-switch"><a href="#" id="link-iniciar-sesion">¿Ya tienes cuenta? Iniciar sesión</a></p>
+      </form>
+    </div>
+  </div>
+  <script src="loading.js"></script>
+  <script src="index.js"></script>
+  <script src="realtime-sync.js"></script>
+</body>
+</html>

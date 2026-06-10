@@ -1,0 +1,16 @@
+## v1.8.6
+
+### Depósito
+- **Resumen por tipo**: tarjetas con cantidad por nombre/marca; al hacer clic se filtra la tabla de cada unidad.
+- Búsqueda en la tabla sigue disponible para localizar un ítem concreto.
+
+### Matafuegos
+- **Búsqueda inteligente** en todas las pestañas y en la entrega: encuentra series aunque falte un dígito o haya un error de tipeo; sugerencias al escribir.
+- **Entregados**: corregido el buscador que no dejaba escribir después de registrar una entrega (sin tener que minimizar la app).
+
+### Actas
+- El menú **⋮** de cada expediente ya no queda tapado por la carpeta de abajo.
+
+### Nota
+- Reiniciar la aplicación tras actualizar para cargar los cambios.
+- Subir al Release de GitHub: `Bienes.y.Patrimoniales.Setup.1.8.6.exe`, `latest.yml` y, si usás actualizaciones delta, el `.blockmap`.

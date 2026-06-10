@@ -1,0 +1,32 @@
+========================================
+ CÓMO COMPRIMIR Y ENVIAR POR WHATSAPP
+========================================
+
+OPCIÓN A - Con WinRAR (archivo más pequeño)
+------------------------------------------
+1. Clic derecho en la carpeta "control-stock"
+2. "Añadir al archivo..." / "Add to archive..."
+3. Nombre: control-stock.rar
+4. Para que pese menos: en "Opciones" o "Files" → 
+   "Excluir" / "Exclude" → agregar: node_modules
+5. Aceptar. Envía el .rar por WhatsApp.
+
+Si excluiste node_modules, quien lo reciba debe:
+- Descomprimir la carpeta
+- Abrir terminal en esa carpeta
+- Ejecutar: npm install
+- Luego: npm start
+
+
+OPCIÓN B - ZIP desde Windows (sin WinRAR)
+-----------------------------------------
+1. Clic derecho en la carpeta "control-stock"
+2. "Enviar a" → "Carpeta comprimida (en zip)"
+3. Se crea control-stock.zip
+(Si incluyes node_modules puede pesar mucho; mejor excluir esa carpeta manualmente antes de comprimir si quieres que pese poco.)
+
+
+LÍMITE WHATSAPP
+---------------
+Documentos: hasta 100 MB. Si tu .rar/.zip supera eso, 
+excluye la carpeta node_modules (se recupera con npm install).

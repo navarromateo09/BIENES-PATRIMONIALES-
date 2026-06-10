@@ -1,0 +1,107 @@
+/* Gestión de usuarios — panel React */
+
+.usuarios-page {
+  max-width: 960px;
+}
+
+.usuarios-page .usuarios-info {
+  padding: 0.75rem 1rem;
+  background: var(--inst-bg, #f8fafc);
+  border: 1px solid var(--inst-border, #e2e8f0);
+  border-radius: var(--inst-radius, 6px);
+  margin-bottom: 1.25rem;
+  font-size: 0.9rem;
+  color: var(--inst-text, #1a2b3c);
+}
+
+.usuarios-page .usuarios-info strong {
+  color: var(--inst-navy, #0a2540);
+}
+
+.usuarios-card {
+  background: var(--inst-surface, #fff);
+  border: 1px solid var(--inst-border, #e2e8f0);
+  border-radius: 10px;
+  padding: 1.15rem 1.25rem;
+  margin-bottom: 1.25rem;
+  box-shadow: var(--inst-shadow, 0 1px 2px rgba(10, 37, 64, 0.05));
+}
+
+.usuarios-card-title {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--inst-navy, #0a2540);
+}
+
+.usuarios-card-desc {
+  margin: 0 0 1rem;
+  font-size: 0.82rem;
+  color: var(--inst-text-muted, #64748b);
+  line-height: 1.45;
+}
+
+.usuarios-form {
+  display: grid;
+  gap: 0.85rem;
+  max-width: 420px;
+}
+
+.usuarios-form .form-group {
+  margin-bottom: 0;
+}
+
+.usuarios-form label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--inst-text-muted, #64748b);
+}
+
+.usuarios-form input,
+.usuarios-form select {
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  font-size: 0.9rem;
+  border: 1px solid var(--inst-border, #e2e8f0);
+  border-radius: var(--inst-radius, 6px);
+  background: #fff;
+  color: var(--inst-text, #1a2b3c);
+  box-sizing: border-box;
+}
+
+.usuarios-form input:focus,
+.usuarios-form select:focus {
+  outline: none;
+  border-color: var(--inst-accent, #1565a8);
+  box-shadow: 0 0 0 2px rgba(21, 101, 168, 0.15);
+}
+
+.usuarios-form .btn {
+  justify-self: start;
+  margin-top: 0.25rem;
+}
+
+.usuarios-admin-table {
+  margin-bottom: 1.25rem;
+}
+
+.usuarios-admin-table .data-table th,
+.usuarios-admin-table .data-table td {
+  font-size: 0.85rem;
+}
+
+.usuarios-admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+@media (max-width: 640px) {
+  .usuarios-card {
+    padding: 1rem;
+  }
+
+  .usuarios-form {
+    max-width: none;
+  }
+}

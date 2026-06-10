@@ -1,0 +1,24 @@
+## v1.9.1
+
+### Interfaz React (nueva)
+- Migración a React con sidebar fijo y transiciones suaves entre módulos.
+- Menú de usuario (admin1 · Admin) corregido: Configuración, Gestión de usuarios y Cerrar sesión visibles.
+- Panel **Gestión de usuarios** reparado (cambiar contraseña propia y de otros usuarios).
+- Adaptación a monitores chicos (1366×768): menos scroll, tablas y modales más compactos.
+
+### Entregas (guardia)
+- Wizard paso a paso (Dependencia → Productos → Confirmar → Acta).
+- Solo productos con stock en la lista; al buscar agotados muestra aviso.
+- Layout compacto en paso Productos.
+
+### Inventario y modales
+- Modal **Agregar producto** rediseñado y centrado correctamente.
+- Modales legacy montados en pantalla completa (no quedan detrás del contenido).
+
+### Matafuegos
+- Búsqueda general, formulario en página dedicada y validación de series duplicadas.
+
+### Actualización en otras PCs
+- Instalador: `Bienes.y.Patrimoniales.Setup.1.9.1.exe`
+- Para auto-actualización: subir también `latest.yml` y el `.blockmap` al Release de GitHub.
+- Los datos (Supabase + carpeta del usuario) **no se pierden** al actualizar.

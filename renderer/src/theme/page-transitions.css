@@ -1,0 +1,77 @@
+/* Transiciones suaves al navegar entre módulos */
+.page-transition {
+  width: 100%;
+  min-height: 0;
+}
+
+/* Solo opacity: no rompe position:fixed de modales legacy */
+@keyframes page-enter-forward {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes page-enter-back {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.page-transition--forward {
+  animation: page-enter-forward 0.44s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.page-transition--back {
+  animation: page-enter-back 0.44s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Barra de progreso sutil al cambiar de vista */
+.page-transition::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 12000;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--inst-gold, #c5a028) 35%,
+    var(--inst-accent, #1565a8) 65%,
+    transparent 100%
+  );
+  transform: scaleX(0);
+  transform-origin: left center;
+  opacity: 0;
+  pointer-events: none;
+  animation: page-route-bar 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes page-route-bar {
+  0% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-transition--forward,
+  .page-transition--back {
+    animation: page-enter-reduced 0.2s ease both;
+  }
+
+  .page-transition::after {
+    display: none;
+  }
+
+  @keyframes page-enter-reduced {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+}

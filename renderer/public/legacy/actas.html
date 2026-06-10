@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+  <title>Control de Stock - Actas</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="app-page-theme">
+  <div class="dashboard-layout">
+    <aside class="dashboard-sidebar">
+      <nav class="sidebar-nav">
+        <p class="sidebar-section-label">Operaciones</p>
+        <a href="dashboard.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1"></rect><rect x="13" y="3" width="8" height="8" rx="1"></rect><rect x="3" y="13" width="8" height="8" rx="1"></rect><rect x="13" y="13" width="8" height="8" rx="1"></rect></svg></span> Inicio</a>
+        <a href="deposito.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h4l2-4h7l2 4h3v7H3v-7z"></path><path d="M10 18h4"></path></svg></span> Depósito</a>
+        <a href="productos.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9l8-5 8 5v10H4V9z"></path><path d="M4 9l8 5 8-5"></path><path d="M12 4v10"></path></svg></span> Inventario</a>
+        <a href="expedientes.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h7l2 2h7v10H4V6z"></path><path d="M11 6v2"></path></svg></span> Expedientes</a>
+        <a href="guardia.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9l3 3h4v7H4V7z"></path><path d="M4 12h16"></path><path d="M8 16h4"></path></svg></span> Entregas</a>
+        <a href="txt.html" class="sidebar-link" aria-label="TXT">
+          <span class="sidebar-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <path d="M14 2v6h6"></path>
+              <path d="M8 13h8"></path>
+              <path d="M8 17h5"></path>
+            </svg>
+          </span>
+          TXT
+        </a>
+        <p class="sidebar-section-label">Control y soporte</p>
+        <a href="dependencias.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="9" width="16" height="11" rx="1"></rect><path d="M9 9V5h6v4"></path><path d="M9 13h2"></path><path d="M13 13h2"></path><path d="M9 17h2"></path><path d="M13 17h2"></path></svg></span> Dependencias</a>
+        <a href="actas.html" class="sidebar-link active"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="1"></rect><path d="M9 7h6"></path><path d="M9 11h6"></path><path d="M9 15h4"></path></svg></span> Actas</a>
+        <a href="matafuegos.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4h4l3-2"></path><path d="M10 4v3"></path><rect x="8" y="7" width="8" height="11" rx="2"></rect><path d="M12 11v3"></path></svg></span> Matafuegos</a>
+        <a href="auditoria.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg></span> Auditoría</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="dashboard.html" class="sidebar-link">← Volver al inicio</a>
+      </div>
+    </aside>
+    <main class="dashboard-main">
+      <div class="content-panel">
+        <div class="panel-header">
+          <h2 class="page-title">Actas</h2>
+        </div>
+        <p class="panel-desc">Actas de entrega generadas al imprimir desde Entregas. Cada vez que imprimes un acta, queda registrada aquí.</p>
+        <p class="panel-desc actas-grupos-hint">Las actas están agrupadas por <strong>expediente</strong>. Abrí cada carpeta para ver las actas de ese expediente.</p>
+
+        <div class="filtros-avanzados">
+          <div class="filtros-row">
+            <div class="filtro-grupo">
+              <label for="buscar-actas">Buscar</label>
+              <div class="search-bar" role="search">
+                <span class="search-icon" aria-hidden="true">🔍</span>
+                <input type="search" id="buscar-actas" placeholder="Nº de acta, producto, expediente…" autocomplete="off">
+                <button type="button" class="search-clear" data-search-clear="buscar-actas" aria-label="Limpiar búsqueda" style="display:none;">&times;</button>
+              </div>
+            </div>
+            <div class="filtro-grupo">
+              <label for="filtro-actas-dependencia">Dependencia</label>
+              <select id="filtro-actas-dependencia">
+                <option value="">Todas</option>
+              </select>
+            </div>
+            <div class="filtro-grupo">
+              <label for="filtro-actas-desde">Desde</label>
+              <input type="date" id="filtro-actas-desde">
+            </div>
+            <div class="filtro-grupo">
+              <label for="filtro-actas-hasta">Hasta</label>
+              <input type="date" id="filtro-actas-hasta">
+            </div>
+            <div class="filtro-grupo filtro-grupo-btn">
+              <button type="button" id="filtro-actas-limpiar" class="btn btn-secondary btn-sm">Limpiar filtros</button>
+            </div>
+          </div>
+        </div>
+        <div class="table-wrap actas-grupos-wrap">
+          <div id="lista-actas-grupos" class="actas-grupos"></div>
+          <div id="pag-actas"></div>
+        </div>
+        <p id="actas-empty" class="empty-state" style="display: none;">No hay actas registradas. Las actas se guardan automáticamente al imprimir desde una entrega.</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal: Ver acta -->
+  <div id="modal-ver-acta" class="modal modal-tema-clara">
+    <div class="modal-content modal-content-wide modal-acta-content">
+      <div class="modal-header">
+        <h3>Acta de entrega</h3>
+        <button type="button" class="modal-close modal-ver-acta-close" aria-label="Cerrar">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="ver-acta-contenido" class="acta-entrega-print-area">
+          <!-- Contenido del acta inyectado por JS -->
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="btn-imprimir-acta-vista" class="btn btn-primary">Imprimir</button>
+        <button type="button" class="btn btn-secondary modal-ver-acta-close">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Editar acta -->
+  <div id="modal-editar-acta" class="modal modal-tema-clara">
+    <div class="modal-content modal-content-wide">
+      <div class="modal-header">
+        <h3>Modificar acta</h3>
+        <button type="button" class="modal-close modal-editar-acta-close" aria-label="Cerrar">&times;</button>
+      </div>
+      <form id="form-editar-acta">
+        <div class="form-group">
+          <label for="editar-acta-fecha">Fecha</label>
+          <input type="datetime-local" id="editar-acta-fecha" required>
+        </div>
+        <div class="form-group">
+          <label for="editar-acta-dependencia">Dependencia</label>
+          <select id="editar-acta-dependencia">
+            <option value="">— Seleccionar dependencia —</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="editar-acta-producto">Producto</label>
+          <input type="text" id="editar-acta-producto" required placeholder="Ej: L80 / 123 — PARLANTE (1)">
+        </div>
+        <div class="form-group">
+          <label for="editar-acta-expediente">Expediente</label>
+          <input type="text" id="editar-acta-expediente" placeholder="Ej: 3794/208-ADM-2025">
+        </div>
+        <div class="form-group">
+          <label for="editar-acta-cantidad">Cantidad</label>
+          <input type="number" id="editar-acta-cantidad" min="1" value="1" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary modal-editar-acta-close">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="logo-fallback.js"></script>
+  <script src="loading.js"></script>
+  <script src="sidebar-roles.js"></script>
+  <script src="paginacion.js"></script>
+  <script src="actas.js"></script>
+  <script src="session-idle.js"></script>
+  <script src="sidebar-version.js"></script>
+  <script src="realtime-sync.js"></script>
+</body>
+</html>

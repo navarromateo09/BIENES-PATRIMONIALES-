@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+  <title>Control de Stock - TXT</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="app-page-theme">
+  <div class="dashboard-layout">
+    <aside class="dashboard-sidebar">
+      <nav class="sidebar-nav">
+        <p class="sidebar-section-label">Operaciones</p>
+        <a href="dashboard.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="8" height="8" rx="1"></rect>
+            <rect x="13" y="3" width="8" height="8" rx="1"></rect>
+            <rect x="3" y="13" width="8" height="8" rx="1"></rect>
+            <rect x="13" y="13" width="8" height="8" rx="1"></rect>
+          </svg>
+        </span> Inicio</a>
+        <a href="deposito.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 11h4l2-4h7l2 4h3v7H3v-7z"></path>
+            <path d="M10 18h4"></path>
+          </svg>
+        </span> Depósito</a>
+        <a href="productos.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 9l8-5 8 5v10H4V9z"></path>
+            <path d="M4 9l8 5 8-5"></path>
+            <path d="M12 4v10"></path>
+          </svg>
+        </span> Inventario</a>
+        <a href="expedientes.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 6h7l2 2h7v10H4V6z"></path>
+            <path d="M11 6v2"></path>
+          </svg>
+        </span> Expedientes</a>
+        <a href="guardia.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 7h9l3 3h4v7H4V7z"></path>
+            <path d="M4 12h16"></path>
+            <path d="M8 16h4"></path>
+          </svg>
+        </span> Entregas</a>
+        <a href="txt.html" class="sidebar-link active" aria-current="page"><span class="sidebar-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <path d="M14 2v6h6"></path>
+            <path d="M8 13h8"></path>
+            <path d="M8 17h5"></path>
+          </svg>
+        </span> TXT</a>
+        <p class="sidebar-section-label">Control y soporte</p>
+        <a href="dependencias.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="9" width="16" height="11" rx="1"></rect>
+            <path d="M9 9V5h6v4"></path>
+            <path d="M9 13h2"></path>
+            <path d="M13 13h2"></path>
+            <path d="M9 17h2"></path>
+            <path d="M13 17h2"></path>
+          </svg>
+        </span> Dependencias</a>
+        <a href="actas.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="3" width="14" height="18" rx="1"></rect>
+            <path d="M9 7h6"></path>
+            <path d="M9 11h6"></path>
+            <path d="M9 15h4"></path>
+          </svg>
+        </span> Actas</a>
+        <a href="matafuegos.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 4h4l3-2"></path>
+            <path d="M10 4v3"></path>
+            <rect x="8" y="7" width="8" height="11" rx="2"></rect>
+            <path d="M12 11v3"></path>
+          </svg>
+        </span> Matafuegos</a>
+        <a href="auditoria.html" class="sidebar-link"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" class="sidebar-icon-svg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg></span> Auditoría</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="dashboard.html" class="sidebar-link">← Volver al inicio</a>
+      </div>
+    </aside>
+
+    <main class="dashboard-main">
+      <div class="content-panel">
+        <div class="panel-header">
+          <h2 class="page-title">TXT <span class="txt-build-badge" title="Si no ves la franja verde de habitaciones, no estas en esta version">· actualizado</span></h2>
+          <button type="button" id="txt-tab-buscador" class="btn btn-secondary">Buscador</button>
+          <button type="button" id="txt-tab-realizados" class="btn btn-secondary">Realizados</button>
+          <button type="button" id="txt-tab-nuevo" class="btn btn-secondary">Nuevo registro</button>
+          <button type="button" id="txt-btn-nuevo" class="btn btn-primary">Nuevo</button>
+          <button type="button" id="txt-btn-importar" class="btn btn-primary">Importar TXT/CSV</button>
+          <button type="button" id="txt-btn-agregar" class="btn btn-secondary">+ Agregar</button>
+        </div>
+        <p class="panel-desc">Buscador de dependencias y habitaciones del módulo <strong>TXT</strong> (tabla propia, separada de <strong>Dependencias</strong> del menú). Importá TXT/CSV con columnas: <strong>codigo</strong>, <strong>nombre</strong>, <strong>numero</strong>, <strong>nombre división</strong>.</p>
+        <p class="panel-desc txt-hint-agregar-habitacion"><strong>Agregar habitación:</strong> botón verde <strong>+ Habitación</strong> en cada dependencia TXT, o <strong>+ Agregar</strong>. Lo cargado en <strong>Dependencias</strong> (entregas) no aparece acá.</p>
+
+        <input type="file" id="txt-input-importar" accept=".txt,.csv,text/plain" style="display:none;">
+
+        <div id="txt-seccion-buscador" style="margin-top: 1rem;">
+          <div id="txt-contenido">
+          <div class="txt-search-bar" role="search">
+            <span class="txt-search-icon" aria-hidden="true">🔍</span>
+            <input
+              type="search"
+              id="txt-buscar-dependencias"
+              placeholder="Buscar dependencia o división..."
+              autocomplete="off"
+            >
+            <button type="button" id="txt-limpiar-busqueda" class="txt-search-clear" aria-label="Limpiar búsqueda" style="display:none;">&times;</button>
+          </div>
+
+          <div id="txt-resultados" class="txt-resultados empty-state" style="display:flex; align-items:center; justify-content:center; padding: 1.25rem; margin-top: 0.75rem;">
+            <p style="text-align:center; margin:0;">Escribí en la lupa para buscar dependencias y divisiones.</p>
+          </div>
+          </div>
+        </div>
+
+        <div id="txt-seccion-realizados" class="table-wrap txt-realizados-wrap" style="margin-top:1.25rem; display:none;">
+          <div class="txt-realizados-head">
+            <h3>Realizados</h3>
+            <span id="txt-realizados-count" class="txt-realizados-count">0</span>
+          </div>
+          <table class="data-table txt-realizados-table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Registros</th>
+                <th>Última modificación</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="txt-modelos-tabla-body">
+              <tr>
+                <td colspan="4" class="txt-realizados-empty">Todavía no hay TXT realizados.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <section id="txt-seccion-nuevo" class="txt-seccion-nuevo" aria-label="Nuevo registro TXT" hidden>
+          <div class="txt-nuevo-page">
+            <div class="txt-nuevo-page-head">
+              <h3 class="txt-nuevo-page-title">Nuevo registro TXT</h3>
+              <button type="button" class="btn btn-secondary btn-sm txt-nuevo-volver">← Volver</button>
+            </div>
+
+            <div class="txt-nuevo-page-body">
+              <div class="txt-nuevo-form-panel">
+                <div class="txt-nuevo-grid txt-nuevo-grid-ubicacion">
+                  <div class="form-group">
+                    <label for="txt-nuevo-reparticion">Repartición</label>
+                    <input type="text" id="txt-nuevo-reparticion" value="250" placeholder="Ej: 250" maxlength="3" autocomplete="off">
+                  </div>
+                  <div class="form-group">
+                    <label for="txt-nuevo-reparticion-desc">Desc. repartición</label>
+                    <input type="text" id="txt-nuevo-reparticion-desc" value="DPTO GENERAL DE POLICIA" placeholder="Descripción" maxlength="25" autocomplete="off">
+                  </div>
+                  <div class="form-group">
+                    <label for="txt-nuevo-dependencia">Dependencia</label>
+                    <input type="text" id="txt-nuevo-dependencia" placeholder="Cód." maxlength="4" inputmode="numeric" autocomplete="off">
+                  </div>
+                  <div class="form-group txt-nuevo-search-wrap">
+                    <label for="txt-nuevo-dependencia-desc">Desc. dependencia</label>
+                    <input type="text" id="txt-nuevo-dependencia-desc" placeholder="Descripción" maxlength="25" autocomplete="off">
+                    <div id="txt-nuevo-dependencia-sugerencias" class="txt-nuevo-sugerencias" style="display:none;"></div>
+                  </div>
+                  <div class="form-group">
+                    <label for="txt-nuevo-habitacion">Habitación</label>
+                    <input type="text" id="txt-nuevo-habitacion" placeholder="Nº" maxlength="4" inputmode="numeric" autocomplete="off">
+                  </div>
+                  <div class="form-group txt-nuevo-search-wrap">
+                    <label for="txt-nuevo-habitacion-desc">Desc. habitación</label>
+                    <input type="text" id="txt-nuevo-habitacion-desc" placeholder="Descripción" maxlength="25" autocomplete="off">
+                    <div id="txt-nuevo-habitacion-sugerencias" class="txt-nuevo-sugerencias" style="display:none;"></div>
+                  </div>
+                </div>
+
+                <div class="txt-nuevo-grid txt-nuevo-grid-datos">
+                  <div class="form-group">
+                    <label for="txt-nuevo-cuenta">Cuenta</label>
+                    <input type="text" id="txt-nuevo-cuenta" placeholder="0" maxlength="3" autocomplete="off">
+                  </div>
+                  <div class="form-group">
+                    <label for="txt-nuevo-especie">Especie</label>
+                    <input type="text" id="txt-nuevo-especie" placeholder="0" maxlength="4" inputmode="numeric" autocomplete="off">
+                  </div>
+                  <div class="form-group">
+                    <label for="txt-nuevo-motivo">Motivo</label>
+                    <input type="text" id="txt-nuevo-motivo" placeholder="0" maxlength="2" inputmode="numeric" autocomplete="off">
+                  </div>
+                  <div class="form-group">
+                    <label for="txt-nuevo-estado">Estado</label>
+                    <input type="text" id="txt-nuevo-estado" placeholder="0" maxlength="1" autocomplete="off">
+                  </div>
+                  <div class="form-group">
+                    <label for="txt-nuevo-cantidad">Cantidad</label>
+                    <input type="text" id="txt-nuevo-cantidad" inputmode="numeric" maxlength="3" placeholder="0" title="Valor de cada fila en el TXT" autocomplete="off">
+                  </div>
+                  <div class="form-group">
+                    <label for="txt-nuevo-orden">Orden</label>
+                    <input type="text" id="txt-nuevo-orden" placeholder="0" maxlength="4" inputmode="numeric" autocomplete="off">
+                  </div>
+                  <div class="form-group">
+                    <label for="txt-nuevo-valor">Valor</label>
+                    <input type="text" id="txt-nuevo-valor" placeholder="00" maxlength="14" inputmode="decimal" title="Hasta 10 dígitos en el TXT" autocomplete="off">
+                  </div>
+                  <div class="form-group">
+                    <label for="txt-nuevo-mes">Mes</label>
+                    <input type="text" id="txt-nuevo-mes" inputmode="numeric" maxlength="2" placeholder="0" title="0–12" autocomplete="off">
+                  </div>
+                  <div class="form-group">
+                    <label for="txt-nuevo-anio">Año</label>
+                    <input type="text" id="txt-nuevo-anio" inputmode="numeric" maxlength="2" placeholder="0" autocomplete="off">
+                  </div>
+                  <div class="form-group txt-nuevo-desc-field">
+                    <label for="txt-nuevo-descripcion">Descripción del bien</label>
+                    <input type="text" id="txt-nuevo-descripcion" placeholder="Descripción general" maxlength="46" title="Máx. 46 caracteres" autocomplete="off">
+                  </div>
+                </div>
+
+                <div class="txt-nuevo-repeticiones-row" role="group" aria-label="Líneas repetidas">
+                  <div class="form-group txt-nuevo-repeticiones-field">
+                    <label for="txt-nuevo-repeticiones">Líneas repetidas</label>
+                    <input type="text" id="txt-nuevo-repeticiones" inputmode="numeric" maxlength="3" value="1" placeholder="1" title="Cuántas filas cargar (orden correlativo)" autocomplete="off">
+                  </div>
+                  <button type="button" id="txt-nuevo-agregar-repetidas" class="btn btn-secondary">Agregar repetidas</button>
+                  <button type="button" id="txt-nuevo-guardar" class="btn btn-primary">Guardar fila</button>
+                  <p class="txt-nuevo-repeticiones-hint"><strong>Cantidad</strong> = valor por fila. <strong>Repetidas</strong> = cuántas filas iguales (solo cambia el orden).</p>
+                </div>
+              </div>
+
+              <div class="table-wrap txt-nuevo-tabla-wrap">
+                <table class="data-table txt-nuevo-tabla" id="txt-nuevo-tabla">
+                  <thead>
+                    <tr>
+                      <th>Rep</th>
+                      <th>Desc. rep</th>
+                      <th>Dep</th>
+                      <th>Desc. dep</th>
+                      <th>Hab.</th>
+                      <th>Desc. hab</th>
+                      <th>Cuenta</th>
+                      <th>Especie</th>
+                      <th>Motivo</th>
+                      <th>Estado</th>
+                      <th>Cant.</th>
+                      <th>Orden</th>
+                      <th>Valor</th>
+                      <th>Mes</th>
+                      <th>Año</th>
+                      <th>Descripción</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody id="txt-nuevo-tabla-body">
+                    <tr class="txt-nuevo-empty-row">
+                      <td colspan="17">Todavía no hay registros cargados.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="txt-nuevo-page-actions">
+              <button type="button" id="txt-nuevo-finalizado" class="btn btn-primary">Finalizado</button>
+              <button type="button" class="btn btn-secondary txt-nuevo-volver">Cerrar</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal de orden (se abre al seleccionar un resultado en TXT) -->
+  <div id="modal-txt-orden" class="modal modal-tema-clara" aria-hidden="true">
+    <div class="modal-content modal-content-wide">
+      <div class="modal-header">
+        <h3>ORDEN</h3>
+        <button type="button" class="modal-close modal-txt-orden-close" aria-label="Cerrar">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="table-wrap">
+          <table class="data-table" id="txt-orden-tabla">
+            <thead>
+              <tr>
+                <th>ORDEN</th>
+                <th>CANTIDAD</th>
+                <th>ÚLTIMA MODIFICACIÓN</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td id="txt-orden-col-orden">—</td>
+                <td>
+                  <input type="number" id="txt-orden-cantidad" min="0" value="0">
+                </td>
+                <td id="txt-orden-ultima-mod">—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="panel-desc" style="margin-top: 0.75rem;">Por ahora la cantidad es 0.</p>
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="txt-orden-guardar" class="btn btn-primary">Guardar</button>
+        <button type="button" class="btn btn-secondary modal-txt-orden-close">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-txt-agregar" class="modal modal-tema-clara" aria-hidden="true">
+    <div class="modal-content modal-content-wide">
+      <div class="modal-header">
+        <h3>Agregar a TXT</h3>
+        <button type="button" class="modal-close modal-txt-agregar-close" aria-label="Cerrar">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label>¿Qué querés hacer?</label>
+          <input type="hidden" id="txt-agregar-modo" value="existente">
+          <div class="txt-agregar-modo-tabs" role="group" aria-label="Modo de carga">
+            <button type="button" class="btn txt-agregar-modo-tab is-active" data-txt-modo="existente" id="txt-agregar-tab-existente">
+              Dependencia existente (+ habitación)
+            </button>
+            <button type="button" class="btn txt-agregar-modo-tab" data-txt-modo="nueva" id="txt-agregar-tab-nueva">
+              Crear dependencia nueva
+            </button>
+          </div>
+          <p class="panel-desc" style="margin:0.5rem 0 0;">Para agregar una habitación a una dependencia que ya figura en el buscador (ej. 8 - JEF U REGIONAL), usá la primera opción.</p>
+        </div>
+
+        <div id="txt-agregar-section-nueva" style="display:none;">
+          <p id="txt-agregar-hint-nueva" class="panel-desc" style="margin:0 0 1rem;">Creá una dependencia nueva e indicá las habitaciones (divisiones) que quieras cargar.</p>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="txt-agregar-codigo">Código / ID de dependencia</label>
+              <input type="text" id="txt-agregar-codigo" placeholder="Ej: 430" inputmode="numeric">
+            </div>
+            <div class="form-group">
+              <label for="txt-agregar-nombre-dep">Nombre de dependencia</label>
+              <input type="text" id="txt-agregar-nombre-dep" placeholder="Ej: OFICINA JEFE">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top: 1rem;">
+            <label>Divisiones (armar lista)</label>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="txt-agregar-div-num">Nº división</label>
+                <input type="text" id="txt-agregar-div-num" placeholder="Ej: 1" inputmode="numeric">
+              </div>
+              <div class="form-group">
+                <label for="txt-agregar-div-nombre">Nombre división</label>
+                <input type="text" id="txt-agregar-div-nombre" placeholder="Ej: OF SECRETARIA">
+              </div>
+            </div>
+            <div class="modal-productos-expediente-actions" style="padding-top:0;border-top:none;margin-top:0;">
+              <button type="button" id="txt-agregar-div-btn" class="btn btn-secondary">+ Agregar división a la lista</button>
+            </div>
+            <ul id="txt-agregar-div-lista" style="margin: .75rem 0 0; padding-left: 1.15rem;"></ul>
+          </div>
+        </div>
+
+        <div id="txt-agregar-section-existente">
+          <p class="panel-desc" style="margin:0 0 1rem;">Elegí la dependencia ya cargada y completá el número y nombre de la habitación a agregar.</p>
+          <div class="form-group txt-agregar-dep-picker">
+            <label for="txt-agregar-dep-buscar">Dependencia existente</label>
+            <div class="txt-agregar-dep-search-wrap">
+              <input type="search" id="txt-agregar-dep-buscar" placeholder="Escribí código o nombre (ej: 8, JEF REGIONAL)…" autocomplete="off">
+              <input type="hidden" id="txt-agregar-dep-id" value="">
+              <div id="txt-agregar-dep-sugerencias" class="txt-agregar-dep-sugerencias" style="display:none;" role="listbox" aria-label="Dependencias"></div>
+            </div>
+            <p id="txt-agregar-dep-seleccionada" class="panel-desc txt-agregar-dep-seleccionada" style="display:none;"></p>
+            <p id="txt-agregar-dep-existente-vacio" class="panel-desc" style="display:none; margin:0.5rem 0 0; color:#b45309;">No hay dependencias en la tabla TXT. Importá un TXT/CSV en esta pantalla o creá una dependencia nueva arriba.</p>
+          </div>
+          <div class="form-row" style="margin-top: 1rem;">
+            <div class="form-group">
+              <label for="txt-agregar-div-num-ex">Nº habitación</label>
+              <input type="text" id="txt-agregar-div-num-ex" placeholder="Ej: 2" inputmode="numeric">
+            </div>
+            <div class="form-group">
+              <label for="txt-agregar-div-nombre-ex">Nombre habitación</label>
+              <input type="text" id="txt-agregar-div-nombre-ex" placeholder="Ej: OFICINA TECNICA">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="txt-agregar-guardar" class="btn btn-primary" disabled>Guardar</button>
+        <button type="button" class="btn btn-secondary modal-txt-agregar-close">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="logo-fallback.js"></script>
+  <script src="sidebar-active.js"></script>
+  <script src="loading.js"></script>
+  <script src="sidebar-roles.js"></script>
+  <script src="txt.js?v=txt-tabla-separada"></script>
+  <script src="session-idle.js"></script>
+  <script src="sidebar-version.js"></script>
+  <script src="realtime-sync.js"></script>
+</body>
+</html>
+

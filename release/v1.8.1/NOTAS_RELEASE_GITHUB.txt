@@ -1,0 +1,15 @@
+## v1.8.1
+
+### Export TXT (nuevo)
+- Alineación de columnas con el layout de referencia (dependencia, habitación, cuenta).
+- Línea de 164 caracteres con descripción acotada y dígito **1** fijo en columna 164.
+- Límites de digitación en formulario alineados con el TXT (`txt.js` / `txt.html`).
+- **Valor** en 10 dígitos con la misma lógica que el sistema de referencia: 3 dígitos para `⌊n/10⁷⌋` (ceros a la izquierda) + 7 dígitos para `n mod 10⁷` (ceros a la derecha).
+
+### Matafuegos y layout general
+- Paneles desplegables con scroll para ver todo el formulario de entrega en monitores bajos.
+- Ajustes globales de scroll y anchos (`styles.css`) para páginas internas, dashboard y modales.
+
+### Nota
+- Tras actualizar, reiniciar la aplicación en las PCs para cargar `main.js` / `preload.js`.
+- Para GitHub: subir el `.exe` y `latest.yml` (y `.blockmap` si usás actualización automática) como assets del Release **v1.8.1**.

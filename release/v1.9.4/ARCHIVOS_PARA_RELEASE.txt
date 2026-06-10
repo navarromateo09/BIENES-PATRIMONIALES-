@@ -1,0 +1,9 @@
+Subir a GitHub → Releases → New release (tag v1.9.4):
+
+OBLIGATORIOS (auto-actualización):
+  release\Bienes.y.Patrimoniales.Setup.1.9.4.exe
+  release\Bienes.y.Patrimoniales.Setup.1.9.4.exe.blockmap
+  release\latest.yml
+
+OPCIONAL (solo referencia):
+  release\v1.9.4\NOTAS_RELEASE_GITHUB.txt  → pegar como descripción del release
