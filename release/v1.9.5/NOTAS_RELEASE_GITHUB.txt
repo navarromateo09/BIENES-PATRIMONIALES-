@@ -1,0 +1,17 @@
+## v1.9.5
+
+### Entrega de matafuegos
+- Nuevo asistente paso a paso (destino → selección múltiple → confirmar), mismo estilo que Entregas.
+- Búsqueda inteligente de dependencias: las divisiones coincidentes aparecen primero sin desplegar el árbol.
+
+### Formulario de matafuegos
+- Campo **Kg** obligatorio con opciones 5 kg y 10 kg.
+- **Características** pasa a ser opcional (tipo, polvo ABC, etc.).
+
+### Auto-actualización
+Subir al Release estos 3 archivos:
+1. `Bienes.y.Patrimoniales.Setup.1.9.5.exe`
+2. `Bienes.y.Patrimoniales.Setup.1.9.5.exe.blockmap`
+3. `latest.yml`
+
+Los datos del usuario y Supabase no se pierden al actualizar.

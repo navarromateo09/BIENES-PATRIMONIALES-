@@ -1,5 +1,7 @@
 const VENCIDO_SIN_FECHA = '1900-01-01';
 
+export const MF_KG_OPTIONS = ['5 kg', '10 kg'];
+
 export function inferCapacidadTipo(caracteristicas) {
   const c = String(caracteristicas || '').trim();
   if (!c) return { capacidad: '—', tipo: '' };
@@ -10,6 +12,28 @@ export function inferCapacidadTipo(caracteristicas) {
   else if (l) capacidad = `${l[1]} L`;
   const tipo = /\b(polvo|abc|co2|agua|espuma|pqs)\b/i.exec(c);
   return { capacidad, tipo: tipo ? tipo[1].toUpperCase() : '' };
+}
+
+/** Separa kg guardado en características del resto (tipo, notas, etc.). */
+export function parseKgFromCaracteristicas(caracteristicas) {
+  const c = String(caracteristicas || '').trim();
+  if (!c) return { kg: '', rest: '' };
+  const match = c.match(/(\d+(?:[.,]\d+)?)\s*kg/i);
+  if (!match) return { kg: '', rest: c };
+  const num = match[1].replace(',', '.');
+  const kg = MF_KG_OPTIONS.find((opt) => opt.replace(/\s/g, '').toLowerCase() === `${num}kg`) || `${num} kg`;
+  let rest = c.replace(match[0], '').replace(/^[\s,·\-]+|[\s,·\-]+$/g, '').trim();
+  return { kg, rest };
+}
+
+/** Arma el texto final de características para guardar en BD. */
+export function buildMatafuegoCaracteristicas(kg, extra) {
+  const parts = [];
+  const k = String(kg || '').trim();
+  const e = String(extra || '').trim();
+  if (k) parts.push(k);
+  if (e) parts.push(e);
+  return parts.join(', ') || '';
 }
 
 export function formatFecha(val) {

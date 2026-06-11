@@ -4,7 +4,10 @@ import { useLoading } from '../contexts/LoadingContext';
 import { useToast } from '../contexts/ToastContext';
 import { getStockAPI } from '../hooks/useStockAPI';
 import {
+  buildMatafuegoCaracteristicas,
   isVencidoSinFecha,
+  MF_KG_OPTIONS,
+  parseKgFromCaracteristicas,
   validateMatafuegoSeriesForm,
   VENCIDO_SIN_FECHA
 } from '../utils/matafuegosHelpers';
@@ -14,6 +17,7 @@ const EMPTY_FORM = {
   marca: '',
   cantidad: 1,
   series: [''],
+  kg: '',
   caracteristicas: '',
   fechaVencimiento: '',
   sinFecha: false
@@ -54,11 +58,13 @@ export default function MatafuegoFormPage() {
         navigate('/matafuegos', { replace: true });
         return;
       }
+      const { kg, rest } = parseKgFromCaracteristicas(item.caracteristicas);
       setForm({
         marca: item.marca || '',
         cantidad: 1,
         series: [item.numeroSerie || ''],
-        caracteristicas: item.caracteristicas || '',
+        kg,
+        caracteristicas: rest,
         fechaVencimiento: isVencidoSinFecha(item.fechaVencimiento)
           ? ''
           : String(item.fechaVencimiento || '').slice(0, 10),
@@ -123,6 +129,10 @@ export default function MatafuegoFormPage() {
       showToast('Indicá la marca', 'error');
       return;
     }
+    if (!form.kg) {
+      showToast('Seleccioná el peso (kg)', 'error');
+      return;
+    }
     if (!form.sinFecha && !form.fechaVencimiento) {
       showToast('Indicá la fecha de vencimiento o marcá "Vencido sin fecha"', 'error');
       return;
@@ -149,9 +159,11 @@ export default function MatafuegoFormPage() {
       setSeriesErrors({});
       setValidationReport([]);
 
+      const caracteristicasGuardar = buildMatafuegoCaracteristicas(form.kg, form.caracteristicas);
+
       const basePayload = {
         marca: form.marca.trim(),
-        caracteristicas: form.caracteristicas.trim(),
+        caracteristicas: caracteristicasGuardar || null,
         fechaVencimiento: form.sinFecha ? VENCIDO_SIN_FECHA : form.fechaVencimiento,
         estado: isEdit
           ? (all.find((m) => String(m.id) === String(id))?.estado || 'disponible')
@@ -281,15 +293,31 @@ export default function MatafuegoFormPage() {
               </div>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="mf-caracteristicas">Características</label>
-              <input
-                id="mf-caracteristicas"
-                type="text"
-                placeholder="Ej: 5 kg, polvo ABC"
-                value={form.caracteristicas}
-                onChange={(e) => setForm({ ...form, caracteristicas: e.target.value })}
-              />
+            <div className="mf-form-grid mf-form-grid--2">
+              <div className="form-group">
+                <label htmlFor="mf-kg">Kg *</label>
+                <select
+                  id="mf-kg"
+                  required
+                  value={form.kg}
+                  onChange={(e) => setForm({ ...form, kg: e.target.value })}
+                >
+                  <option value="">Seleccionar…</option>
+                  {MF_KG_OPTIONS.map((opt) => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label htmlFor="mf-caracteristicas">Características <span className="mf-label-optional">(opcional)</span></label>
+                <input
+                  id="mf-caracteristicas"
+                  type="text"
+                  placeholder="Ej: polvo ABC, CO2"
+                  value={form.caracteristicas}
+                  onChange={(e) => setForm({ ...form, caracteristicas: e.target.value })}
+                />
+              </div>
             </div>
 
             <div className="mf-form-grid mf-form-grid--2">

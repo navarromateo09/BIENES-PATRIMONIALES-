@@ -24,6 +24,7 @@ import {
   parseHistorialRow,
   secondaryLineSug
 } from '../utils/matafuegosHelpers';
+import MatafuegoEntregaWizard from '../components/matafuegos/MatafuegoEntregaWizard';
 import '../theme/matafuegos-pro.css';
 
 const TAB_ESTADO = {
@@ -80,7 +81,6 @@ export default function MatafuegosPage() {
   const globalSearchRef = useRef(null);
   const skipPageResetRef = useRef(false);
 
-  const [entrega, setEntrega] = useState({ dependenciaId: '', matafuegoId: '' });
 
   const cats = useMemo(() => categorizeMatafuegos(all), [all]);
   const counts = useMemo(() => ({
@@ -189,27 +189,28 @@ export default function MatafuegosPage() {
     await api.saveMatafuego(payload);
   }
 
-  async function handleEntrega(e) {
-    e.preventDefault();
-    if (!entrega.dependenciaId || !entrega.matafuegoId) {
-      showToast('Seleccioná dependencia y matafuego', 'error');
-      return;
+  async function handleEntregaConfirm({ dependenciaId, matafuegos }) {
+    if (!dependenciaId || !matafuegos?.length) {
+      showToast('Seleccioná destino y al menos un matafuego', 'error');
+      throw new Error('incomplete');
     }
-    const m = cats.disponibles.find((x) => x.id === entrega.matafuegoId);
-    if (!m) return;
-    show('Registrando entrega…');
+    show(matafuegos.length > 1 ? 'Registrando entregas…' : 'Registrando entrega…');
     try {
-      await saveMatafuego({
-        ...m,
-        estado: 'entregado',
-        dependenciaId: entrega.dependenciaId
-      });
-      showToast('Matafuego entregado');
-      setEntregaOpen(false);
-      setEntrega({ dependenciaId: '', matafuegoId: '' });
+      for (const m of matafuegos) {
+        // eslint-disable-next-line no-await-in-loop
+        await saveMatafuego({
+          ...m,
+          estado: 'entregado',
+          dependenciaId
+        });
+      }
+      showToast(matafuegos.length > 1 ? `${matafuegos.length} matafuegos entregados` : 'Matafuego entregado');
       await load();
     } catch (err) {
-      showToast(err.message || 'Error', 'error');
+      if (err?.message !== 'incomplete') {
+        showToast(err.message || 'Error al registrar', 'error');
+      }
+      throw err;
     } finally {
       hide();
     }
@@ -611,40 +612,13 @@ export default function MatafuegosPage() {
         </div>
       </div>
 
-      {entregaOpen && (
-        <div className="modal open modal-tema-clara" role="dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h3>Entregar matafuego</h3>
-              <button type="button" className="modal-close" onClick={() => setEntregaOpen(false)}>&times;</button>
-            </div>
-            <form className="modal-body" onSubmit={handleEntrega}>
-              <div className="form-group">
-                <label>Dependencia destino</label>
-                <select value={entrega.dependenciaId} onChange={(e) => setEntrega({ ...entrega, dependenciaId: e.target.value })} required>
-                  <option value="">Seleccionar…</option>
-                  {dependencias.map((d) => (
-                    <option key={d.id} value={d.id}>{d.nombre || d.codigo}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Matafuego disponible</label>
-                <select value={entrega.matafuegoId} onChange={(e) => setEntrega({ ...entrega, matafuegoId: e.target.value })} required>
-                  <option value="">Seleccionar…</option>
-                  {cats.disponibles.map((m) => (
-                    <option key={m.id} value={m.id}>{m.marca} — {m.numeroSerie}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="modal-actions">
-                <button type="submit" className="btn btn-primary">Confirmar entrega</button>
-                <button type="button" className="btn btn-secondary" onClick={() => setEntregaOpen(false)}>Cancelar</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <MatafuegoEntregaWizard
+        open={entregaOpen}
+        dependencias={dependencias}
+        disponibles={cats.disponibles}
+        onClose={() => setEntregaOpen(false)}
+        onConfirm={handleEntregaConfirm}
+      />
     </>
   );
 }
