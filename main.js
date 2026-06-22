@@ -531,6 +531,7 @@ async function loadData() {
         estado: normalizeMatafuegoEstadoFromDb(r.estado || 'disponible', r.dependencia_id || null),
         fechaIngreso: r.fecha_ingreso || null,
         dependenciaId: r.dependencia_id || null,
+        fechaEntrega: r.fecha_entrega || null,
         createdAt: r.created_at || null
       }));
     } catch (_) { /* tabla matafuegos puede no existir aún */ }
@@ -554,6 +555,7 @@ function mapRawMatafuegoRows(rawMatafuegos) {
       estado: normalizeMatafuegoEstadoFromDb(r.estado || 'disponible', r.dependencia_id || null),
       fechaIngreso: r.fecha_ingreso || null,
       dependenciaId: r.dependencia_id || null,
+      fechaEntrega: r.fecha_entrega || null,
       createdAt: r.created_at || null
     };
   });
@@ -847,6 +849,7 @@ function mapMatafuegoRowDbToApp(r) {
     estado: normalizeMatafuegoEstadoFromDb(r.estado || 'disponible', r.dependencia_id || null),
     fechaIngreso: r.fecha_ingreso || null,
     dependenciaId: r.dependencia_id || null,
+    fechaEntrega: r.fecha_entrega || null,
     createdAt: r.created_at || null
   };
 }
@@ -945,7 +948,7 @@ function inferMatafuegoMovimiento(prev, next) {
   if (!prev) return 'ingreso';
   if (!prev.dependenciaId && next && next.dependenciaId) return 'egreso';
   if ((prev.estado || '') !== (next.estado || '')) return 'cambio_estado';
-  return 'actualizacion';
+  return 'editado';
 }
 
 async function logMatafuegoMovimiento(prev, next) {
@@ -2584,7 +2587,7 @@ ipcMain.handle('save-matafuego', async (_, matafuego) => {
   if (supabase) {
     const { data: rows } = await supabase
       .from('matafuegos')
-      .select('id, marca, numero_serie, caracteristicas, fecha_vencimiento, estado, fecha_ingreso, dependencia_id')
+      .select('id, marca, numero_serie, caracteristicas, fecha_vencimiento, estado, fecha_ingreso, dependencia_id, fecha_entrega')
       .eq('id', String(matafuego.id))
       .limit(1);
     esEdicion = !!(rows && rows.length);
@@ -2602,7 +2605,8 @@ ipcMain.handle('save-matafuego', async (_, matafuego) => {
         fechaVencimiento: prevLocal.fechaVencimiento || null,
         estado: prevLocal.estado || 'disponible',
         fechaIngreso: prevLocal.fechaIngreso || null,
-        dependenciaId: prevLocal.dependenciaId || null
+        dependenciaId: prevLocal.dependenciaId || null,
+        fechaEntrega: prevLocal.fechaEntrega || null
       };
     }
   }
@@ -2616,6 +2620,15 @@ ipcMain.handle('save-matafuego', async (_, matafuego) => {
       throw new Error('El número de serie ya está registrado en el sistema.');
     }
   }
+  const estadoApp = normalizeMatafuegoEstadoFromDb(matafuego.estado || 'disponible', matafuego.dependenciaId || null);
+  let fechaEntrega = matafuego.fechaEntrega != null && matafuego.fechaEntrega !== ''
+    ? String(matafuego.fechaEntrega).slice(0, 10)
+    : (prevMatafuego && prevMatafuego.fechaEntrega ? String(prevMatafuego.fechaEntrega).slice(0, 10) : null);
+  if (estadoApp === 'entregado') {
+    if (!fechaEntrega) fechaEntrega = new Date().toISOString().slice(0, 10);
+  } else {
+    fechaEntrega = null;
+  }
   const row = {
     id: matafuego.id,
     marca: matafuego.marca || null,
@@ -2624,11 +2637,11 @@ ipcMain.handle('save-matafuego', async (_, matafuego) => {
     fecha_vencimiento: matafuego.fechaVencimiento || null,
     estado: normalizeMatafuegoEstadoToDb(matafuego.estado || 'disponible'),
     fecha_ingreso: matafuego.fechaIngreso || null,
-    dependencia_id: matafuego.dependenciaId || null
+    dependencia_id: matafuego.dependenciaId || null,
+    fecha_entrega: fechaEntrega
   };
   // Compatibilidad con esquema actual de Supabase (estado solo disponible/recarga):
   // "entregado" se representa como estado disponible + dependencia asignada.
-  const estadoApp = normalizeMatafuegoEstadoFromDb(matafuego.estado || 'disponible', matafuego.dependenciaId || null);
   const nextMatafuego = {
     id: matafuego.id,
     marca: matafuego.marca || null,
@@ -2637,7 +2650,8 @@ ipcMain.handle('save-matafuego', async (_, matafuego) => {
     fechaVencimiento: matafuego.fechaVencimiento || null,
     estado: estadoApp,
     fechaIngreso: matafuego.fechaIngreso || null,
-    dependenciaId: matafuego.dependenciaId || null
+    dependenciaId: matafuego.dependenciaId || null,
+    fechaEntrega
   };
   if (estadoApp === 'entregado') row.estado = 'disponible';
   if (supabase) {
@@ -2701,7 +2715,7 @@ ipcMain.handle('save-matafuego', async (_, matafuego) => {
   const data = await loadData();
   if (!data.matafuegos) data.matafuegos = [];
   const idx = data.matafuegos.findIndex(m => m.id === matafuego.id);
-  const toSave = { id: matafuego.id, marca: matafuego.marca, numeroSerie: matafuego.numeroSerie, caracteristicas: matafuego.caracteristicas, fechaVencimiento: matafuego.fechaVencimiento, estado: matafuego.estado || 'disponible', fechaIngreso: matafuego.fechaIngreso || null, dependenciaId: matafuego.dependenciaId || null };
+  const toSave = { id: matafuego.id, marca: matafuego.marca, numeroSerie: matafuego.numeroSerie, caracteristicas: matafuego.caracteristicas, fechaVencimiento: matafuego.fechaVencimiento, estado: matafuego.estado || 'disponible', fechaIngreso: matafuego.fechaIngreso || null, dependenciaId: matafuego.dependenciaId || null, fechaEntrega: nextMatafuego.fechaEntrega || null };
   if (idx >= 0) data.matafuegos[idx] = toSave;
   else data.matafuegos.unshift(toSave);
   fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');

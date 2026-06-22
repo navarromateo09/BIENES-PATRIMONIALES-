@@ -38,7 +38,7 @@ echo  LISTO
 echo ====================================================
 echo.
 echo Instalador:
-echo   release\Bienes.y.Patrimoniales.Setup.1.9.5.exe
+echo   release\Bienes.y.Patrimoniales.Setup.1.9.6.exe
 echo.
 echo O ejecutar sin instalar:
 echo   release\win-unpacked\Bienes y Patrimoniales.exe

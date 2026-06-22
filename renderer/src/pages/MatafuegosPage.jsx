@@ -151,7 +151,7 @@ export default function MatafuegosPage() {
       let h = historial;
       const term = normalizeSearch(effectiveTerm);
       if (term) {
-        h = h.filter((r) => normalizeSearch(`${r.marca} ${r.numeroSerie} ${r.movimiento}`).includes(term));
+        h = h.filter((r) => normalizeSearch(`${r.marca} ${r.numeroSerie} ${r.movimiento} ${r.usuario || ''}`).includes(term));
       }
       return h;
     }
@@ -195,13 +195,15 @@ export default function MatafuegosPage() {
       throw new Error('incomplete');
     }
     show(matafuegos.length > 1 ? 'Registrando entregas…' : 'Registrando entrega…');
+    const hoy = new Date().toISOString().slice(0, 10);
     try {
       for (const m of matafuegos) {
         // eslint-disable-next-line no-await-in-loop
         await saveMatafuego({
           ...m,
           estado: 'entregado',
-          dependenciaId
+          dependenciaId,
+          fechaEntrega: hoy
         });
       }
       showToast(matafuegos.length > 1 ? `${matafuegos.length} matafuegos entregados` : 'Matafuego entregado');
@@ -240,7 +242,7 @@ export default function MatafuegosPage() {
     if (!api?.exportMatafuegosExcel) return;
     const rows = filteredList.map((m) => {
       const inf = inferCapacidadTipo(m.caracteristicas);
-      return {
+      const row = {
         Marca: m.marca || '',
         Serie: m.numeroSerie || '',
         Capacidad: inf.capacidad,
@@ -249,6 +251,10 @@ export default function MatafuegosPage() {
         Estado: m.estado || '',
         Dependencia: depNombre(dependencias, m.dependenciaId)
       };
+      if (tab === 'entregados') {
+        row['Fecha entrega'] = m.fechaEntrega ? formatFecha(m.fechaEntrega) : 'Sin registro';
+      }
+      return row;
     });
     if (!rows.length) {
       showToast('No hay filas para exportar', 'error');
@@ -527,13 +533,14 @@ export default function MatafuegosPage() {
                   <div className="inst-table-wrap table-wrap">
                     <table className="data-table">
                       <thead>
-                        <tr><th>Fecha</th><th>Movimiento</th><th>Marca</th><th>Nº de serie</th></tr>
+                        <tr><th>Fecha</th><th>Movimiento</th><th>Usuario</th><th>Marca</th><th>Nº de serie</th></tr>
                       </thead>
                       <tbody>
                         {pag.items.map((r) => (
                           <tr key={r.id}>
                             <td>{r.fecha ? new Date(r.fecha).toLocaleString('es-AR') : '—'}</td>
                             <td>{r.movimiento}</td>
+                            <td>{r.usuario || '—'}</td>
                             <td>{r.marca}</td>
                             <td>{r.numeroSerie}</td>
                           </tr>
@@ -555,6 +562,7 @@ export default function MatafuegosPage() {
                       <th>Capacidad</th>
                       <th>Tipo</th>
                       {tab === 'entregados' && <th>Dependencia</th>}
+                      {tab === 'entregados' && <th>Fecha de entrega</th>}
                       <th>Última recarga</th>
                       <th>Próximo vencimiento</th>
                       <th>Acciones</th>
@@ -577,6 +585,9 @@ export default function MatafuegosPage() {
                           <td>{inf.capacidad}</td>
                           <td>{inf.tipo ? <span className="mf-badge-tipo">{inf.tipo}</span> : '—'}</td>
                           {tab === 'entregados' && <td>{depNombre(dependencias, m.dependenciaId) || '—'}</td>}
+                          {tab === 'entregados' && (
+                            <td>{m.fechaEntrega ? formatFecha(m.fechaEntrega) : <span className="mf-fecha-sin-registro">Sin registro</span>}</td>
+                          )}
                           <td>{formatFecha(m.fechaIngreso)}</td>
                           <td className={vencClass(m)}>{formatFecha(m.fechaVencimiento)}</td>
                           <td className="mf-actions-cell">

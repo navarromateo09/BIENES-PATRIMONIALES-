@@ -79,6 +79,23 @@ export default function MatafuegoEntregaWizard({
     setStep(2);
   }
 
+  function pickDependencia(depId, e) {
+    e?.stopPropagation?.();
+    seleccionarDependencia(depId);
+  }
+
+  function renderDepAction(depId) {
+    return (
+      <button
+        type="button"
+        className="btn btn-primary btn-sm mf-entrega-pick-btn"
+        onClick={(e) => pickDependencia(depId, e)}
+      >
+        Seleccionar
+      </button>
+    );
+  }
+
   function addToCarrito(m) {
     if (carritoIds.has(m.id)) {
       return;
@@ -158,7 +175,7 @@ export default function MatafuegoEntregaWizard({
             <div className="mf-entrega-card">
               <h3 className="mf-entrega-step-title">Paso 1 · Seleccionar destino</h3>
               <p className="mf-entrega-step-desc">
-                Buscá por nombre, código o número. Si coincide una división interna, aparece primero sin desplegar el árbol.
+                Buscá por nombre, código o número. Hacé clic en la fila o en <strong>Seleccionar</strong>.
               </p>
               <div className="search-bar mf-entrega-search" role="search">
                 <span className="search-icon" aria-hidden="true">🔍</span>
@@ -183,6 +200,7 @@ export default function MatafuegoEntregaWizard({
               {depSearchActive && depRows.length > 0 && (
                 <p className="mf-entrega-search-hint" role="status">
                   {depRows.length} coincidencia{depRows.length === 1 ? '' : 's'} — mejor opción arriba
+                  {depRows.length > 12 && ' · Si buscás una comisaría puntual, probá ej. «comisaria 4» o «4ta»'}
                 </p>
               )}
               <div className="inst-table-wrap table-wrap mf-entrega-table-wrap">
@@ -214,7 +232,12 @@ export default function MatafuegoEntregaWizard({
                         return (
                           <tr
                             key={row.key}
-                            className={`mf-entrega-dep-hit${row.isTopMatch ? ' mf-entrega-dep-hit--top' : ''}`}
+                            className={`mf-entrega-dep-hit mf-entrega-dep-row${row.isTopMatch ? ' mf-entrega-dep-hit--top' : ''}`}
+                            onClick={() => seleccionarDependencia(row.dep.id)}
+                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); seleccionarDependencia(row.dep.id); } }}
+                            tabIndex={0}
+                            role="button"
+                            aria-label={`Seleccionar ${row.nombre}`}
                           >
                             <td>
                               {row.breadcrumb && (
@@ -225,24 +248,28 @@ export default function MatafuegoEntregaWizard({
                               <span className="link-dependencia mf-entrega-dep-label">{row.label}</span>
                             </td>
                             <td>{row.nombre}</td>
-                            <td>
-                              <button type="button" className="btn btn-primary btn-sm" onClick={() => seleccionarDependencia(row.dep.id)}>
-                                Seleccionar
-                              </button>
-                            </td>
+                            <td>{renderDepAction(row.dep.id)}</td>
                           </tr>
                         );
                       }
                       if (row.type === 'main') {
                         return (
-                          <tr key={row.key} className="main-dep-row">
+                          <tr
+                            key={row.key}
+                            className="main-dep-row mf-entrega-dep-row"
+                            onClick={() => seleccionarDependencia(row.dep.id)}
+                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); seleccionarDependencia(row.dep.id); } }}
+                            tabIndex={0}
+                            role="button"
+                            aria-label={`Seleccionar ${row.nombre}`}
+                          >
                             <td>
                               {row.hasChildren ? (
                                 <button
                                   type="button"
                                   className={`btn-flecha-dep ${row.isExpanded ? 'arrow-expanded' : 'arrow-collapsed'}`}
                                   aria-label="Ver subdivisiones"
-                                  onClick={() => toggleExpand(row.dep.id)}
+                                  onClick={(e) => { e.stopPropagation(); toggleExpand(row.dep.id); }}
                                 >
                                   {row.isExpanded ? '▼' : '▶'}
                                 </button>
@@ -253,11 +280,7 @@ export default function MatafuegoEntregaWizard({
                               <span className="link-dependencia">{row.label}</span>
                             </td>
                             <td>{row.nombre}</td>
-                            <td>
-                              <button type="button" className="btn btn-primary btn-sm" onClick={() => seleccionarDependencia(row.dep.id)}>
-                                Seleccionar
-                              </button>
-                            </td>
+                            <td>{renderDepAction(row.dep.id)}</td>
                           </tr>
                         );
                       }
@@ -265,16 +288,21 @@ export default function MatafuegoEntregaWizard({
                       const hiddenClass = row.hidden ? ' row-division-hidden' : '';
                       const indent = 8 + (row.level * 22);
                       return (
-                        <tr key={row.key} className={`row-division${levelClass}${hiddenClass}`}>
+                        <tr
+                          key={row.key}
+                          className={`row-division mf-entrega-dep-row${levelClass}${hiddenClass}`}
+                          onClick={() => seleccionarDependencia(row.dep.id)}
+                          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); seleccionarDependencia(row.dep.id); } }}
+                          tabIndex={row.hidden ? -1 : 0}
+                          role="button"
+                          aria-label={`Seleccionar ${row.nombre}`}
+                          aria-hidden={row.hidden || undefined}
+                        >
                           <td style={{ paddingLeft: `${indent}px` }}>
                             <span className="link-dependencia">{row.labelPrefix}{row.label}</span>
                           </td>
                           <td>{row.nombre}</td>
-                          <td>
-                            <button type="button" className="btn btn-primary btn-sm" onClick={() => seleccionarDependencia(row.dep.id)}>
-                              Seleccionar
-                            </button>
-                          </td>
+                          <td>{renderDepAction(row.dep.id)}</td>
                         </tr>
                       );
                     })}

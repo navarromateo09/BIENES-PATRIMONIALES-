@@ -2029,24 +2029,43 @@
     }
   }
 
-  function parseHistorialDetalle(detalleRaw, fallbackFecha, fallbackEntidadId) {
-    var detalle = String(detalleRaw || '');
+  function formatHistorialUsuario(usuario) {
+    var u = String(usuario || '').trim();
+    if (!u) return '—';
+    if (u.toLowerCase() === 'sistema') return 'Sistema';
+    return u;
+  }
+
+  function inferHistorialMovimientoFromDetalle(detalle, accion) {
+    var d = String(detalle || '').toLowerCase();
+    if (d.indexOf('movimiento automático') >= 0 && d.indexOf('recarga') >= 0) return 'Cambio de estado';
+    if (d.indexOf('eliminó matafuego') >= 0 || String(accion || '').toUpperCase() === 'ELIMINAR') return 'Eliminación';
+    return 'Editado';
+  }
+
+  function parseHistorialDetalle(row) {
+    var detalle = String((row && row.detalle) || '');
+    var fallbackFecha = row && row.fecha;
+    var fallbackEntidadId = row && row.entidadId;
+    var usuario = formatHistorialUsuario(row && row.usuario);
     if (detalle.indexOf('MATAFUEGO_HIST|') === 0) {
       try {
         var obj = JSON.parse(detalle.slice('MATAFUEGO_HIST|'.length));
         return {
           fecha: obj.fecha || fallbackFecha || '',
-          movimiento: String(obj.movimiento || 'actualizacion'),
+          movimiento: String(obj.movimiento || 'editado'),
           marca: obj.marca || '—',
-          numeroSerie: obj.numeroSerie || (obj.id || fallbackEntidadId || '—')
+          numeroSerie: obj.numeroSerie || (obj.id || fallbackEntidadId || '—'),
+          usuario: usuario
         };
       } catch (_) {}
     }
     return {
       fecha: fallbackFecha || '',
-      movimiento: 'actualizacion',
+      movimiento: inferHistorialMovimientoFromDetalle(detalle, row && row.accion),
       marca: '—',
-      numeroSerie: fallbackEntidadId || '—'
+      numeroSerie: fallbackEntidadId || '—',
+      usuario: usuario
     };
   }
 
@@ -2055,7 +2074,10 @@
     if (k === 'ingreso') return 'Ingreso';
     if (k === 'egreso') return 'Egreso';
     if (k === 'cambio_estado') return 'Cambio de estado';
-    return 'Actualización';
+    if (k === 'entrega') return 'Entrega';
+    if (k === 'actualizacion' || k === 'editado') return 'Editado';
+    if (k === 'eliminacion') return 'Eliminación';
+    return 'Editado';
   }
 
   function filterHistorialByPanelSearch(items, term) {
@@ -2072,7 +2094,8 @@
         h.movimiento || '',
         labelMovimientoHistorial(h.movimiento),
         h.marca || '',
-        h.numeroSerie || ''
+        h.numeroSerie || '',
+        h.usuario || ''
       ].join(' '));
       if (txt.indexOf(t) >= 0) return true;
       if (h.numeroSerie && serialFuzzyMatch(h.numeroSerie, term)) return true;
@@ -2091,14 +2114,14 @@
       contadorHistorial.textContent = normalizeText(termHist) ? String(listHist.length) : String(baseHist.length);
     }
     if (!baseHist.length) {
-      listaHistorial.innerHTML = '<tr><td colspan="4" class="empty-state">No hay movimientos de matafuegos registrados.</td></tr>';
+      listaHistorial.innerHTML = '<tr><td colspan="5" class="empty-state">No hay movimientos de matafuegos registrados.</td></tr>';
       var pcHist0 = document.getElementById('pag-matafuegos-historial');
       if (pcHist0) pcHist0.innerHTML = '';
       syncMfPagSizeSelects();
       return;
     }
     if (!listHist.length) {
-      listaHistorial.innerHTML = '<tr><td colspan="4" class="empty-state">Sin resultados en el historial.</td></tr>';
+      listaHistorial.innerHTML = '<tr><td colspan="5" class="empty-state">Sin resultados en el historial.</td></tr>';
       var pcHist1 = document.getElementById('pag-matafuegos-historial');
       if (pcHist1) pcHist1.innerHTML = '';
       syncMfPagSizeSelects();
@@ -2111,6 +2134,7 @@
       return '<tr>' +
         '<td>' + fecha + '</td>' +
         '<td>' + labelMovimientoHistorial(h.movimiento) + '</td>' +
+        '<td>' + (h.usuario || '—') + '</td>' +
         '<td>' + (h.marca || '—') + '</td>' +
         '<td>' + (h.numeroSerie || '—') + '</td>' +
         '</tr>';
@@ -2159,7 +2183,7 @@
         matafuegosEntregados = allMf.filter(function (m) { return (m.estado || '') === 'entregado'; });
         matafuegosInservibles = allMf.filter(function (m) { return (m.estado || '') === 'inservible'; });
         historialMatafuegos = (auditRows || []).map(function (row) {
-          return parseHistorialDetalle(row && row.detalle, row && row.fecha, row && row.entidadId);
+          return parseHistorialDetalle(row);
         }).filter(function (x) { return !!x; });
         recargandoIds = {};
         Object.keys(recargandoMap || {}).forEach(function (id) {

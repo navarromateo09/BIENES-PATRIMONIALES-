@@ -1,4 +1,4 @@
-import { depMatchesBusqueda } from './dependenciasHelpers';
+import { depMatchesBusqueda, extractComisariaNumber, normalizeDepSearch } from './dependenciasHelpers';
 import { buildGuardiaDepRows, getDisplayLabel, isTxtItem } from './guardiaHelpers';
 import { inferCapacidadTipo, normalizeSearch } from './matafuegosHelpers';
 
@@ -24,16 +24,15 @@ function getDepBreadcrumb(dep, deps) {
 }
 
 function scoreDepSearchMatch(dep, deps, qRaw) {
-  const q = normalizeSearch(qRaw);
+  const q = normalizeDepSearch(qRaw);
   const qCompact = q.replace(/\s/g, '');
   const parent = getDepParent(deps, dep);
-  const qLower = String(qRaw || '').trim().toLowerCase();
-  if (!depMatchesBusqueda(dep, deps, qLower, parent)) return -1;
+  if (!depMatchesBusqueda(dep, deps, qRaw, parent)) return -1;
 
-  const nombre = normalizeSearch(dep.nombre || '');
-  const label = normalizeSearch(getDisplayLabel(dep, deps));
-  const codigo = normalizeSearch(dep.codigo || '');
-  const numero = normalizeSearch(dep.numero || '');
+  const nombre = normalizeDepSearch(dep.nombre || '');
+  const label = normalizeDepSearch(getDisplayLabel(dep, deps));
+  const codigo = normalizeDepSearch(dep.codigo || '');
+  const numero = normalizeDepSearch(dep.numero || '');
   const nombreCompact = nombre.replace(/\s/g, '');
   const labelCompact = label.replace(/\s/g, '');
 
@@ -44,6 +43,15 @@ function scoreDepSearchMatch(dep, deps, qRaw) {
   else if (nombre.includes(q)) score = 15;
   else if (label.includes(q) || labelCompact.includes(qCompact)) score = 25;
   else if (codigo.includes(q) || numero.includes(q)) score = 35;
+
+  const tokens = q.split(/\s+/).filter(Boolean);
+  const numToken = tokens.find((t) => /^\d{1,2}/.test(t));
+  if (numToken) {
+    const wanted = parseInt(numToken.replace(/\D/g, ''), 10);
+    const found = extractComisariaNumber(dep, deps);
+    if (!Number.isNaN(wanted) && found === wanted) score = 0;
+    else if (!Number.isNaN(wanted) && found != null) score += 50;
+  }
 
   if (dep.parentId && (nombre.includes(q) || nombreCompact.includes(qCompact))) {
     score -= 12;
@@ -58,6 +66,14 @@ function scoreDepSearchMatch(dep, deps, qRaw) {
   score += depth * 2;
 
   return score;
+}
+
+function compareDepSearchRows(a, b, deps) {
+  if (a.score !== b.score) return a.score - b.score;
+  const na = extractComisariaNumber(a.dep, deps);
+  const nb = extractComisariaNumber(b.dep, deps);
+  if (na != null && nb != null && na !== nb) return na - nb;
+  return a.label.localeCompare(b.label, 'es', { numeric: true, sensitivity: 'base' });
 }
 
 function buildFlatSearchDepRows(deps, busqueda) {
@@ -79,7 +95,7 @@ function buildFlatSearchDepRows(deps, busqueda) {
       };
     })
     .filter(Boolean)
-    .sort((a, b) => a.score - b.score || a.label.localeCompare(b.label, 'es'));
+    .sort((a, b) => compareDepSearchRows(a, b, deps));
 }
 
 /**

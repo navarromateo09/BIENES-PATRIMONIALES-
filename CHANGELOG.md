@@ -1,5 +1,25 @@
 # Historial de versiones
 
+## 1.9.6
+
+### Matafuegos — Historial
+- El movimiento genérico **Actualización** pasa a llamarse **Editado**.
+- Nueva columna **Usuario** en el historial (quién registró cada movimiento).
+
+### Matafuegos — Entrega
+- Búsqueda de dependencias corregida: `comisaria 4` encuentra la comisaría correcta (ya no confunde con **ZONA 4**).
+- Reconoce variantes: `4ta`, `cuarta`, `cria`, etc.
+- Se puede **seleccionar haciendo clic en la fila**; botón **Seleccionar** fijo a la derecha.
+
+### Matafuegos — Entregados
+- Columna **Fecha de entrega** al registrar una entrega (entregas nuevas).
+- SQL opcional en Supabase: `supabase-matafuegos-fecha-entrega.sql` (`fecha_entrega`).
+
+### Técnico
+- Versión **1.9.6** (`package.json`).
+
+---
+
 ## 1.9.2
 
 ### Auto-actualización

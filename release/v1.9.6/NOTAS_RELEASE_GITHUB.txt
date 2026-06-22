@@ -1,0 +1,25 @@
+## v1.9.6
+
+### Historial de matafuegos
+- **Editado** en lugar de "Actualización" cuando se modifican datos.
+- Columna **Usuario** con quién hizo cada movimiento.
+
+### Entrega de matafuegos
+- Búsqueda corregida: `comisaria 4` ya no mezcla resultados de **ZONA 4**.
+- Entiende `4ta`, `cuarta`, `cria`, etc.
+- Clic en la fila o botón **Seleccionar** (siempre visible).
+
+### Entregados
+- **Fecha de entrega** en la pestaña Entregados (entregas nuevas).
+
+### Supabase (opcional, multi-PC)
+Ejecutar una vez en el SQL Editor:
+`supabase-matafuegos-fecha-entrega.sql`
+
+### Auto-actualización
+Subir al Release estos 3 archivos:
+1. `Bienes.y.Patrimoniales.Setup.1.9.6.exe`
+2. `Bienes.y.Patrimoniales.Setup.1.9.6.exe.blockmap`
+3. `latest.yml`
+
+Los datos del usuario y Supabase no se pierden al actualizar.

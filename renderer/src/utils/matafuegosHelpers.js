@@ -134,6 +134,9 @@ export function getMatafuegoSearchText(m, estadoKey, depNombre = '') {
   if (estadoKey === 'recarga' || estadoKey === 'entregado') {
     parts.push(m.fechaIngreso, formatFecha(m.fechaIngreso));
   }
+  if (estadoKey === 'entregado') {
+    parts.push(m.fechaEntrega, formatFecha(m.fechaEntrega));
+  }
   return normalizeSearch(parts.join(' '));
 }
 
@@ -212,7 +215,7 @@ export function secondaryLineSug(m, estadoKey, depNombre) {
     return `Ingreso: ${fi} · ${depNombre || '—'}`;
   }
   if (estadoKey === 'entregado') {
-    const fe = m.fechaIngreso ? formatFecha(m.fechaIngreso) : '—';
+    const fe = m.fechaEntrega ? formatFecha(m.fechaEntrega) : '—';
     return `Entrega: ${fe} · ${depNombre || '—'}`;
   }
   return `Venc.: ${formatFecha(m.fechaVencimiento)}`;
@@ -385,8 +388,23 @@ export function applyVencimientoFilter(list, filtro) {
   });
 }
 
+export function formatHistorialUsuario(usuario) {
+  const u = String(usuario || '').trim();
+  if (!u) return '—';
+  if (u.toLowerCase() === 'sistema') return 'Sistema';
+  return u;
+}
+
+function inferHistorialMovimientoFromDetalle(detalle, accion) {
+  const d = String(detalle || '').toLowerCase();
+  if (d.includes('movimiento automático') && d.includes('recarga')) return 'Cambio de estado';
+  if (d.includes('eliminó matafuego') || String(accion || '').toUpperCase() === 'ELIMINAR') return 'Eliminación';
+  return 'Editado';
+}
+
 export function parseHistorialRow(row) {
   const detalle = String(row?.detalle || '');
+  const usuario = formatHistorialUsuario(row?.usuario);
   if (detalle.startsWith('MATAFUEGO_HIST|')) {
     try {
       const obj = JSON.parse(detalle.slice('MATAFUEGO_HIST|'.length));
@@ -395,16 +413,18 @@ export function parseHistorialRow(row) {
         fecha: obj.fecha || row.fecha,
         movimiento: labelMovimiento(obj.movimiento),
         marca: obj.marca || '—',
-        numeroSerie: obj.numeroSerie || row.entidadId || '—'
+        numeroSerie: obj.numeroSerie || row.entidadId || '—',
+        usuario
       };
     } catch (_) { /* fallthrough */ }
   }
   return {
     id: row.id,
     fecha: row.fecha,
-    movimiento: 'Actualización',
+    movimiento: inferHistorialMovimientoFromDetalle(detalle, row?.accion),
     marca: '—',
-    numeroSerie: row.entidadId || '—'
+    numeroSerie: row.entidadId || '—',
+    usuario
   };
 }
 
@@ -414,7 +434,9 @@ function labelMovimiento(key) {
   if (k === 'egreso') return 'Egreso';
   if (k === 'cambio_estado') return 'Cambio de estado';
   if (k === 'entrega') return 'Entrega';
-  return 'Actualización';
+  if (k === 'actualizacion' || k === 'editado') return 'Editado';
+  if (k === 'eliminacion') return 'Eliminación';
+  return 'Editado';
 }
 
 export function paginate(items, page, size) {

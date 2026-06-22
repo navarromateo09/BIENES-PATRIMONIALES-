@@ -522,6 +522,12 @@
   cursor: pointer;
 }
 
+.mf-fecha-sin-registro {
+  color: #94a3b8;
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
 .mf-form-actions {
   display: flex;
   justify-content: flex-end;
@@ -734,6 +740,61 @@
 
 .mf-entrega-dep-hit--top {
   background: #eef6fc;
+}
+
+.mf-entrega-dep-row {
+  cursor: pointer;
+}
+
+.mf-entrega-dep-row:hover {
+  background: #f3f9ff;
+}
+
+.mf-entrega-dep-row:focus-visible {
+  outline: 2px solid #1565a8;
+  outline-offset: -2px;
+}
+
+.mf-entrega-table-wrap .data-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.mf-entrega-table-wrap .data-table th:first-child,
+.mf-entrega-table-wrap .data-table td:first-child {
+  width: 52%;
+  max-width: 0;
+  overflow: hidden;
+}
+
+.mf-entrega-table-wrap .data-table th:nth-child(2),
+.mf-entrega-table-wrap .data-table td:nth-child(2) {
+  width: 24%;
+}
+
+.mf-entrega-table-wrap .data-table th:last-child,
+.mf-entrega-table-wrap .data-table td:last-child {
+  width: 24%;
+  min-width: 7.5rem;
+  position: sticky;
+  right: 0;
+  z-index: 2;
+  background: #fff;
+  box-shadow: -6px 0 10px rgba(15, 23, 42, 0.06);
+}
+
+.mf-entrega-table-wrap .data-table thead th:last-child {
+  z-index: 3;
+  background: #f8fafc;
+}
+
+.mf-entrega-dep-hit--top td:last-child,
+.mf-entrega-dep-row:hover td:last-child {
+  background: #f3f9ff;
+}
+
+.mf-entrega-pick-btn {
+  white-space: nowrap;
 }
 
 .mf-entrega-dep-hit--top .mf-entrega-dep-label {
