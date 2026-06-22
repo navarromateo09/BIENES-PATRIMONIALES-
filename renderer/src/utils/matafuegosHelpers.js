@@ -372,6 +372,77 @@ export function countProximosVencimiento(disponibles, dias = 30) {
   }).length;
 }
 
+/** Desglose por capacidad en kg (5, 10 u otros / sin dato). */
+export function countCapacidadKgBreakdown(items) {
+  let kg5 = 0;
+  let kg10 = 0;
+  let otros = 0;
+  let sinDato = 0;
+
+  (items || []).forEach((m) => {
+    const { capacidad } = inferCapacidadTipo(m.caracteristicas);
+    if (capacidad === '—') {
+      sinDato += 1;
+      return;
+    }
+    const norm = capacidad.replace(/\s/g, '').toLowerCase();
+    if (norm === '5kg') kg5 += 1;
+    else if (norm === '10kg') kg10 += 1;
+    else otros += 1;
+  });
+
+  return { kg5, kg10, otros, sinDato };
+}
+
+function toIsoDateLocal(d) {
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+function parseIsoYmdLocalDate(iso) {
+  if (!iso) return null;
+  const parts = String(iso).slice(0, 10).split('-').map(Number);
+  if (parts.length !== 3 || parts.some((n) => Number.isNaN(n))) return null;
+  const d = new Date(parts[0], parts[1] - 1, parts[2]);
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+
+export function minFechaMananaIso() {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() + 1);
+  return toIsoDateLocal(d);
+}
+
+/** Fecha sugerida al dar por terminada una recarga en taller. */
+export function defaultVencimientoPostRecarga(m) {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  d.setFullYear(d.getFullYear() + 1);
+  const suggested = toIsoDateLocal(d);
+  if (!m?.fechaVencimiento || isVencidoSinFecha(m.fechaVencimiento)) return suggested;
+  const fv = String(m.fechaVencimiento).slice(0, 10);
+  const v = parseIsoYmdLocalDate(fv);
+  if (!v) return suggested;
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+  if (v <= hoy) return suggested;
+  if (m.fechaIngreso) {
+    const ing = parseIsoYmdLocalDate(String(m.fechaIngreso).slice(0, 10));
+    if (ing && v < ing) return suggested;
+  }
+  return fv;
+}
+
+export function buildRecargandoIdsFromMap(recargandoMap, recargaItems) {
+  const ids = {};
+  const recargaIdSet = new Set((recargaItems || []).map((m) => String(m.id)));
+  Object.keys(recargandoMap || {}).forEach((id) => {
+    if (recargandoMap[id] && recargaIdSet.has(String(id))) ids[String(id)] = true;
+  });
+  return ids;
+}
+
 export function applyVencimientoFilter(list, filtro) {
   if (!filtro) return list;
   const hoy = new Date();

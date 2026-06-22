@@ -2335,8 +2335,24 @@ ipcMain.handle('import-dependencias', async (_, dependencias) => {
 });
 
 ipcMain.handle('save-dependencia', async (_, dependencia) => {
-  ensureAdminSession('Solo un administrador puede modificar dependencias.');
+  const session = loadSession();
+  if (!session || !session.username) {
+    throw new Error('Debe iniciar sesión.');
+  }
   if (!dependencia.id) dependencia.id = Date.now().toString();
+
+  let esEdicion = false;
+  if (supabase) {
+    const { data: rows } = await supabase.from('dependencias').select('id').eq('id', String(dependencia.id)).limit(1);
+    esEdicion = !!(rows && rows.length);
+  } else {
+    const data = await loadData();
+    esEdicion = (data.dependencias || []).some((d) => d && String(d.id) === String(dependencia.id));
+  }
+  if (esEdicion && !isAdminSession()) {
+    throw new Error('Solo un administrador puede editar dependencias.');
+  }
+
   const row = {
     id: dependencia.id,
     nombre: dependencia.nombre || '',
@@ -2347,6 +2363,12 @@ ipcMain.handle('save-dependencia', async (_, dependencia) => {
   if (supabase) {
     const { error } = await supabase.from('dependencias').upsert(row, { onConflict: 'id' });
     if (error) throw new Error(error.message);
+    await logAudit(
+      esEdicion ? 'MODIFICAR' : 'CREAR',
+      'Dependencias',
+      (esEdicion ? 'Editó' : 'Creó') + ' dependencia ' + (row.nombre || row.id),
+      row.id
+    );
     return dependencia.id;
   }
   const data = await loadData();
@@ -2356,6 +2378,12 @@ ipcMain.handle('save-dependencia', async (_, dependencia) => {
   if (idx >= 0) data.dependencias[idx] = { ...data.dependencias[idx], ...toSave };
   else data.dependencias.push(toSave);
   fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
+  await logAudit(
+    esEdicion ? 'MODIFICAR' : 'CREAR',
+    'Dependencias',
+    (esEdicion ? 'Editó' : 'Creó') + ' dependencia ' + (toSave.nombre || toSave.id),
+    toSave.id
+  );
   return dependencia.id;
 });
 

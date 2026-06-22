@@ -1,5 +1,28 @@
 # Historial de versiones
 
+## 1.9.8
+
+### Dependencias
+- Los usuarios **no administradores** pueden **agregar dependencias** y **divisiones** (+ Agregar dependencia, + División).
+- Editar, eliminar e importar estructura siguen reservados para administradores.
+- Auditoría registra creación y edición de dependencias.
+
+### Matafuegos — Entrega
+- Wizard de entrega en pestaña **Entregar** (pantalla completa, estilo Guardia).
+- Búsqueda de dependencias mejorada: `comisaria 1/2/3/4`, `Nº`, abreviaturas (`com 4`, `4ta`, etc.).
+- Tabla de resultados con **scroll** cuando hay muchas coincidencias.
+
+### Matafuegos — Para recarga
+- Restaurados botones **En recarga (taller)** y **Listo** (nueva fecha de vencimiento → Disponibles).
+
+### Matafuegos — KPIs
+- Desglose por capacidad (**5 kg** / **10 kg**) en tarjetas Disponibles y Para recarga.
+
+### Técnico
+- Versión **1.9.8** (`package.json`).
+
+---
+
 ## 1.9.6
 
 ### Matafuegos — Historial

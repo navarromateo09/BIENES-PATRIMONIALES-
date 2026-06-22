@@ -1,4 +1,12 @@
-import { depMatchesBusqueda, extractComisariaNumber, normalizeDepSearch } from './dependenciasHelpers';
+import {
+  depMatchesBusqueda,
+  expandDepSearchQuery,
+  extractComisariaNumber,
+  isComisariaFocusedQuery,
+  normalizeDepSearch,
+  normalizeDepSearchQuery,
+  parseComisariaNumberQuery
+} from './dependenciasHelpers';
 import { buildGuardiaDepRows, getDisplayLabel, isTxtItem } from './guardiaHelpers';
 import { inferCapacidadTipo, normalizeSearch } from './matafuegosHelpers';
 
@@ -24,7 +32,7 @@ function getDepBreadcrumb(dep, deps) {
 }
 
 function scoreDepSearchMatch(dep, deps, qRaw) {
-  const q = normalizeDepSearch(qRaw);
+  const q = expandDepSearchQuery(qRaw);
   const qCompact = q.replace(/\s/g, '');
   const parent = getDepParent(deps, dep);
   if (!depMatchesBusqueda(dep, deps, qRaw, parent)) return -1;
@@ -35,26 +43,50 @@ function scoreDepSearchMatch(dep, deps, qRaw) {
   const numero = normalizeDepSearch(dep.numero || '');
   const nombreCompact = nombre.replace(/\s/g, '');
   const labelCompact = label.replace(/\s/g, '');
+  const breadcrumb = normalizeDepSearch(getDepBreadcrumb(dep, deps));
 
   let score = 80;
+  const wantedComisaria = parseComisariaNumberQuery(q);
+  const foundComisaria = extractComisariaNumber(dep, deps);
+  const comisariaFocus = isComisariaFocusedQuery(q);
 
-  if (nombre === q || nombreCompact === qCompact) score = 0;
-  else if (nombre.startsWith(q)) score = 8;
-  else if (nombre.includes(q)) score = 15;
-  else if (label.includes(q) || labelCompact.includes(qCompact)) score = 25;
-  else if (codigo.includes(q) || numero.includes(q)) score = 35;
-
-  const tokens = q.split(/\s+/).filter(Boolean);
-  const numToken = tokens.find((t) => /^\d{1,2}/.test(t));
-  if (numToken) {
-    const wanted = parseInt(numToken.replace(/\D/g, ''), 10);
-    const found = extractComisariaNumber(dep, deps);
-    if (!Number.isNaN(wanted) && found === wanted) score = 0;
-    else if (!Number.isNaN(wanted) && found != null) score += 50;
+  if (wantedComisaria != null && foundComisaria === wantedComisaria) {
+    if (nombreCompact === `comisaria${wantedComisaria}` || nombre === `comisaria ${wantedComisaria}`) {
+      score = 0;
+    } else if (nombre.includes(`comisaria ${wantedComisaria}`) || nombreCompact.includes(`comisaria${wantedComisaria}`)) {
+      score = 1;
+    } else {
+      score = 3;
+    }
+  } else if (nombre === q || nombreCompact === qCompact) {
+    score = 0;
+  } else if (nombre.startsWith(q)) {
+    score = 8;
+  } else if (nombre.includes(q)) {
+    score = 12;
+  } else if (label.includes(q) || labelCompact.includes(qCompact)) {
+    score = 22;
+  } else if (breadcrumb.includes(q)) {
+    score = 32;
+  } else if (codigo.includes(q) || numero.includes(q)) {
+    score = 38;
+  } else if (comisariaFocus && foundComisaria != null) {
+    score = 18;
+  } else if (wantedComisaria == null) {
+    const numToken = q.split(/\s+/).find((t) => /^\d{1,2}/.test(t));
+    if (numToken) {
+      const wanted = parseInt(numToken.replace(/\D/g, ''), 10);
+      if (!Number.isNaN(wanted) && foundComisaria === wanted) score = 5;
+      else if (!Number.isNaN(wanted) && foundComisaria != null) score += 50;
+    }
   }
 
   if (dep.parentId && (nombre.includes(q) || nombreCompact.includes(qCompact))) {
-    score -= 12;
+    score -= 10;
+  }
+
+  if (comisariaFocus && !nombre.includes('comisaria') && !nombre.includes('cria') && !nombre.includes('seccional')) {
+    score += 25;
   }
 
   let depth = 0;
@@ -68,12 +100,25 @@ function scoreDepSearchMatch(dep, deps, qRaw) {
   return score;
 }
 
-function compareDepSearchRows(a, b, deps) {
+function compareDepSearchRows(a, b, deps, qRaw) {
+  const q = expandDepSearchQuery(qRaw);
+  const wantedComisaria = parseComisariaNumberQuery(q);
+  const comisariaQuery = wantedComisaria != null || isComisariaFocusedQuery(q);
+
+  if (comisariaQuery) {
+    const na = extractComisariaNumber(a.dep, deps);
+    const nb = extractComisariaNumber(b.dep, deps);
+    if (na != null && nb != null && na !== nb) return na - nb;
+    if (na != null && nb == null) return -1;
+    if (na == null && nb != null) return 1;
+  }
+
   if (a.score !== b.score) return a.score - b.score;
+
   const na = extractComisariaNumber(a.dep, deps);
   const nb = extractComisariaNumber(b.dep, deps);
   if (na != null && nb != null && na !== nb) return na - nb;
-  return a.label.localeCompare(b.label, 'es', { numeric: true, sensitivity: 'base' });
+  return a.nombre.localeCompare(b.nombre, 'es', { numeric: true, sensitivity: 'base' });
 }
 
 function buildFlatSearchDepRows(deps, busqueda) {
@@ -95,7 +140,7 @@ function buildFlatSearchDepRows(deps, busqueda) {
       };
     })
     .filter(Boolean)
-    .sort((a, b) => compareDepSearchRows(a, b, deps));
+    .sort((a, b) => compareDepSearchRows(a, b, deps, q));
 }
 
 /**

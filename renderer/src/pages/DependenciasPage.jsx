@@ -451,8 +451,8 @@ export default function DependenciasPage() {
       }
       setModalAgregarOpen(false);
       await refresh();
-    } catch {
-      showToast('Error al guardar', 'error');
+    } catch (err) {
+      showToast(err?.message || 'Error al guardar', 'error');
     } finally {
       hide();
     }
@@ -518,16 +518,16 @@ export default function DependenciasPage() {
         >
           Ver envíos
         </button>
+        {' '}
+        <button
+          type="button"
+          className="btn btn-secondary btn-sm"
+          onClick={() => openAgregarDivisiones(dep.id)}
+        >
+          + División
+        </button>
         {isAdmin && (
           <>
-            {' '}
-            <button
-              type="button"
-              className="btn btn-secondary btn-sm"
-              onClick={() => openAgregarDivisiones(dep.id)}
-            >
-              + División
-            </button>
             {' '}
             <div className="dep-acciones-wrap">
               <button
@@ -557,31 +557,33 @@ export default function DependenciasPage() {
     <div className="content-panel">
       <div className="panel-header">
         <h2 className="page-title">Gestión de dependencias</h2>
-        {isAdmin && (
-          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={() => importInputRef.current?.click()}
-            >
-              Importar estructura
-            </button>
-            <input
-              ref={importInputRef}
-              type="file"
-              accept=".csv,.txt"
-              style={{ display: 'none' }}
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) handleImport(file);
-                e.target.value = '';
-              }}
-            />
-            <button type="button" className="btn btn-primary" onClick={() => openAgregarModal('')}>
-              + Agregar dependencia
-            </button>
-          </div>
-        )}
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          {isAdmin && (
+            <>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => importInputRef.current?.click()}
+              >
+                Importar estructura
+              </button>
+              <input
+                ref={importInputRef}
+                type="file"
+                accept=".csv,.txt"
+                style={{ display: 'none' }}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) handleImport(file);
+                  e.target.value = '';
+                }}
+              />
+            </>
+          )}
+          <button type="button" className="btn btn-primary" onClick={() => openAgregarModal('')}>
+            + Agregar dependencia
+          </button>
+        </div>
       </div>
       <p className="panel-desc">
         Destinos o áreas con número de identificación (ej. 144). Puedes crear divisiones dentro de cada dependencia (ej. 144 - División 1).
@@ -691,11 +693,11 @@ export default function DependenciasPage() {
           </thead>
           <tbody>
             {!deps.length && (
-              <tr>
-                <td colSpan={3} className="empty-state">
-                  <p>No hay dependencias. Agrega una con el botón de arriba.</p>
-                </td>
-              </tr>
+                <tr>
+                  <td colSpan={3} className="empty-state">
+                    <p>No hay dependencias. Agregá una con el botón &quot;+ Agregar dependencia&quot;.</p>
+                  </td>
+                </tr>
             )}
             {sinCoincidencias && (
               <tr>

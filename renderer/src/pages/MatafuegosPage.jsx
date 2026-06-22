@@ -10,6 +10,8 @@ import {
   categorizeMatafuegos,
   collectGlobalSearchMatches,
   countProximosVencimiento,
+  buildRecargandoIdsFromMap,
+  countCapacidadKgBreakdown,
   estadoBadgeClass,
   estadoSugerenciaLabel,
   formatFecha,
@@ -25,6 +27,8 @@ import {
   secondaryLineSug
 } from '../utils/matafuegosHelpers';
 import MatafuegoEntregaWizard from '../components/matafuegos/MatafuegoEntregaWizard';
+import MatafuegoRecargaActions from '../components/matafuegos/MatafuegoRecargaActions';
+import MatafuegoRecargaListoModal from '../components/matafuegos/MatafuegoRecargaListoModal';
 import '../theme/matafuegos-pro.css';
 
 const TAB_ESTADO = {
@@ -39,7 +43,8 @@ const TABS = [
   { key: 'recarga', label: 'Para recarga', title: 'Matafuegos para recarga', sub: 'Vencidos o pendientes de recarga' },
   { key: 'inservibles', label: 'Inservibles', title: 'Matafuegos inservibles', sub: 'Fuera de servicio' },
   { key: 'entregados', label: 'Entregados', title: 'Matafuegos entregados', sub: 'Con dependencia asignada' },
-  { key: 'historial', label: 'Historial', title: 'Historial de movimientos', sub: 'Ingresos y cambios registrados' }
+  { key: 'historial', label: 'Historial', title: 'Historial de movimientos', sub: 'Ingresos y cambios registrados' },
+  { key: 'entregar', label: 'Entregar', title: 'Entregar matafuegos', sub: 'Registrá entregas a dependencias paso a paso' }
 ];
 
 const KPI = [
@@ -74,7 +79,9 @@ export default function MatafuegosPage() {
   const [dependencias, setDependencias] = useState([]);
   const [historial, setHistorial] = useState([]);
 
-  const [entregaOpen, setEntregaOpen] = useState(false);
+  const [entregaWizardKey, setEntregaWizardKey] = useState(0);
+  const [recargandoIds, setRecargandoIds] = useState({});
+  const [recargaListoMf, setRecargaListoMf] = useState(null);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [suggestIndex, setSuggestIndex] = useState(-1);
   const [highlightId, setHighlightId] = useState(null);
@@ -99,6 +106,11 @@ export default function MatafuegosPage() {
 
   const proximos30 = useMemo(() => countProximosVencimiento(cats.disponibles), [cats.disponibles]);
 
+  const capBreakdown = useMemo(() => ({
+    disponibles: countCapacidadKgBreakdown(cats.disponibles),
+    recarga: countCapacidadKgBreakdown(cats.recarga)
+  }), [cats.disponibles, cats.recarga]);
+
   const load = useCallback(async () => {
     const api = getStockAPI();
     if (!api?.getMatafuegosData) return;
@@ -106,9 +118,12 @@ export default function MatafuegosPage() {
     try {
       if (api.syncExpiredMatafuegos) await api.syncExpiredMatafuegos().catch(() => {});
       const bundle = await api.getMatafuegosData();
-      setAll(bundle.matafuegos || []);
+      const matafuegos = bundle.matafuegos || [];
+      const recargaItems = matafuegos.filter((m) => (m.estado || '') === 'recarga');
+      setAll(matafuegos);
       setDependencias(bundle.dependencias || []);
       setHistorial((bundle.auditLog || []).map(parseHistorialRow));
+      setRecargandoIds(buildRecargandoIdsFromMap(bundle.recargandoMap, recargaItems));
     } catch (e) {
       showToast(e.message || 'Error al cargar', 'error');
     } finally {
@@ -147,6 +162,7 @@ export default function MatafuegosPage() {
   );
 
   const filteredList = useMemo(() => {
+    if (tab === 'entregar') return [];
     if (tab === 'historial') {
       let h = historial;
       const term = normalizeSearch(effectiveTerm);
@@ -208,11 +224,71 @@ export default function MatafuegosPage() {
       }
       showToast(matafuegos.length > 1 ? `${matafuegos.length} matafuegos entregados` : 'Matafuego entregado');
       await load();
+      switchTab('entregados');
+      setEntregaWizardKey((k) => k + 1);
     } catch (err) {
       if (err?.message !== 'incomplete') {
         showToast(err.message || 'Error al registrar', 'error');
       }
       throw err;
+    } finally {
+      hide();
+    }
+  }
+
+  async function handleToggleRecargando(m) {
+    const id = String(m.id || '');
+    if (!id) return;
+    const api = getStockAPI();
+    const next = !recargandoIds[id];
+    setRecargandoIds((prev) => {
+      const copy = { ...prev };
+      if (next) copy[id] = true;
+      else delete copy[id];
+      return copy;
+    });
+    try {
+      if (api?.setMatafuegoRecargando) {
+        await api.setMatafuegoRecargando(id, next);
+      }
+    } catch (err) {
+      setRecargandoIds((prev) => {
+        const copy = { ...prev };
+        if (next) delete copy[id];
+        else copy[id] = true;
+        return copy;
+      });
+      showToast(err.message || 'No se pudo sincronizar el estado recargando', 'error');
+    }
+  }
+
+  async function handleRecargaListoConfirm(fechaVencimiento) {
+    const m = recargaListoMf;
+    if (!m) return;
+    const api = getStockAPI();
+    const hoy = new Date().toISOString().slice(0, 10);
+    show('Pasando a disponible…');
+    try {
+      await saveMatafuego({
+        id: m.id,
+        marca: m.marca || null,
+        numeroSerie: m.numeroSerie || '',
+        caracteristicas: m.caracteristicas || null,
+        fechaVencimiento,
+        estado: 'disponible',
+        fechaIngreso: hoy,
+        dependenciaId: null
+      });
+      const id = String(m.id);
+      if (recargandoIds[id] && api?.setMatafuegoRecargando) {
+        await api.setMatafuegoRecargando(id, false).catch(() => {});
+      }
+      setRecargaListoMf(null);
+      showToast('Matafuego disponible tras la recarga');
+      await load();
+      switchTab('disponibles');
+    } catch (err) {
+      showToast(err.message || 'Error al pasar a disponible', 'error');
     } finally {
       hide();
     }
@@ -273,6 +349,9 @@ export default function MatafuegosPage() {
     setTab(nextTab);
     setPanelSearch('');
     setHighlightId(null);
+    if (nextTab === 'entregar') {
+      setEntregaWizardKey((k) => k + 1);
+    }
   }
 
   function applyGlobalSuggestion(match) {
@@ -328,7 +407,7 @@ export default function MatafuegosPage() {
             <p className="mf-hero-sub">Gestión y control de matafuegos</p>
           </div>
           <div className="mf-hero-actions">
-            <button type="button" className="btn btn-secondary btn-sm" onClick={() => setEntregaOpen(true)}>
+            <button type="button" className="btn btn-secondary btn-sm" onClick={() => switchTab('entregar')}>
               Entregar matafuego
             </button>
             <button type="button" className="btn btn-primary btn-sm" onClick={() => navigate('/matafuegos/nuevo')}>
@@ -338,7 +417,9 @@ export default function MatafuegosPage() {
         </header>
 
         <section className="mf-kpi-grid" aria-label="Resumen">
-          {KPI.map((k) => (
+          {KPI.map((k) => {
+            const cap = (k.key === 'disponibles' || k.key === 'recarga') ? capBreakdown[k.key] : null;
+            return (
             <button
               key={k.key}
               type="button"
@@ -348,8 +429,22 @@ export default function MatafuegosPage() {
               <p className="mf-kpi-label">{k.label}</p>
               <p className="mf-kpi-value">{counts[k.key] ?? 0}</p>
               <p className="mf-kpi-hint">{k.hint}</p>
+              {cap && (
+                <p className="mf-kpi-breakdown" aria-label={`Desglose por capacidad en ${k.label.toLowerCase()}`}>
+                  <span><strong>5 kg:</strong> {cap.kg5}</span>
+                  <span><strong>10 kg:</strong> {cap.kg10}</span>
+                  {(cap.otros > 0 || cap.sinDato > 0) && (
+                    <span className="mf-kpi-breakdown-muted">
+                      {cap.otros > 0 && `Otro: ${cap.otros}`}
+                      {cap.otros > 0 && cap.sinDato > 0 && ' · '}
+                      {cap.sinDato > 0 && `Sin dato: ${cap.sinDato}`}
+                    </span>
+                  )}
+                </p>
+              )}
             </button>
-          ))}
+            );
+          })}
         </section>
 
         <div className="mf-alert-banner">
@@ -368,6 +463,7 @@ export default function MatafuegosPage() {
           </button>
         </div>
 
+        {tab !== 'entregar' && (
         <div className="mf-search-global" ref={globalSearchRef}>
           <div className="matafuegos-search-combo">
             <span className="mf-search-icon" aria-hidden="true">🔍</span>
@@ -459,14 +555,17 @@ export default function MatafuegosPage() {
             </p>
           )}
         </div>
+        )}
 
-        <div className="mf-panel-card">
+        <div className={`mf-panel-card${tab === 'entregar' ? ' mf-panel-card--entrega' : ''}`}>
+          {tab !== 'entregar' && (
           <div className="mf-panel-toolbar">
             <span className="mf-pag-info">{filteredList.length} registro(s) en {tabInfo?.label}</span>
             <button type="button" className="btn btn-secondary btn-sm" onClick={handleExport}>
               Exportar Excel
             </button>
           </div>
+          )}
           <nav className="mf-tabs" role="tablist">
             {TABS.map((t) => (
               <button
@@ -482,6 +581,16 @@ export default function MatafuegosPage() {
           </nav>
 
           <div className="mf-tab-body">
+            {tab === 'entregar' ? (
+              <MatafuegoEntregaWizard
+                key={entregaWizardKey}
+                dependencias={dependencias}
+                disponibles={cats.disponibles}
+                onCancel={() => switchTab('disponibles')}
+                onConfirm={handleEntregaConfirm}
+              />
+            ) : (
+            <>
             <div className="mf-tab-head">
               <h3>{tabInfo?.title}</h3>
               <p>{tabInfo?.sub}</p>
@@ -563,6 +672,7 @@ export default function MatafuegosPage() {
                       <th>Tipo</th>
                       {tab === 'entregados' && <th>Dependencia</th>}
                       {tab === 'entregados' && <th>Fecha de entrega</th>}
+                      {tab === 'recarga' && <th>Estado</th>}
                       <th>Última recarga</th>
                       <th>Próximo vencimiento</th>
                       <th>Acciones</th>
@@ -571,6 +681,7 @@ export default function MatafuegosPage() {
                   <tbody>
                     {pag.items.map((m) => {
                       const inf = inferCapacidadTipo(m.caracteristicas);
+                      const recargando = tab === 'recarga' && !!recargandoIds[String(m.id)];
                       return (
                         <tr
                           key={m.id}
@@ -588,12 +699,32 @@ export default function MatafuegosPage() {
                           {tab === 'entregados' && (
                             <td>{m.fechaEntrega ? formatFecha(m.fechaEntrega) : <span className="mf-fecha-sin-registro">Sin registro</span>}</td>
                           )}
+                          {tab === 'recarga' && (
+                            <td>
+                              <span className={recargando ? 'mf-estado-recargando' : 'mf-estado-pendiente'}>
+                                {recargando ? 'Recargando' : 'Pendiente'}
+                              </span>
+                            </td>
+                          )}
                           <td>{formatFecha(m.fechaIngreso)}</td>
                           <td className={vencClass(m)}>{formatFecha(m.fechaVencimiento)}</td>
                           <td className="mf-actions-cell">
-                            <button type="button" className="btn btn-secondary btn-sm" onClick={() => navigate(`/matafuegos/editar/${m.id}`)}>Editar</button>
-                            {isAdmin && (
-                              <button type="button" className="btn btn-secondary btn-sm" onClick={() => handleDelete(m)}>Eliminar</button>
+                            {tab === 'recarga' ? (
+                              <MatafuegoRecargaActions
+                                recargando={recargando}
+                                onToggleRecargando={() => handleToggleRecargando(m)}
+                                onOpenListo={() => setRecargaListoMf(m)}
+                                onEdit={() => navigate(`/matafuegos/editar/${m.id}`)}
+                                onDelete={() => handleDelete(m)}
+                                isAdmin={isAdmin}
+                              />
+                            ) : (
+                              <>
+                                <button type="button" className="btn btn-secondary btn-sm" onClick={() => navigate(`/matafuegos/editar/${m.id}`)}>Editar</button>
+                                {isAdmin && (
+                                  <button type="button" className="btn btn-secondary btn-sm" onClick={() => handleDelete(m)}>Eliminar</button>
+                                )}
+                              </>
                             )}
                           </td>
                         </tr>
@@ -619,16 +750,16 @@ export default function MatafuegosPage() {
                 </label>
               </div>
             )}
+            </>
+            )}
           </div>
         </div>
       </div>
 
-      <MatafuegoEntregaWizard
-        open={entregaOpen}
-        dependencias={dependencias}
-        disponibles={cats.disponibles}
-        onClose={() => setEntregaOpen(false)}
-        onConfirm={handleEntregaConfirm}
+      <MatafuegoRecargaListoModal
+        matafuego={recargaListoMf}
+        onClose={() => setRecargaListoMf(null)}
+        onConfirm={handleRecargaListoConfirm}
       />
     </>
   );

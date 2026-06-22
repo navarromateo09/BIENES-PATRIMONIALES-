@@ -36,6 +36,47 @@ export function normalizeDepSearch(s) {
     .trim();
 }
 
+export function normalizeDepSearchQuery(s) {
+  return normalizeDepSearch(s).replace(/\s+/g, ' ');
+}
+
+/** Expande abreviaturas frecuentes antes de buscar. */
+export function expandDepSearchQuery(raw) {
+  let q = normalizeDepSearchQuery(raw);
+  q = q.replace(/\bcom\.?\b/g, 'comisaria');
+  q = q.replace(/\bcrias?\b/g, (m) => (m === 'cria' ? 'comisaria' : 'comisarias'));
+  q = q.replace(/\bseccionales?\b/g, (m) => (m.startsWith('seccional') && m.length > 9 ? 'seccionales' : 'seccional'));
+  q = q.replace(/\s+/g, ' ').trim();
+  return q;
+}
+
+function isComisariaHintToken(token) {
+  const t = normalizeDepSearch(token);
+  if (!t) return false;
+  return matchesComisariaHint(t)
+    || t.startsWith('comis')
+    || t === 'com'
+    || t === 'cria'
+    || t === 'crias';
+}
+
+export function isComisariaFocusedQuery(raw) {
+  const q = expandDepSearchQuery(raw);
+  if (parseComisariaNumberQuery(q) != null) return true;
+  const tokens = q.split(/\s+/).filter(Boolean);
+  if (!tokens.length) return false;
+  return tokens.some((t) => isComisariaHintToken(t));
+}
+
+function isSelectableComisariaDep(dep, deps, parent) {
+  const { nombre, label } = depSelfText(dep, deps, parent);
+  const text = `${nombre} ${label}`;
+  if (matchesComisariaHint(text)) return true;
+  if (/(?:comisaria|cria|seccional)\s*(?:n[°º.]?\s*)?\d{1,2}/i.test(text)) return true;
+  if (/\d{1,2}(?:ta|ra|ero|do|ma|va|na)?\s+(?:comisaria|cria|seccional)/i.test(text)) return true;
+  return false;
+}
+
 const ORDINAL_WORDS = {
   1: ['1', '1ra', '1era', 'primera', 'primero'],
   2: ['2', '2da', 'segunda', 'segundo'],
@@ -113,12 +154,72 @@ function depSelfText(dep, deps, parent) {
   return { label, nombre, numero, fields: ` ${nombre} ${numero} ${label} ` };
 }
 
-function parseComisariaNumberQuery(q) {
-  const m1 = q.match(/^(?:comisaria|comisarias|cria|crias|seccional|seccionales)\s+(\d{1,2})(?:ta|ra|ero|do|ma|va|na)?$/);
+function compactDepSearchText(s) {
+  return normalizeDepSearch(s).replace(/[°º.]/g, '').replace(/\s/g, '');
+}
+
+export function parseComisariaNumberQuery(q) {
+  const normalized = expandDepSearchQuery(q)
+    .replace(/\s*[-/]\s*/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const m1 = normalized.match(
+    /^(?:comisaria|comisarias|cria|crias|seccional|seccionales)\s*(?:(?:n[°º.]|nro\.?)\s*)?(\d{1,2})(?:ta|ra|ero|do|ma|va|na)?$/
+  );
   if (m1) return parseInt(m1[1], 10);
-  const m2 = q.match(/^(\d{1,2})(?:ta|ra|ero|do|ma|va|na)?\s+(?:comisaria|comisarias|cria|crias|seccional|seccionales)$/);
+  const m2 = normalized.match(
+    /^(\d{1,2})(?:ta|ra|ero|do|ma|va|na)?\s+(?:comisaria|comisarias|cria|crias|seccional|seccionales)$/
+  );
   if (m2) return parseInt(m2[1], 10);
+  const m3 = normalized.match(/^com\.?\s*(\d{1,2})(?:ta|ra|ero|do|ma|va|na)?$/);
+  if (m3) return parseInt(m3[1], 10);
+  const m4 = normalized.match(/^(?:comisaria|cria|seccional)\s+(\d{1,2})$/);
+  if (m4) return parseInt(m4[1], 10);
+  const m5 = normalized.match(/^(\d{1,2})(?:ta|ra|ero|do|ma|va|na)$/);
+  if (m5) return parseInt(m5[1], 10);
   return null;
+}
+
+function comisariaDepMatchesWantedNumber(dep, deps, parent, wanted) {
+  const found = extractComisariaNumber(dep, deps);
+  if (found === wanted) return true;
+
+  const { nombre, label, numero } = depSelfText(dep, deps, parent);
+  const depText = `${nombre} ${label}`;
+  const depCompact = compactDepSearchText(depText);
+
+  const patterns = [
+    new RegExp(
+      `(?:comisaria|comisarias|cria|crias|seccional|seccionales)\\s*(?:n[°º.]?\\s*)?0*${wanted}(?:ta|ra|ero|do|ma|va|na)?\\b`,
+      'i'
+    ),
+    new RegExp(
+      `\\b0*${wanted}(?:ta|ra|ero|do|ma|va|na)?\\s+(?:comisaria|comisarias|cria|crias|seccional|seccionales)\\b`,
+      'i'
+    )
+  ];
+  if (patterns.some((re) => re.test(depText))) return true;
+
+  const ordWords = ORDINAL_WORDS[wanted] || [];
+  if (ordWords.some((w) => {
+    const wn = compactDepSearchText(w);
+    return wn.length > 1 && depCompact.includes(wn);
+  })) {
+    return true;
+  }
+
+  if (numero && parseInt(numero, 10) === wanted && matchesComisariaHint(depText)) {
+    return true;
+  }
+
+  if (
+    matchesComisariaHint(depText)
+    && new RegExp(`-\\s*0*${wanted}(?:ta|ra|ero|do|ma|va|na)?\\s*-`, 'i').test(label)
+  ) {
+    return true;
+  }
+
+  return false;
 }
 
 function matchesComisariaDep(dep, deps, parent) {
@@ -144,17 +245,24 @@ function tokenMatchesDep(token, haystack, dep, deps, parent) {
   const numFromToken = t.match(/^(\d{1,2})(?:ta|ra|ero|do|ma|va|na)?$/);
   if (numFromToken) {
     const wanted = parseInt(numFromToken[1], 10);
+    if (matchesComisariaDep(dep, deps, parent) || isSelectableComisariaDep(dep, deps, parent)) {
+      if (comisariaDepMatchesWantedNumber(dep, deps, parent, wanted)) return true;
+      return false;
+    }
     const found = extractComisariaNumber(dep, deps);
     if (!Number.isNaN(wanted) && found === wanted) return true;
     const ordWords = ORDINAL_WORDS[wanted] || [];
     if (ordWords.some((w) => depOnly.includes(normalizeDepSearch(w).replace(/\s/g, '')))) return true;
     const re = new RegExp(`(?:^|[\\s\\-nº°ª])${wanted}(?:ta|ra|ero|do|ma|va|na)?(?:\\s|$|\\-)`, 'i');
-    if (re.test(self.fields)) return true;
+    if (re.test(self.fields)) {
+      if (/\bzona\b/.test(self.nombre) && !isSelectableComisariaDep(dep, deps, parent)) return false;
+      return true;
+    }
     return false;
   }
 
-  if (t === 'comisaria' || t === 'comisarias' || t.startsWith('comis') || t === 'cria' || t === 'crias') {
-    if (matchesComisariaDep(dep, deps, parent)) return true;
+  if (isComisariaHintToken(t)) {
+    return isSelectableComisariaDep(dep, deps, parent);
   }
 
   return variants.some((v) => {
@@ -172,7 +280,7 @@ export function extractComisariaNumber(dep, deps) {
   const combined = `${nombre} ${label} ${ancestors}`;
   const numero = String(dep.numero != null ? dep.numero : '').trim();
 
-  const m = combined.match(/(?:comisaria|cria|seccional)\s*(\d+)/);
+  const m = combined.match(/(?:comisaria|cria|seccional)\s*(?:n[°º.]?\s*)?(\d{1,2})/);
   if (m) return parseInt(m[1], 10);
 
   for (const [num, words] of Object.entries(ORDINAL_WORDS)) {
@@ -195,21 +303,27 @@ export function extractComisariaNumber(dep, deps) {
 
 export function depMatchesBusqueda(dep, deps, busqueda, parent) {
   if (!busqueda) return true;
-  const q = normalizeDepSearch(busqueda);
+  const q = expandDepSearchQuery(busqueda);
   if (!q) return true;
+
+  const haystack = haystackForDepSearch(dep, deps, parent);
+  const qCompact = compactDepSearchText(q);
+  const self = depSelfText(dep, deps, parent);
+  const depOnlyCompact = compactDepSearchText(`${self.nombre} ${self.label} ${self.numero}`);
+  const depOnlyText = `${self.nombre} ${self.label}`;
+
+  if (depOnlyCompact.includes(qCompact) || depOnlyText.includes(q)) return true;
 
   const wantedComisaria = parseComisariaNumberQuery(q);
   if (wantedComisaria != null) {
-    if (!matchesComisariaDep(dep, deps, parent)) return false;
-    return extractComisariaNumber(dep, deps) === wantedComisaria;
+    if (!isSelectableComisariaDep(dep, deps, parent)) return false;
+    return comisariaDepMatchesWantedNumber(dep, deps, parent, wantedComisaria);
   }
 
-  const haystack = haystackForDepSearch(dep, deps, parent);
-  const qCompact = q.replace(/\s/g, '');
-  const self = depSelfText(dep, deps, parent);
-  const depOnlyCompact = `${self.nombre} ${self.label} ${self.numero}`.replace(/\s/g, '');
+  if (isComisariaFocusedQuery(q) && !isSelectableComisariaDep(dep, deps, parent)) {
+    return false;
+  }
 
-  if (depOnlyCompact.includes(qCompact) || `${self.nombre} ${self.label}`.includes(q)) return true;
   if (haystack.text.includes(q) || haystack.compact.includes(qCompact)) return true;
 
   const tokens = q.split(/\s+/).filter(Boolean);
