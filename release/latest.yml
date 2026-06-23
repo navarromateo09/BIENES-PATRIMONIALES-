@@ -1,8 +1,8 @@
-version: 1.9.8
+version: 1.9.9
 files:
-  - url: Bienes.y.Patrimoniales.Setup.1.9.8.exe
-    sha512: JYFS02d8OmiEM7D8IP5OuSD3XOHuWcCgz5YZCvbPLU0deVZgOv64+Sq1sNuGZF9JnR3RWb4OM9u2WFu2fNj2fA==
-    size: 91876275
-path: Bienes.y.Patrimoniales.Setup.1.9.8.exe
-sha512: JYFS02d8OmiEM7D8IP5OuSD3XOHuWcCgz5YZCvbPLU0deVZgOv64+Sq1sNuGZF9JnR3RWb4OM9u2WFu2fNj2fA==
-releaseDate: '2026-06-22T13:48:03.691Z'
+  - url: Bienes.y.Patrimoniales.Setup.1.9.9.exe
+    sha512: DrhTSag4HrslqSkSUotlhz8KcP0BFM7AvKMbgpjA+AkKcvZ9qJ/cJqTm09P3kvqXG0wlWW4QSwvBzOCqSCrCdg==
+    size: 91877441
+path: Bienes.y.Patrimoniales.Setup.1.9.9.exe
+sha512: DrhTSag4HrslqSkSUotlhz8KcP0BFM7AvKMbgpjA+AkKcvZ9qJ/cJqTm09P3kvqXG0wlWW4QSwvBzOCqSCrCdg==
+releaseDate: '2026-06-23T13:03:29.641Z'

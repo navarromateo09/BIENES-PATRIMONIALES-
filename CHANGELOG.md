@@ -1,5 +1,26 @@
 # Historial de versiones
 
+## 1.9.9
+
+### Matafuegos — Historial
+- Filtros por **marca**, **capacidad (kg)** y **tipo de movimiento** (ingreso, salida, cambio de estado, editado, entrega, eliminado).
+- Columna **Capacidad** en la tabla.
+- Solo movimientos reales (sin registros internos de recarga).
+
+### Matafuegos — Entregados
+- Filtros por **marca** y **capacidad (kg)**.
+- Columna **Usuario** (quién registró la entrega).
+- Entregas nuevas guardan usuario y fecha; entregas antiguas sin auditoría muestran **—**.
+
+### Matafuegos — Auditoría de entregas
+- Historial ampliado (hasta 2000 registros) y mejor detección de movimientos de entrega.
+- Usuario guardado en cada movimiento del historial.
+
+### Técnico
+- Versión **1.9.9** (`package.json`).
+
+---
+
 ## 1.9.8
 
 ### Dependencias

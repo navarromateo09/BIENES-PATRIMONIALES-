@@ -282,6 +282,10 @@
   margin: 0;
 }
 
+.mf-filters-row--historial {
+  margin-bottom: 0.75rem;
+}
+
 .mf-filters-row {
   display: flex;
   flex-wrap: wrap;

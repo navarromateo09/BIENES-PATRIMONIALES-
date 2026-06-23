@@ -1,0 +1,26 @@
+## v1.9.9
+
+### Matafuegos — Historial
+- Filtros por **marca**, **capacidad (kg)** y **tipo de movimiento** (ingreso, salida, cambio de estado, editado, entrega, eliminado).
+- Columna **Capacidad** en la tabla.
+- Solo movimientos reales (sin registros internos de recarga).
+
+### Matafuegos — Entregados
+- Filtros por **marca** y **capacidad (kg)**.
+- Columna **Usuario** (quién registró la entrega).
+- Entregas nuevas guardan usuario y fecha; entregas antiguas sin auditoría muestran **—**.
+
+### Matafuegos — Auditoría
+- Historial ampliado (hasta 2000 registros) y mejor detección de movimientos de entrega.
+- Usuario guardado en cada movimiento del historial.
+
+### Dependencias (desde 1.9.8)
+- Usuarios no admin pueden agregar dependencias y divisiones.
+
+### Auto-actualización
+Subir al Release estos 3 archivos:
+1. `Bienes.y.Patrimoniales.Setup.1.9.9.exe`
+2. `Bienes.y.Patrimoniales.Setup.1.9.9.exe.blockmap`
+3. `latest.yml`
+
+Los datos del usuario y Supabase no se pierden al actualizar.

@@ -2,6 +2,15 @@ const VENCIDO_SIN_FECHA = '1900-01-01';
 
 export const MF_KG_OPTIONS = ['5 kg', '10 kg'];
 
+export const HISTORIAL_MOVIMIENTO_FILTROS = [
+  { value: 'ingreso', label: 'Ingreso' },
+  { value: 'egreso', label: 'Salida / Egreso' },
+  { value: 'cambio_estado', label: 'Cambio de estado' },
+  { value: 'editado', label: 'Editado' },
+  { value: 'entrega', label: 'Entrega' },
+  { value: 'eliminacion', label: 'Eliminado' }
+];
+
 export function inferCapacidadTipo(caracteristicas) {
   const c = String(caracteristicas || '').trim();
   if (!c) return { capacidad: '—', tipo: '' };
@@ -394,6 +403,23 @@ export function countCapacidadKgBreakdown(items) {
   return { kg5, kg10, otros, sinDato };
 }
 
+export function collectMatafuegoMarcas(items) {
+  const s = new Set();
+  (items || []).forEach((m) => {
+    const marca = String(m?.marca || '').trim();
+    if (marca) s.add(marca);
+  });
+  return [...s].sort();
+}
+
+export function matchesCapacidadKgFilter(m, kgFilter) {
+  if (!kgFilter) return true;
+  const { capacidad } = inferCapacidadTipo(m?.caracteristicas);
+  if (kgFilter === 'otros') return capacidad !== '—' && !MF_KG_OPTIONS.includes(capacidad);
+  if (kgFilter === 'sin_dato') return capacidad === '—';
+  return capacidad === kgFilter;
+}
+
 function toIsoDateLocal(d) {
   const pad = (n) => String(n).padStart(2, '0');
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
@@ -466,6 +492,94 @@ export function formatHistorialUsuario(usuario) {
   return u;
 }
 
+/** Filas de auditoría que representan movimientos visibles en Historial. */
+export function isMatafuegoHistorialAuditRow(row) {
+  if (!row || row.modulo !== 'Matafuegos') return false;
+  const detalle = String(row.detalle || '');
+  if (detalle.startsWith('MATAFUEGO_HIST|')) return true;
+  if (String(row.accion || '').toUpperCase() === 'ELIMINAR') return true;
+  return false;
+}
+
+function isEntregaMovimiento(obj) {
+  if (!obj) return false;
+  const mov = String(obj.movimiento || '').toLowerCase();
+  if (mov === 'egreso' || mov === 'entrega') return true;
+  const nextEst = String(obj.estadoNuevo || '').toLowerCase();
+  const prevEst = String(obj.estadoAnterior || '').toLowerCase();
+  if (nextEst === 'entregado' && prevEst !== 'entregado') return true;
+  const depNueva = obj.dependenciaNueva != null ? String(obj.dependenciaNueva).trim() : '';
+  const depAnterior = obj.dependenciaAnterior != null ? String(obj.dependenciaAnterior).trim() : '';
+  if (depNueva && !depAnterior) return true;
+  return false;
+}
+
+/** Usuario que registró la entrega de cada matafuego (id → usuario). */
+export function buildEntregaUsuarioByMatafuegoId(auditRows) {
+  const byId = {};
+  const bySerie = {};
+
+  function consider(mfId, serie, fecha, usuario) {
+    const u = formatHistorialUsuario(usuario);
+    if (u === '—') return;
+    const f = String(fecha || '');
+    if (mfId) {
+      const key = String(mfId);
+      if (!byId[key] || f >= (byId[key].fecha || '')) byId[key] = { usuario: u, fecha: f };
+    }
+    const s = normalizeAlnum(serie);
+    if (s) {
+      if (!bySerie[s] || f >= (bySerie[s].fecha || '')) bySerie[s] = { usuario: u, fecha: f };
+    }
+  }
+
+  (auditRows || []).forEach((row) => {
+    const detalle = String(row.detalle || '');
+    if (!detalle.startsWith('MATAFUEGO_HIST|')) return;
+    try {
+      const obj = JSON.parse(detalle.slice('MATAFUEGO_HIST|'.length));
+      if (!isEntregaMovimiento(obj)) return;
+      const usuario = row.usuario || obj.usuario;
+      consider(obj.id || row.entidadId, obj.numeroSerie, obj.fecha || row.fecha, usuario);
+    } catch (_) { /* ignore */ }
+  });
+
+  return { byId, bySerie };
+}
+
+export function resolveEntregaUsuario(matafuego, map) {
+  if (!matafuego) return '—';
+  const stored = formatHistorialUsuario(matafuego.usuarioEntrega);
+  if (stored !== '—') return stored;
+  if (!map) return '—';
+  const idKey = String(matafuego.id || '');
+  if (idKey && map.byId[idKey]) return map.byId[idKey].usuario;
+  const s = normalizeAlnum(matafuego.numeroSerie);
+  if (s && map.bySerie[s]) return map.bySerie[s].usuario;
+  return '—';
+}
+
+function normalizeMovimientoKey(key) {
+  const k = String(key || '').toLowerCase();
+  if (k === 'ingreso') return 'ingreso';
+  if (k === 'egreso' || k === 'salida') return 'egreso';
+  if (k === 'cambio_estado' || k === 'cambio de estado') return 'cambio_estado';
+  if (k === 'entrega') return 'entrega';
+  if (k === 'eliminacion' || k === 'eliminación' || k === 'eliminado') return 'eliminacion';
+  if (k === 'actualizacion' || k === 'editado') return 'editado';
+  return 'editado';
+}
+
+export function movimientoKeyFromLabel(label) {
+  const l = String(label || '').toLowerCase();
+  if (l === 'ingreso') return 'ingreso';
+  if (l === 'egreso' || l === 'salida') return 'egreso';
+  if (l.includes('cambio de estado') || l === 'cambio de estado') return 'cambio_estado';
+  if (l.includes('elimin')) return 'eliminacion';
+  if (l === 'entrega') return 'entrega';
+  return 'editado';
+}
+
 function inferHistorialMovimientoFromDetalle(detalle, accion) {
   const d = String(detalle || '').toLowerCase();
   if (d.includes('movimiento automático') && d.includes('recarga')) return 'Cambio de estado';
@@ -473,28 +587,90 @@ function inferHistorialMovimientoFromDetalle(detalle, accion) {
   return 'Editado';
 }
 
+export function enrichHistorialRows(rows, matafuegos = []) {
+  const mfById = new Map((matafuegos || []).map((m) => [String(m.id), m]));
+  const mfBySerie = new Map();
+  (matafuegos || []).forEach((m) => {
+    const s = normalizeAlnum(m.numeroSerie);
+    if (s) mfBySerie.set(s, m);
+  });
+
+  return (rows || []).map((r) => {
+    let car = r.caracteristicas || '';
+    if (!car && r.matafuegoId) car = mfById.get(String(r.matafuegoId))?.caracteristicas || '';
+    if (!car && r.numeroSerie && r.numeroSerie !== '—') {
+      car = mfBySerie.get(normalizeAlnum(r.numeroSerie))?.caracteristicas || '';
+    }
+    const { capacidad } = inferCapacidadTipo(car);
+    const capacidadKg = capacidad !== '—' ? capacidad : '';
+    return { ...r, capacidadKg };
+  });
+}
+
+export function filterMatafuegoHistorial(rows, filtros = {}) {
+  const { buscar = '', marca = '', kg = '', movimiento = '' } = filtros;
+  let out = rows || [];
+
+  if (marca) out = out.filter((r) => r.marca === marca);
+  if (movimiento) {
+    out = out.filter((r) => (r.movimientoKey || movimientoKeyFromLabel(r.movimiento)) === movimiento);
+  }
+  if (kg) {
+    if (kg === 'otros') {
+      out = out.filter((r) => r.capacidadKg && !MF_KG_OPTIONS.includes(r.capacidadKg));
+    } else {
+      out = out.filter((r) => r.capacidadKg === kg);
+    }
+  }
+  if (buscar) {
+    const term = normalizeSearch(buscar);
+    out = out.filter((r) => normalizeSearch(
+      `${r.marca} ${r.numeroSerie} ${r.movimiento} ${r.usuario || ''} ${r.capacidadKg || ''}`
+    ).includes(term));
+  }
+  return out;
+}
+
+export function collectHistorialMarcas(rows) {
+  const s = new Set();
+  (rows || []).forEach((r) => {
+    const m = String(r.marca || '').trim();
+    if (m && m !== '—') s.add(m);
+  });
+  return [...s].sort();
+}
+
 export function parseHistorialRow(row) {
   const detalle = String(row?.detalle || '');
-  const usuario = formatHistorialUsuario(row?.usuario);
   if (detalle.startsWith('MATAFUEGO_HIST|')) {
     try {
       const obj = JSON.parse(detalle.slice('MATAFUEGO_HIST|'.length));
+      const movimientoKey = normalizeMovimientoKey(obj.movimiento);
+      const usuario = formatHistorialUsuario(row?.usuario || obj.usuario);
       return {
         id: row.id,
         fecha: obj.fecha || row.fecha,
         movimiento: labelMovimiento(obj.movimiento),
+        movimientoKey,
         marca: obj.marca || '—',
         numeroSerie: obj.numeroSerie || row.entidadId || '—',
+        matafuegoId: obj.id || row.entidadId || null,
+        caracteristicas: obj.caracteristicas || '',
         usuario
       };
     } catch (_) { /* fallthrough */ }
   }
+  const usuario = formatHistorialUsuario(row?.usuario);
+  const movimiento = inferHistorialMovimientoFromDetalle(detalle, row?.accion);
   return {
     id: row.id,
     fecha: row.fecha,
-    movimiento: inferHistorialMovimientoFromDetalle(detalle, row?.accion),
+    movimiento,
+    movimientoKey: movimientoKeyFromLabel(movimiento),
     marca: '—',
     numeroSerie: row.entidadId || '—',
+    matafuegoId: row.entidadId || null,
+    caracteristicas: '',
     usuario
   };
 }

@@ -562,7 +562,7 @@ function mapRawMatafuegoRows(rawMatafuegos) {
 }
 
 async function fetchAuditLogMatafuegos(limit) {
-  const max = limit != null ? limit : 500;
+  const max = limit != null ? limit : 2000;
   if (supabase) {
     try {
       const { data, error } = await supabase
@@ -620,7 +620,7 @@ async function fetchMatafuegosRecargandoAuditEntries() {
 async function loadMatafuegosBundle() {
   if (!supabase) {
     const data = await loadData();
-    const auditAll = await fetchAuditLogMatafuegos(500);
+    const auditAll = await fetchAuditLogMatafuegos(2000);
     const recEntries = await fetchMatafuegosRecargandoAuditEntries();
     return {
       matafuegos: data.matafuegos || [],
@@ -635,7 +635,7 @@ async function loadMatafuegosBundle() {
       fetchAllRows('matafuegos', 'created_at', false),
       fetchAllRows('dependencias', 'id', true),
       fetchAllRows('txt_dependencias', 'id', true),
-      fetchAuditLogMatafuegos(500),
+      fetchAuditLogMatafuegos(2000),
       fetchMatafuegosRecargandoAuditEntries()
     ]);
     const dependencias = (rawDependencias || []).map(function (r) {
@@ -953,14 +953,20 @@ function inferMatafuegoMovimiento(prev, next) {
 
 async function logMatafuegoMovimiento(prev, next) {
   const mov = inferMatafuegoMovimiento(prev, next);
+  const session = loadSession();
+  const usuario = session && session.username ? session.username : 'sistema';
   const payload = {
     movimiento: mov,
     fecha: new Date().toISOString(),
     id: next && next.id ? next.id : (prev && prev.id ? prev.id : null),
     marca: next && next.marca ? next.marca : (prev && prev.marca ? prev.marca : null),
     numeroSerie: next && next.numeroSerie ? next.numeroSerie : (prev && prev.numeroSerie ? prev.numeroSerie : ''),
+    caracteristicas: next && next.caracteristicas ? next.caracteristicas : (prev && prev.caracteristicas ? prev.caracteristicas : ''),
     estadoAnterior: prev && prev.estado ? prev.estado : null,
-    estadoNuevo: next && next.estado ? next.estado : null
+    estadoNuevo: next && next.estado ? next.estado : null,
+    dependenciaAnterior: prev && prev.dependenciaId ? prev.dependenciaId : null,
+    dependenciaNueva: next && next.dependenciaId ? next.dependenciaId : null,
+    usuario
   };
   await logAudit('MODIFICAR', 'Matafuegos', 'MATAFUEGO_HIST|' + JSON.stringify(payload), payload.id);
 }
@@ -2743,7 +2749,27 @@ ipcMain.handle('save-matafuego', async (_, matafuego) => {
   const data = await loadData();
   if (!data.matafuegos) data.matafuegos = [];
   const idx = data.matafuegos.findIndex(m => m.id === matafuego.id);
-  const toSave = { id: matafuego.id, marca: matafuego.marca, numeroSerie: matafuego.numeroSerie, caracteristicas: matafuego.caracteristicas, fechaVencimiento: matafuego.fechaVencimiento, estado: matafuego.estado || 'disponible', fechaIngreso: matafuego.fechaIngreso || null, dependenciaId: matafuego.dependenciaId || null, fechaEntrega: nextMatafuego.fechaEntrega || null };
+  const prevLocal = idx >= 0 ? data.matafuegos[idx] : null;
+  let usuarioEntrega = prevLocal && prevLocal.usuarioEntrega ? prevLocal.usuarioEntrega : null;
+  const entregaNueva = estadoApp === 'entregado' && (!prevMatafuego || !prevMatafuego.dependenciaId);
+  if (entregaNueva) {
+    const sess = loadSession();
+    if (sess && sess.username) usuarioEntrega = sess.username;
+  } else if (estadoApp !== 'entregado') {
+    usuarioEntrega = null;
+  }
+  const toSave = {
+    id: matafuego.id,
+    marca: matafuego.marca,
+    numeroSerie: matafuego.numeroSerie,
+    caracteristicas: matafuego.caracteristicas,
+    fechaVencimiento: matafuego.fechaVencimiento,
+    estado: matafuego.estado || 'disponible',
+    fechaIngreso: matafuego.fechaIngreso || null,
+    dependenciaId: matafuego.dependenciaId || null,
+    fechaEntrega: nextMatafuego.fechaEntrega || null,
+    usuarioEntrega: usuarioEntrega || null
+  };
   if (idx >= 0) data.matafuegos[idx] = toSave;
   else data.matafuegos.unshift(toSave);
   fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');

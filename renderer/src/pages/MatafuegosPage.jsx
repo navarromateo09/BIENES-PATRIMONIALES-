@@ -10,20 +10,30 @@ import {
   categorizeMatafuegos,
   collectGlobalSearchMatches,
   countProximosVencimiento,
+  buildEntregaUsuarioByMatafuegoId,
   buildRecargandoIdsFromMap,
   countCapacidadKgBreakdown,
+  collectHistorialMarcas,
+  collectMatafuegoMarcas,
+  enrichHistorialRows,
   estadoBadgeClass,
   estadoSugerenciaLabel,
+  filterMatafuegoHistorial,
   formatFecha,
   getEffectiveSearchTerm,
+  HISTORIAL_MOVIMIENTO_FILTROS,
   inferCapacidadTipo,
+  isMatafuegoHistorialAuditRow,
   isExactSerieMatch,
   isVencidoSinFecha,
+  MF_KG_OPTIONS,
   mapEstadoKeyToTab,
+  matchesCapacidadKgFilter,
   matafuegoMatchesTerm,
   normalizeSearch,
   paginate,
   parseHistorialRow,
+  resolveEntregaUsuario,
   secondaryLineSug
 } from '../utils/matafuegosHelpers';
 import MatafuegoEntregaWizard from '../components/matafuegos/MatafuegoEntregaWizard';
@@ -74,10 +84,15 @@ export default function MatafuegosPage() {
   const [panelSearch, setPanelSearch] = useState('');
   const [filtroMarca, setFiltroMarca] = useState('');
   const [filtroVenc, setFiltroVenc] = useState('');
+  const [filtroHistMarca, setFiltroHistMarca] = useState('');
+  const [filtroHistKg, setFiltroHistKg] = useState('');
+  const [filtroHistMov, setFiltroHistMov] = useState('');
+  const [filtroEntMarca, setFiltroEntMarca] = useState('');
+  const [filtroEntKg, setFiltroEntKg] = useState('');
 
   const [all, setAll] = useState([]);
   const [dependencias, setDependencias] = useState([]);
-  const [historial, setHistorial] = useState([]);
+  const [auditLog, setAuditLog] = useState([]);
 
   const [entregaWizardKey, setEntregaWizardKey] = useState(0);
   const [recargandoIds, setRecargandoIds] = useState({});
@@ -90,19 +105,37 @@ export default function MatafuegosPage() {
 
 
   const cats = useMemo(() => categorizeMatafuegos(all), [all]);
+  const historialRows = useMemo(
+    () => (auditLog || []).filter(isMatafuegoHistorialAuditRow).map(parseHistorialRow),
+    [auditLog]
+  );
+
+  const entregaUsuarioMap = useMemo(
+    () => buildEntregaUsuarioByMatafuegoId(auditLog),
+    [auditLog]
+  );
+
   const counts = useMemo(() => ({
     disponibles: cats.disponibles.length,
     recarga: cats.recarga.length,
     inservibles: cats.inservibles.length,
     entregados: cats.entregados.length,
-    historial: historial.length
-  }), [cats, historial]);
+    historial: historialRows.length
+  }), [cats, historialRows]);
 
-  const marcas = useMemo(() => {
-    const s = new Set();
-    cats.disponibles.forEach((m) => { if (m.marca) s.add(m.marca); });
-    return [...s].sort();
-  }, [cats.disponibles]);
+  const marcas = useMemo(() => collectMatafuegoMarcas(cats.disponibles), [cats.disponibles]);
+
+  const marcasEntregados = useMemo(() => collectMatafuegoMarcas(cats.entregados), [cats.entregados]);
+
+  const marcasHistorial = useMemo(
+    () => collectHistorialMarcas(enrichHistorialRows(historialRows, all)),
+    [historialRows, all]
+  );
+
+  const historialEnriquecido = useMemo(
+    () => enrichHistorialRows(historialRows, all),
+    [historialRows, all]
+  );
 
   const proximos30 = useMemo(() => countProximosVencimiento(cats.disponibles), [cats.disponibles]);
 
@@ -122,7 +155,7 @@ export default function MatafuegosPage() {
       const recargaItems = matafuegos.filter((m) => (m.estado || '') === 'recarga');
       setAll(matafuegos);
       setDependencias(bundle.dependencias || []);
-      setHistorial((bundle.auditLog || []).map(parseHistorialRow));
+      setAuditLog(bundle.auditLog || []);
       setRecargandoIds(buildRecargandoIdsFromMap(bundle.recargandoMap, recargaItems));
     } catch (e) {
       showToast(e.message || 'Error al cargar', 'error');
@@ -139,7 +172,7 @@ export default function MatafuegosPage() {
     }
     setPage(1);
     setHighlightId(null);
-  }, [tab, globalSearch, panelSearch, filtroMarca, filtroVenc]);
+  }, [tab, globalSearch, panelSearch, filtroMarca, filtroVenc, filtroHistMarca, filtroHistKg, filtroHistMov, filtroEntMarca, filtroEntKg]);
 
   useEffect(() => {
     if (!showSuggestions) return undefined;
@@ -164,27 +197,39 @@ export default function MatafuegosPage() {
   const filteredList = useMemo(() => {
     if (tab === 'entregar') return [];
     if (tab === 'historial') {
-      let h = historial;
-      const term = normalizeSearch(effectiveTerm);
-      if (term) {
-        h = h.filter((r) => normalizeSearch(`${r.marca} ${r.numeroSerie} ${r.movimiento} ${r.usuario || ''}`).includes(term));
-      }
-      return h;
+      return filterMatafuegoHistorial(historialEnriquecido, {
+        buscar: effectiveTerm,
+        marca: filtroHistMarca,
+        kg: filtroHistKg,
+        movimiento: filtroHistMov
+      });
     }
     const estadoKey = TAB_ESTADO[tab] || 'disponible';
     let list = cats[tab] || [];
-    list = list.filter((m) => matafuegoMatchesTerm(
-      m,
-      estadoKey,
-      effectiveTerm,
-      depNombre(dependencias, m.dependenciaId)
-    ));
+    if (tab === 'entregados') {
+      if (filtroEntMarca) list = list.filter((m) => m.marca === filtroEntMarca);
+      if (filtroEntKg) list = list.filter((m) => matchesCapacidadKgFilter(m, filtroEntKg));
+      const term = normalizeSearch(effectiveTerm);
+      if (term) {
+        list = list.filter((m) => {
+          if (matafuegoMatchesTerm(m, estadoKey, effectiveTerm, depNombre(dependencias, m.dependenciaId))) return true;
+          return normalizeSearch(resolveEntregaUsuario(m, entregaUsuarioMap)).includes(term);
+        });
+      }
+    } else {
+      list = list.filter((m) => matafuegoMatchesTerm(
+        m,
+        estadoKey,
+        effectiveTerm,
+        depNombre(dependencias, m.dependenciaId)
+      ));
+    }
     if (tab === 'disponibles') {
       if (filtroMarca) list = list.filter((m) => m.marca === filtroMarca);
       list = applyVencimientoFilter(list, filtroVenc);
     }
     return list;
-  }, [tab, cats, historial, dependencias, effectiveTerm, filtroMarca, filtroVenc]);
+  }, [tab, cats, historialEnriquecido, dependencias, effectiveTerm, filtroMarca, filtroVenc, filtroHistMarca, filtroHistKg, filtroHistMov, filtroEntMarca, filtroEntKg, entregaUsuarioMap]);
 
   useEffect(() => {
     if (!highlightId) return;
@@ -316,22 +361,35 @@ export default function MatafuegosPage() {
   async function handleExport() {
     const api = getStockAPI();
     if (!api?.exportMatafuegosExcel) return;
-    const rows = filteredList.map((m) => {
-      const inf = inferCapacidadTipo(m.caracteristicas);
-      const row = {
-        Marca: m.marca || '',
-        Serie: m.numeroSerie || '',
-        Capacidad: inf.capacidad,
-        Tipo: inf.tipo,
-        Vencimiento: formatFecha(m.fechaVencimiento),
-        Estado: m.estado || '',
-        Dependencia: depNombre(dependencias, m.dependenciaId)
-      };
-      if (tab === 'entregados') {
-        row['Fecha entrega'] = m.fechaEntrega ? formatFecha(m.fechaEntrega) : 'Sin registro';
-      }
-      return row;
-    });
+    let rows;
+    if (tab === 'historial') {
+      rows = filteredList.map((r) => ({
+        Fecha: r.fecha ? new Date(r.fecha).toLocaleString('es-AR') : '',
+        Movimiento: r.movimiento,
+        Usuario: r.usuario || '',
+        Marca: r.marca,
+        Capacidad: r.capacidadKg || '—',
+        Serie: r.numeroSerie
+      }));
+    } else {
+      rows = filteredList.map((m) => {
+        const inf = inferCapacidadTipo(m.caracteristicas);
+        const row = {
+          Marca: m.marca || '',
+          Serie: m.numeroSerie || '',
+          Capacidad: inf.capacidad,
+          Tipo: inf.tipo,
+          Vencimiento: formatFecha(m.fechaVencimiento),
+          Estado: m.estado || '',
+          Dependencia: depNombre(dependencias, m.dependenciaId)
+        };
+        if (tab === 'entregados') {
+          row['Fecha entrega'] = m.fechaEntrega ? formatFecha(m.fechaEntrega) : 'Sin registro';
+          row.Usuario = resolveEntregaUsuario(m, entregaUsuarioMap);
+        }
+        return row;
+      });
+    }
     if (!rows.length) {
       showToast('No hay filas para exportar', 'error');
       return;
@@ -349,9 +407,33 @@ export default function MatafuegosPage() {
     setTab(nextTab);
     setPanelSearch('');
     setHighlightId(null);
+    if (nextTab !== 'disponibles') {
+      setFiltroMarca('');
+      setFiltroVenc('');
+    }
+    if (nextTab !== 'historial') {
+      setFiltroHistMarca('');
+      setFiltroHistKg('');
+      setFiltroHistMov('');
+    }
+    if (nextTab !== 'entregados') {
+      setFiltroEntMarca('');
+      setFiltroEntKg('');
+    }
     if (nextTab === 'entregar') {
       setEntregaWizardKey((k) => k + 1);
     }
+  }
+
+  function limpiarFiltrosHistorial() {
+    setFiltroHistMarca('');
+    setFiltroHistKg('');
+    setFiltroHistMov('');
+  }
+
+  function limpiarFiltrosEntregados() {
+    setFiltroEntMarca('');
+    setFiltroEntKg('');
   }
 
   function applyGlobalSuggestion(match) {
@@ -622,6 +704,66 @@ export default function MatafuegosPage() {
               </div>
             )}
 
+            {tab === 'historial' && (
+              <div className="mf-filters-row mf-filters-row--historial">
+                <div>
+                  <label>Marca</label>
+                  <select value={filtroHistMarca} onChange={(e) => setFiltroHistMarca(e.target.value)}>
+                    <option value="">Todas</option>
+                    {marcasHistorial.map((m) => <option key={m} value={m}>{m}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label>Capacidad (kg)</label>
+                  <select value={filtroHistKg} onChange={(e) => setFiltroHistKg(e.target.value)}>
+                    <option value="">Todas</option>
+                    {MF_KG_OPTIONS.map((k) => <option key={k} value={k}>{k}</option>)}
+                    <option value="otros">Otras</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Movimiento</label>
+                  <select value={filtroHistMov} onChange={(e) => setFiltroHistMov(e.target.value)}>
+                    <option value="">Todos</option>
+                    {HISTORIAL_MOVIMIENTO_FILTROS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
+                </div>
+                {(filtroHistMarca || filtroHistKg || filtroHistMov) && (
+                  <button type="button" className="btn btn-secondary btn-sm" onClick={limpiarFiltrosHistorial}>
+                    Limpiar filtros
+                  </button>
+                )}
+              </div>
+            )}
+
+            {tab === 'entregados' && (
+              <div className="mf-filters-row">
+                <div>
+                  <label>Marca</label>
+                  <select value={filtroEntMarca} onChange={(e) => setFiltroEntMarca(e.target.value)}>
+                    <option value="">Todas</option>
+                    {marcasEntregados.map((m) => <option key={m} value={m}>{m}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label>Capacidad (kg)</label>
+                  <select value={filtroEntKg} onChange={(e) => setFiltroEntKg(e.target.value)}>
+                    <option value="">Todas</option>
+                    {MF_KG_OPTIONS.map((k) => <option key={k} value={k}>{k}</option>)}
+                    <option value="otros">Otras</option>
+                    <option value="sin_dato">Sin dato</option>
+                  </select>
+                </div>
+                {(filtroEntMarca || filtroEntKg) && (
+                  <button type="button" className="btn btn-secondary btn-sm" onClick={limpiarFiltrosEntregados}>
+                    Limpiar filtros
+                  </button>
+                )}
+              </div>
+            )}
+
             <div className="mf-panel-search">
               <input
                 type="search"
@@ -636,13 +778,13 @@ export default function MatafuegosPage() {
 
             {tab === 'historial' ? (
               filteredList.length === 0 ? (
-                <p className="mf-empty">No hay registros en el historial.</p>
+                <p className="mf-empty">No hay registros en el historial con los filtros aplicados.</p>
               ) : (
                 <>
                   <div className="inst-table-wrap table-wrap">
                     <table className="data-table">
                       <thead>
-                        <tr><th>Fecha</th><th>Movimiento</th><th>Usuario</th><th>Marca</th><th>Nº de serie</th></tr>
+                        <tr><th>Fecha</th><th>Movimiento</th><th>Usuario</th><th>Marca</th><th>Capacidad</th><th>Nº de serie</th></tr>
                       </thead>
                       <tbody>
                         {pag.items.map((r) => (
@@ -651,6 +793,7 @@ export default function MatafuegosPage() {
                             <td>{r.movimiento}</td>
                             <td>{r.usuario || '—'}</td>
                             <td>{r.marca}</td>
+                            <td>{r.capacidadKg || '—'}</td>
                             <td>{r.numeroSerie}</td>
                           </tr>
                         ))}
@@ -672,6 +815,7 @@ export default function MatafuegosPage() {
                       <th>Tipo</th>
                       {tab === 'entregados' && <th>Dependencia</th>}
                       {tab === 'entregados' && <th>Fecha de entrega</th>}
+                      {tab === 'entregados' && <th>Usuario</th>}
                       {tab === 'recarga' && <th>Estado</th>}
                       <th>Última recarga</th>
                       <th>Próximo vencimiento</th>
@@ -698,6 +842,11 @@ export default function MatafuegosPage() {
                           {tab === 'entregados' && <td>{depNombre(dependencias, m.dependenciaId) || '—'}</td>}
                           {tab === 'entregados' && (
                             <td>{m.fechaEntrega ? formatFecha(m.fechaEntrega) : <span className="mf-fecha-sin-registro">Sin registro</span>}</td>
+                          )}
+                          {tab === 'entregados' && (
+                            <td title={!m.fechaEntrega && resolveEntregaUsuario(m, entregaUsuarioMap) === '—' ? 'Entrega cargada antes de registrar usuario y fecha en el sistema' : undefined}>
+                              {resolveEntregaUsuario(m, entregaUsuarioMap)}
+                            </td>
                           )}
                           {tab === 'recarga' && (
                             <td>
