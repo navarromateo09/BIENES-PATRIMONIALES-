@@ -11,13 +11,13 @@ const ROUTE_BODY_CLASS = {
   '/txt': 'app-page-theme',
   '/dependencias': 'app-page-theme page-dependencias',
   '/actas': 'app-page-theme',
-  '/matafuegos': 'app-page-theme',
+  '/matafuegos': 'app-page-theme page-matafuegos',
   '/auditoria': 'dashboard-page',
   '/usuarios': 'dashboard-page'
 };
 
 function resolveBodyClass(pathname) {
-  if (pathname.startsWith('/matafuegos')) return 'app-page-theme';
+  if (pathname.startsWith('/matafuegos')) return 'app-page-theme page-matafuegos';
   return ROUTE_BODY_CLASS[pathname] || 'dashboard-page';
 }
 

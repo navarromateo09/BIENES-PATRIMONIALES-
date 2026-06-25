@@ -1099,12 +1099,15 @@ body.app-institutional .mf-entrega-table-wrap--scroll,
 .mf-entrega-step--pick {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-height: 0;
   padding: 0.75rem 1.15rem 1rem;
 }
 
 .mf-entrega-pick-card {
   display: flex;
   flex-direction: column;
+  flex: 1;
   min-height: 0;
   max-height: calc(100vh - 14rem);
   overflow: hidden;
@@ -1246,5 +1249,184 @@ body.app-institutional .mf-entrega-table-wrap--scroll,
 
   .mf-entrega-pick-card {
     max-height: none;
+  }
+}
+
+/* ── Pestaña Entregar: layout compacto para pantallas chicas / bajas ── */
+body.app-institutional.page-matafuegos-entrega .dashboard-main {
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+body.app-institutional.page-matafuegos-entrega .inst-header-strip {
+  padding-top: 0.28rem;
+  padding-bottom: 0.28rem;
+}
+
+body.app-institutional.page-matafuegos-entrega .dashboard-header {
+  padding: 0.6rem 1.15rem 0.45rem;
+}
+
+body.app-institutional.page-matafuegos-entrega .header-greeting h1 {
+  font-size: 1rem;
+}
+
+body.app-institutional.page-matafuegos-entrega .inst-header-subtitle,
+body.app-institutional.page-matafuegos-entrega .header-greeting .header-date {
+  display: none;
+}
+
+body.app-institutional.page-matafuegos-entrega .inst-content-wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 0.45rem 1rem 0.55rem;
+}
+
+.mf-page--entrega {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 100%;
+}
+
+.mf-page--entrega > .mf-hero,
+.mf-page--entrega > .mf-kpi-grid,
+.mf-page--entrega > .mf-alert-banner {
+  display: none;
+}
+
+.mf-page--entrega > .mf-panel-card--entrega {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+  border-radius: 8px;
+}
+
+.mf-page--entrega .mf-tab {
+  padding: 0.5rem 0.7rem;
+  font-size: 0.78rem;
+}
+
+.mf-page--entrega .mf-entrega-head--inline {
+  padding: 0.5rem 0.85rem 0.4rem;
+}
+
+.mf-page--entrega .mf-entrega-title {
+  font-size: 0.92rem;
+}
+
+.mf-page--entrega .mf-entrega-sub {
+  display: none;
+}
+
+.mf-page--entrega .mf-entrega-stepper {
+  padding: 0.4rem 0.85rem;
+  gap: 0.35rem;
+}
+
+.mf-page--entrega .mf-entrega-stepper-item {
+  padding: 0.35rem 0.45rem;
+  gap: 0.3rem;
+}
+
+.mf-page--entrega .mf-entrega-stepper-label {
+  font-size: 0.7rem;
+}
+
+.mf-page--entrega .mf-entrega-step--deps,
+.mf-page--entrega .mf-entrega-step--pick {
+  flex: 1;
+  min-height: 0;
+  padding: 0.4rem 0.7rem 0.5rem;
+}
+
+.mf-page--entrega .mf-entrega-card--deps {
+  padding: 0.6rem 0.7rem;
+}
+
+.mf-page--entrega .mf-entrega-step-title {
+  font-size: 0.86rem;
+  margin: 0;
+}
+
+.mf-page--entrega .mf-entrega-step-desc {
+  display: none;
+}
+
+.mf-page--entrega .mf-entrega-search {
+  margin-bottom: 0.5rem;
+}
+
+.mf-page--entrega .mf-entrega-search-hint {
+  margin: -0.2rem 0 0.4rem;
+  font-size: 0.72rem;
+}
+
+.mf-page--entrega .mf-entrega-table-wrap--scroll {
+  height: auto;
+  max-height: none;
+  flex: 1;
+  min-height: 7rem;
+}
+
+.mf-page--entrega .mf-entrega-pick-card {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+}
+
+.mf-page--entrega .mf-entrega-pick-head {
+  padding: 0.5rem 0.75rem;
+}
+
+.mf-page--entrega .mf-entrega-pick-head .mf-entrega-step-desc {
+  display: block;
+  margin: 0.2rem 0 0;
+  font-size: 0.75rem;
+}
+
+.mf-page--entrega .mf-entrega-pick-panel--cart {
+  display: flex;
+  flex-direction: column;
+}
+
+.mf-page--entrega .mf-entrega-pick-footer {
+  position: sticky;
+  bottom: 0;
+  background: #fafbfc;
+  z-index: 2;
+  box-shadow: 0 -4px 12px rgba(15, 23, 42, 0.06);
+}
+
+.mf-page--entrega .mf-entrega-step:not(.mf-entrega-step--deps):not(.mf-entrega-step--pick) {
+  overflow-y: auto;
+  justify-content: center;
+  padding: 0.65rem;
+}
+
+@media (max-height: 820px) {
+  body.app-institutional.page-matafuegos-entrega .inst-content-wrap {
+    padding: 0.35rem 0.75rem 0.45rem;
+  }
+
+  .mf-page--entrega .mf-entrega-stepper-label {
+    font-size: 0.65rem;
+  }
+
+  .mf-page--entrega .mf-entrega-table-wrap--scroll {
+    min-height: 5.5rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .mf-page--entrega .mf-entrega-pick-panel--cart {
+    max-height: min(38vh, 240px);
   }
 }

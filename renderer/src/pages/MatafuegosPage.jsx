@@ -165,6 +165,17 @@ export default function MatafuegosPage() {
   }, [show, hide, showToast]);
 
   useEffect(() => { load(); }, [load]);
+
+  useEffect(() => {
+    const cls = 'page-matafuegos-entrega';
+    if (tab === 'entregar') {
+      document.body.classList.add(cls);
+    } else {
+      document.body.classList.remove(cls);
+    }
+    return () => document.body.classList.remove(cls);
+  }, [tab]);
+
   useEffect(() => {
     if (skipPageResetRef.current) {
       skipPageResetRef.current = false;
@@ -482,7 +493,7 @@ export default function MatafuegosPage() {
 
   return (
     <>
-      <div className="mf-page">
+      <div className={`mf-page${tab === 'entregar' ? ' mf-page--entrega' : ''}`}>
         <header className="mf-hero">
           <div>
             <h1 className="mf-hero-title">MATAFUEGOS</h1>

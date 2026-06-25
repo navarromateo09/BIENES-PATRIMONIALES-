@@ -24,6 +24,8 @@ import {
   parseDependenciasCsv,
   parseDependenciasTxt,
   parseTxtNuevoRepeticiones,
+  parseTxtOrdenNumber,
+  formatTxtOrdenInput,
   readFileAsText
 } from '../utils/txtHelpers';
 
@@ -50,9 +52,7 @@ function ModalShell({ open, onClose, title, wide, children, actions }) {
 }
 
 function toOrderNumber(value) {
-  const n = parseInt(String(value || '').trim(), 10);
-  if (Number.isNaN(n) || n < 0) return null;
-  return n;
+  return parseTxtOrdenNumber(value);
 }
 
 function getOrdenScopeKeyFromValues(depCodigo, habNumero, habNombre) {
@@ -76,7 +76,7 @@ function ModalTxtOrden({ open, ordenId, ordenLabel, onClose, showToast }) {
     if (api.getTxtOrdenInfo) {
       api.getTxtOrdenInfo(ordenId).then((info) => {
         const n = info && info.count != null ? info.count : 0;
-        setCantidad(String(n != null ? n : 0));
+        setCantidad(formatTxtOrdenInput(n != null ? n : 0) || '0');
         const updatedAt = info && info.updatedAt ? String(info.updatedAt) : '';
         if (!updatedAt) {
           setUltimaMod('—');
@@ -91,7 +91,7 @@ function ModalTxtOrden({ open, ordenId, ordenLabel, onClose, showToast }) {
       }).catch(() => {});
     } else if (api.getTxtOrdenCount) {
       api.getTxtOrdenCount(ordenId).then((n) => {
-        setCantidad(String(n != null ? n : 0));
+        setCantidad(formatTxtOrdenInput(n != null ? n : 0) || '0');
       }).catch(() => {});
     }
   }, [open, ordenId]);
@@ -106,12 +106,15 @@ function ModalTxtOrden({ open, ordenId, ordenLabel, onClose, showToast }) {
       showToast('Función de guardado no disponible', 'error');
       return;
     }
-    let n = parseInt(cantidad, 10);
-    if (Number.isNaN(n) || n < 0) n = 0;
+    const parsed = parseTxtOrdenNumber(cantidad);
+    if (parsed == null) {
+      showToast('Ingresá un número de orden válido (ej. 9.960 o 9960)', 'error');
+      return;
+    }
     setSaving(true);
     try {
-      await api.saveTxtOrdenCount(ordenId, n);
-      showToast(`Conteo guardado: ${n}`, 'success');
+      await api.saveTxtOrdenCount(ordenId, parsed);
+      showToast(`Conteo guardado: ${formatTxtOrdenInput(parsed)}`, 'success');
       onClose();
     } catch (err) {
       const msg = err?.message || 'Error desconocido';
@@ -153,8 +156,9 @@ function ModalTxtOrden({ open, ordenId, ordenLabel, onClose, showToast }) {
                 <td>{ordenLabel?.trim() || '—'}</td>
                 <td>
                   <input
-                    type="number"
-                    min="0"
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="Ej: 9.960"
                     value={cantidad}
                     onChange={(e) => setCantidad(e.target.value)}
                   />
@@ -164,7 +168,6 @@ function ModalTxtOrden({ open, ordenId, ordenLabel, onClose, showToast }) {
             </tbody>
           </table>
         </div>
-        <p className="panel-desc" style={{ marginTop: '0.75rem' }}>Por ahora la cantidad es 0.</p>
       </div>
     </ModalShell>
   );
@@ -208,9 +211,11 @@ function ModalTxtAgregar({ open, onClose, deps, preselectDepId, onSaved, showToa
     [deps, depId]
   );
 
+  const pendingDivision = !!onlyDigits(divNum) && !!divNombre.trim();
+
   const canGuardar = modo === 'existente'
     ? !!depId && !!onlyDigits(habNum) && !!habNombre.trim()
-    : !!onlyDigits(codigo) && !!nombreDep.trim() && divisionesTemp.length > 0;
+    : !!onlyDigits(codigo) && !!nombreDep.trim() && (divisionesTemp.length > 0 || pendingDivision);
 
   useEffect(() => {
     if (!open) return;
@@ -268,6 +273,16 @@ function ModalTxtAgregar({ open, onClose, deps, preselectDepId, onSaved, showToa
     setDivNombre('');
   }
 
+  function buildDivisionesParaGuardar() {
+    const list = [...divisionesTemp];
+    const numeroDigits = onlyDigits(divNum);
+    const nombre = divNombre.trim().toUpperCase();
+    if (numeroDigits && nombre && !list.some((d) => String(d.numero) === numeroDigits)) {
+      list.push({ numero: numeroDigits, nombre });
+    }
+    return list;
+  }
+
   async function handleGuardar() {
     const api = getStockAPI();
     if (!api?.saveTxtDependencia) {
@@ -305,6 +320,7 @@ function ModalTxtAgregar({ open, onClose, deps, preselectDepId, onSaved, showToa
       } else {
         const codigoDigits = onlyDigits(codigo);
         const nombreDep2 = nombreDep.trim().toUpperCase();
+        const divisiones = buildDivisionesParaGuardar();
         if (!codigoDigits) {
           showToast('Ingresá el código/ID de dependencia', 'error');
           return;
@@ -313,37 +329,35 @@ function ModalTxtAgregar({ open, onClose, deps, preselectDepId, onSaved, showToa
           showToast('Ingresá el nombre de dependencia', 'error');
           return;
         }
-        if (!divisionesTemp.length) {
-          showToast('Agregá al menos una división', 'error');
+        if (!divisiones.length) {
+          showToast('Completá al menos una división (nº y nombre)', 'error');
           return;
         }
         const mainId2 = `txt-dep-${codigoDigits}`;
-        const promises = [
-          api.saveTxtDependencia({
-            id: mainId2,
-            nombre: nombreDep2,
-            codigo: codigoDigits,
-            parentId: null,
-            numero: null
-          })
-        ];
-        divisionesTemp.forEach((d) => {
-          promises.push(api.saveTxtDependencia({
+        await api.saveTxtDependencia({
+          id: mainId2,
+          nombre: nombreDep2,
+          codigo: codigoDigits,
+          parentId: null,
+          numero: null
+        });
+        for (const d of divisiones) {
+          // eslint-disable-next-line no-await-in-loop
+          await api.saveTxtDependencia({
             id: `${mainId2}-div-${d.numero}`,
             nombre: d.nombre,
             codigo: codigoDigits,
             parentId: mainId2,
             numero: d.numero
-          }));
-        });
-        await Promise.all(promises);
+          });
+        }
         showToast('Dependencia y divisiones agregadas', 'success');
       }
       onClose();
-      onSaved();
+      await onSaved();
     } catch (err) {
       console.error('[TXT] saveDependencia ERROR:', err);
-      showToast('Error al guardar', 'error');
+      showToast(err?.message || 'Error al guardar', 'error');
     } finally {
       setSaving(false);
     }
@@ -357,7 +371,9 @@ function ModalTxtAgregar({ open, onClose, deps, preselectDepId, onSaved, showToa
       wide
       actions={(
         <div className="modal-actions">
-          <button type="button" className="btn btn-primary" disabled={!canGuardar || saving} onClick={handleGuardar}>Guardar</button>
+          <button type="button" className="btn btn-primary" disabled={!canGuardar || saving} onClick={handleGuardar}>
+            {saving ? 'Guardando…' : 'Guardar'}
+          </button>
           <button type="button" className="btn btn-secondary" onClick={onClose}>Cancelar</button>
         </div>
       )}
@@ -389,7 +405,7 @@ function ModalTxtAgregar({ open, onClose, deps, preselectDepId, onSaved, showToa
         {modo === 'nueva' ? (
           <div>
             <p className="panel-desc" style={{ margin: '0 0 1rem' }}>
-              Creá una dependencia nueva e indicá las habitaciones (divisiones) que quieras cargar.
+              Creá una dependencia nueva e indicá las habitaciones (divisiones). Podés usar «+ Agregar división a la lista» o guardar directo si ya completaste nº y nombre abajo.
             </p>
             <div className="form-row">
               <div className="form-group">

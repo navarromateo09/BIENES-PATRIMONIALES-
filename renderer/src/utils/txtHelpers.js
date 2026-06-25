@@ -49,6 +49,22 @@ function onlyDigitsSliceTxtNuevo(s, max) {
   return d.length <= max ? d : d.slice(0, max);
 }
 
+/** Orden TXT: acepta 9960, 9.960, 9,960 → número entero. */
+export function parseTxtOrdenNumber(value) {
+  const digits = String(value ?? '').trim().replace(/[^\d]/g, '');
+  if (!digits) return null;
+  const n = parseInt(digits, 10);
+  if (Number.isNaN(n) || n < 0) return null;
+  return n;
+}
+
+/** Muestra orden con separador de miles (es-AR): 9960 → 9.960 */
+export function formatTxtOrdenInput(value) {
+  const n = parseTxtOrdenNumber(value);
+  if (n == null) return '';
+  return n.toLocaleString('es-AR', { maximumFractionDigits: 0 });
+}
+
 export function normalizeTxtNuevoValorDigits(s) {
   return onlyDigitsSliceTxtNuevo(String(s || '').replace(/\./g, '').replace(/,/g, ''), TXT_NUEVO_FIELD_MAX.valorDigits);
 }
@@ -241,8 +257,8 @@ export function parseTxtNuevoRepeticiones(value) {
 export function expandTxtItemPorRepeticiones(item, repeticiones) {
   if (!item) return [];
   const n = parseTxtNuevoRepeticiones(repeticiones);
-  let baseOrden = parseInt(String(item.orden == null ? '' : item.orden).replace(/[^\d]/g, ''), 10);
-  if (Number.isNaN(baseOrden)) baseOrden = 0;
+  let baseOrden = parseTxtOrdenNumber(item.orden);
+  if (baseOrden == null) baseOrden = 0;
   const rows = [];
   for (let i = 0; i < n; i++) {
     rows.push(clampTxtNuevoItem({ ...item, orden: String(baseOrden + i) }));

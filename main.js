@@ -1994,6 +1994,22 @@ ipcMain.handle('get-dependencias', async () => {
 
 // IPC: TXT dependencias (EXCLUSIVAS de la pestaña TXT)
 ipcMain.handle('get-txt-dependencias', async () => {
+  if (supabase) {
+    try {
+      const raw = await fetchAllRows('txt_dependencias', 'id', true);
+      return (raw || []).map(function (r) {
+        return {
+          id: r.id,
+          nombre: r.nombre || '',
+          codigo: r.codigo != null ? String(r.codigo) : '',
+          parentId: r.parent_id ?? null,
+          numero: r.numero != null ? String(r.numero) : null
+        };
+      });
+    } catch (e) {
+      console.warn('[TXT] get-txt-dependencias Supabase:', e && e.message);
+    }
+  }
   const data = await loadData();
   return data.txtDependencias || [];
 });
@@ -2221,6 +2237,26 @@ ipcMain.handle('save-txt-dependencia', async (_, dependencia) => {
   if (supabase) {
     const { error } = await supabase.from('txt_dependencias').upsert(row, { onConflict: 'id' });
     if (error) throw new Error(error.message);
+    try {
+      let data;
+      try {
+        data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
+      } catch (_) {
+        data = {};
+      }
+      if (!data.txtDependencias) data.txtDependencias = [];
+      const idxLocal = data.txtDependencias.findIndex(function (d) { return d && String(d.id) === String(dependencia.id); });
+      const toSave = {
+        id: dependencia.id,
+        nombre: dependencia.nombre || '',
+        codigo: dependencia.codigo != null ? String(dependencia.codigo) : '',
+        parentId: dependencia.parentId ?? null,
+        numero: dependencia.numero != null ? String(dependencia.numero) : ''
+      };
+      if (idxLocal >= 0) data.txtDependencias[idxLocal] = { ...data.txtDependencias[idxLocal], ...toSave };
+      else data.txtDependencias.push(toSave);
+      fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
+    } catch (_) { /* caché local opcional */ }
     return dependencia.id;
   }
   const data = await loadData();
@@ -2413,6 +2449,13 @@ ipcMain.handle('delete-dependencia', async (_, id) => {
 });
 
 // IPC: Conteo "ORDEN" por dependencia/división (TXT)
+function parseTxtOrdenCountInput(value) {
+  const digits = String(value ?? '').trim().replace(/[^\d]/g, '');
+  if (!digits) return 0;
+  const n = parseInt(digits, 10);
+  return Number.isNaN(n) || n < 0 ? 0 : n;
+}
+
 ipcMain.handle('get-txt-orden-count', async (_, id) => {
   if (!id) return 0;
   if (supabase) {
@@ -2458,8 +2501,7 @@ ipcMain.handle('get-txt-orden-info', async (_, id) => {
 
 ipcMain.handle('save-txt-orden-count', async (_, id, count) => {
   if (!id) throw new Error('Falta id');
-  const n = parseInt(count, 10);
-  const safeCount = isNaN(n) ? 0 : Math.max(0, n);
+  const safeCount = parseTxtOrdenCountInput(count);
   if (supabase) {
     try {
       const payload = { id: String(id), count: safeCount, updated_at: new Date().toISOString() };

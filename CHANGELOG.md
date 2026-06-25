@@ -1,5 +1,25 @@
 # Historial de versiones
 
+## 1.9.10
+
+### TXT — Orden con punto de miles
+- El modal **ORDEN** acepta números con separador argentino (ej. **9.960** o **9960**).
+- Se guarda el valor entero correcto (9960) en lugar de cortar en el punto.
+
+### TXT — Agregar dependencia
+- Corregido el guardado que quedaba trabado al crear dependencia nueva con división.
+- Guardado en orden (primero dependencia, después divisiones) y recarga más rápida.
+
+### Matafuegos — Entregar (pantallas chicas)
+- Pestaña **Entregar** en modo compacto: oculta KPIs y banners para ganar espacio.
+- Tabla y wizard con scroll interno; botón **Continuar** siempre visible en paso 2.
+- Adaptado a monitores con poca altura (1366×768 y similares).
+
+### Técnico
+- Versión **1.9.10** (`package.json`).
+
+---
+
 ## 1.9.9
 
 ### Matafuegos — Historial
