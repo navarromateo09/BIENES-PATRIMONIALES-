@@ -1,5 +1,18 @@
 # Historial de versiones
 
+## 1.9.12
+
+### Matafuegos — Entregar (pantallas chicas)
+- Botón **Continuar** fijo al pie de la ventana en el paso 2; siempre visible aunque haya muchos matafuegos en el carrito.
+
+### Matafuegos — Entregados
+- En **Editar**, los administradores pueden cambiar el **destino de entrega** si se registró por error.
+
+### Técnico
+- Versión **1.9.12** (`package.json`).
+
+---
+
 ## 1.9.11
 
 ### Matafuegos — Entregar (pantallas chicas)

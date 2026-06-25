@@ -655,6 +655,38 @@
   border-top: 1px solid var(--inst-border-light);
 }
 
+.mf-form-section {
+  margin-top: 1.25rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--inst-border-light, #eef2f7);
+}
+
+.mf-form-section-title {
+  margin: 0 0 0.35rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--inst-navy, #0a2540);
+}
+
+.mf-form-section--destino .mf-form-hint {
+  margin-bottom: 0.75rem;
+}
+
+.mf-form-destino-meta {
+  margin: 0 0 0.85rem;
+  font-size: 0.82rem;
+  color: #475569;
+}
+
+.mf-form-section .form-group input[type="search"] {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--inst-border-light, #e2e8f0);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  box-sizing: border-box;
+}
+
 @media (max-width: 640px) {
   .mf-form-grid--2 {
     grid-template-columns: 1fr;
@@ -1102,7 +1134,8 @@ body.app-institutional .mf-entrega-table-wrap--scroll,
   flex: 1;
   min-height: 0;
   overflow: hidden;
-  padding: 0.75rem 1.15rem 1rem;
+  padding: 0.75rem 1.15rem 0;
+  padding-bottom: 4.25rem;
 }
 
 .mf-entrega-pick-card {
@@ -1110,14 +1143,14 @@ body.app-institutional .mf-entrega-table-wrap--scroll,
   flex-direction: column;
   flex: 1;
   min-height: 0;
-  max-height: calc(100vh - 14rem);
+  max-height: none;
   overflow: hidden;
 }
 
 .mf-entrega-wizard-pick .mf-entrega-pick-card {
   flex: 1;
   min-height: 0;
-  max-height: min(calc(100dvh - 10.5rem), calc(100vh - 10.5rem));
+  max-height: none;
   overflow: hidden;
 }
 
@@ -1297,6 +1330,22 @@ body.app-institutional .mf-entrega-table-wrap--scroll,
   z-index: 4;
 }
 
+/* Barra fija al pie de la ventana — siempre visible en paso 2 */
+.mf-entrega-pick-footer--dock {
+  position: fixed;
+  left: var(--inst-sidebar-w, 252px);
+  right: 0;
+  bottom: 0;
+  z-index: 250;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.55rem 1rem;
+  margin: 0;
+  background: #fff;
+  border-top: 1px solid #cbd5e1;
+  box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.12);
+}
+
 .mf-entrega-pick-footer-count {
   font-size: 0.8rem;
   font-weight: 600;
@@ -1468,7 +1517,11 @@ body.app-institutional.page-matafuegos-entrega .inst-content-wrap {
 .mf-page--entrega .mf-entrega-pick-card {
   flex: 1;
   min-height: 0;
-  max-height: min(calc(100dvh - 10.5rem), calc(100vh - 10.5rem));
+  max-height: none;
+}
+
+.mf-page--entrega .mf-entrega-step--pick {
+  padding-bottom: 4.25rem;
 }
 
 .mf-page--entrega .mf-entrega-pick-head {
@@ -1516,18 +1569,20 @@ body.app-institutional.page-matafuegos-entrega .inst-content-wrap {
   }
 
   .mf-page--entrega .mf-entrega-step--pick {
-    padding: 0.3rem 0.55rem 0.4rem;
+    padding: 0.3rem 0.55rem 0;
+    padding-bottom: 4rem;
   }
 
   .mf-entrega-wizard-pick .mf-entrega-pick-card {
-    max-height: min(calc(100dvh - 8.5rem), calc(100vh - 8.5rem));
+    max-height: none;
   }
 
   .mf-entrega-pick-head {
     padding: 0.45rem 0.65rem;
   }
 
-  .mf-entrega-pick-footer--card {
+  .mf-entrega-pick-footer--dock {
+    left: var(--inst-sidebar-w, 200px);
     padding: 0.45rem 0.65rem;
   }
 }

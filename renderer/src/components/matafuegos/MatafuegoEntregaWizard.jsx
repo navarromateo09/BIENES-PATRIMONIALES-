@@ -416,29 +416,29 @@ export default function MatafuegoEntregaWizard({
                 </div>
               </aside>
             </div>
-            <footer className="mf-entrega-pick-footer mf-entrega-pick-footer--card">
-              <span className="mf-entrega-pick-footer-count" aria-live="polite">
-                {carrito.length > 0
-                  ? `${carrito.length} matafuego${carrito.length === 1 ? '' : 's'} seleccionado${carrito.length === 1 ? '' : 's'}`
-                  : 'Ningún matafuego seleccionado'}
-              </span>
-              <div className="mf-entrega-pick-footer-actions">
-                {carrito.length > 0 && (
-                  <button type="button" className="btn btn-secondary btn-sm" onClick={() => setCarrito([])}>
-                    Vaciar
-                  </button>
-                )}
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  disabled={!carrito.length}
-                  onClick={() => setStep(3)}
-                >
-                  Continuar →
-                </button>
-              </div>
-            </footer>
           </div>
+          <footer className="mf-entrega-pick-footer mf-entrega-pick-footer--dock">
+            <span className="mf-entrega-pick-footer-count" aria-live="polite">
+              {carrito.length > 0
+                ? `${carrito.length} matafuego${carrito.length === 1 ? '' : 's'} seleccionado${carrito.length === 1 ? '' : 's'}`
+                : 'Ningún matafuego seleccionado'}
+            </span>
+            <div className="mf-entrega-pick-footer-actions">
+              {carrito.length > 0 && (
+                <button type="button" className="btn btn-secondary btn-sm" onClick={() => setCarrito([])}>
+                  Vaciar
+                </button>
+              )}
+              <button
+                type="button"
+                className="btn btn-primary"
+                disabled={!carrito.length}
+                onClick={() => setStep(3)}
+              >
+                Continuar →
+              </button>
+            </div>
+          </footer>
         </div>
       )}
 

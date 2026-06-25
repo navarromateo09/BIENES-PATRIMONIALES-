@@ -3,8 +3,10 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useLoading } from '../contexts/LoadingContext';
 import { useToast } from '../contexts/ToastContext';
 import { getStockAPI } from '../hooks/useStockAPI';
+import { filterDepsForEntrega, getDisplayLabel } from '../utils/matafuegosEntregaHelpers';
 import {
   buildMatafuegoCaracteristicas,
+  formatFecha,
   isVencidoSinFecha,
   MF_KG_OPTIONS,
   parseKgFromCaracteristicas,
@@ -20,7 +22,8 @@ const EMPTY_FORM = {
   kg: '',
   caracteristicas: '',
   fechaVencimiento: '',
-  sinFecha: false
+  sinFecha: false,
+  dependenciaId: ''
 };
 
 function clampCantidad(n) {
@@ -40,6 +43,9 @@ export default function MatafuegoFormPage() {
   const [loaded, setLoaded] = useState(!isEdit);
   const [seriesErrors, setSeriesErrors] = useState({});
   const [validationReport, setValidationReport] = useState([]);
+  const [dependencias, setDependencias] = useState([]);
+  const [editItem, setEditItem] = useState(null);
+  const [depBuscar, setDepBuscar] = useState('');
 
   const load = useCallback(async () => {
     const api = getStockAPI();
@@ -47,6 +53,7 @@ export default function MatafuegoFormPage() {
     show(isEdit ? 'Cargando matafuego…' : 'Preparando formulario…');
     try {
       const bundle = await api.getMatafuegosData();
+      setDependencias(bundle.dependencias || []);
       if (!isEdit) {
         setLoaded(true);
         return;
@@ -59,6 +66,7 @@ export default function MatafuegoFormPage() {
         return;
       }
       const { kg, rest } = parseKgFromCaracteristicas(item.caracteristicas);
+      setEditItem(item);
       setForm({
         marca: item.marca || '',
         cantidad: 1,
@@ -68,7 +76,8 @@ export default function MatafuegoFormPage() {
         fechaVencimiento: isVencidoSinFecha(item.fechaVencimiento)
           ? ''
           : String(item.fechaVencimiento || '').slice(0, 10),
-        sinFecha: isVencidoSinFecha(item.fechaVencimiento)
+        sinFecha: isVencidoSinFecha(item.fechaVencimiento),
+        dependenciaId: item.dependenciaId || ''
       });
       setLoaded(true);
     } catch (e) {
@@ -82,6 +91,30 @@ export default function MatafuegoFormPage() {
   useEffect(() => { load(); }, [load]);
 
   const cantidad = useMemo(() => clampCantidad(form.cantidad), [form.cantidad]);
+
+  const isEntregadoEdit = Boolean(
+    isEdit && editItem && (
+      String(editItem.estado || '').toLowerCase() === 'entregado' || editItem.dependenciaId
+    )
+  );
+
+  const depsFiltradas = useMemo(() => {
+    const deps = filterDepsForEntrega(dependencias);
+    const q = depBuscar.trim().toLowerCase();
+    const list = !q
+      ? deps
+      : deps.filter((d) => {
+        const label = getDisplayLabel(d, dependencias).toLowerCase();
+        const nombre = String(d.nombre || '').toLowerCase();
+        const codigo = String(d.codigo || '').toLowerCase();
+        return label.includes(q) || nombre.includes(q) || codigo.includes(q);
+      });
+    return list.slice().sort((a, b) => {
+      const la = getDisplayLabel(a, dependencias).toLowerCase();
+      const lb = getDisplayLabel(b, dependencias).toLowerCase();
+      return la.localeCompare(lb, 'es');
+    });
+  }, [dependencias, depBuscar]);
 
   useEffect(() => {
     if (isEdit) return;
@@ -137,6 +170,10 @@ export default function MatafuegoFormPage() {
       showToast('Indicá la fecha de vencimiento o marcá "Vencido sin fecha"', 'error');
       return;
     }
+    if (isEntregadoEdit && !form.dependenciaId) {
+      showToast('Seleccioná el destino de entrega', 'error');
+      return;
+    }
 
     show('Guardando…');
     try {
@@ -160,20 +197,22 @@ export default function MatafuegoFormPage() {
       setValidationReport([]);
 
       const caracteristicasGuardar = buildMatafuegoCaracteristicas(form.kg, form.caracteristicas);
+      const existing = isEdit ? all.find((m) => String(m.id) === String(id)) : null;
 
       const basePayload = {
         marca: form.marca.trim(),
         caracteristicas: caracteristicasGuardar || null,
         fechaVencimiento: form.sinFecha ? VENCIDO_SIN_FECHA : form.fechaVencimiento,
         estado: isEdit
-          ? (all.find((m) => String(m.id) === String(id))?.estado || 'disponible')
+          ? (existing?.estado || 'disponible')
           : 'disponible',
         fechaIngreso: isEdit
-          ? (all.find((m) => String(m.id) === String(id))?.fechaIngreso || new Date().toISOString().slice(0, 10))
+          ? (existing?.fechaIngreso || new Date().toISOString().slice(0, 10))
           : new Date().toISOString().slice(0, 10),
-        dependenciaId: isEdit
-          ? (all.find((m) => String(m.id) === String(id))?.dependenciaId || null)
-          : null
+        dependenciaId: isEntregadoEdit
+          ? (form.dependenciaId || null)
+          : (isEdit ? (existing?.dependenciaId || null) : null),
+        fechaEntrega: isEntregadoEdit ? (existing?.fechaEntrega || null) : undefined
       };
 
       if (isEdit) {
@@ -214,7 +253,9 @@ export default function MatafuegoFormPage() {
             <h1 className="mf-hero-title">{isEdit ? 'Editar matafuego' : 'Agregar nuevo matafuego'}</h1>
             <p className="mf-hero-sub">
               {isEdit
-                ? 'Modificá los datos del matafuego seleccionado.'
+                ? (isEntregadoEdit
+                  ? 'Modificá los datos del matafuego o corregí el destino donde fue entregado.'
+                  : 'Modificá los datos del matafuego seleccionado.')
                 : 'Completá los datos requeridos para registrar uno o varios matafuegos en disponibles.'}
             </p>
           </div>
@@ -343,6 +384,53 @@ export default function MatafuegoFormPage() {
                 </label>
               </div>
             </div>
+
+            {isEntregadoEdit && (
+              <section className="mf-form-section mf-form-section--destino" aria-labelledby="mf-destino-title">
+                <h3 id="mf-destino-title" className="mf-form-section-title">Destino de entrega</h3>
+                <p className="mf-form-hint">
+                  Si se entregó en la dependencia equivocada, elegí el destino correcto. La fecha de entrega se mantiene.
+                </p>
+                {editItem?.fechaEntrega && (
+                  <p className="mf-form-destino-meta">
+                    Fecha de entrega actual: <strong>{formatFecha(editItem.fechaEntrega)}</strong>
+                  </p>
+                )}
+                <div className="form-group">
+                  <label htmlFor="mf-dep-buscar">Buscar dependencia</label>
+                  <input
+                    id="mf-dep-buscar"
+                    type="search"
+                    placeholder="Nombre, código, comisaría…"
+                    value={depBuscar}
+                    onChange={(e) => setDepBuscar(e.target.value)}
+                    autoComplete="off"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="mf-dependencia">Dependencia destino *</label>
+                  <select
+                    id="mf-dependencia"
+                    required
+                    value={form.dependenciaId}
+                    onChange={(e) => setForm({ ...form, dependenciaId: e.target.value })}
+                  >
+                    <option value="">— Seleccionar dependencia —</option>
+                    {depsFiltradas.map((d) => {
+                      const label = getDisplayLabel(d, dependencias);
+                      return (
+                        <option key={d.id} value={d.id}>
+                          {label !== '—' ? label : (d.nombre || d.codigo || d.id)}
+                        </option>
+                      );
+                    })}
+                  </select>
+                  {depBuscar && depsFiltradas.length === 0 && (
+                    <p className="mf-form-hint">Ninguna dependencia coincide con la búsqueda.</p>
+                  )}
+                </div>
+              </section>
+            )}
 
             <div className="mf-form-actions">
               <button type="button" className="btn btn-secondary" onClick={() => navigate('/matafuegos')}>

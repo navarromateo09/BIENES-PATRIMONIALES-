@@ -947,6 +947,8 @@ function isMatafuegoSoloCambioVencimiento(prev, next) {
 function inferMatafuegoMovimiento(prev, next) {
   if (!prev) return 'ingreso';
   if (!prev.dependenciaId && next && next.dependenciaId) return 'egreso';
+  if (prev.dependenciaId && next && next.dependenciaId
+    && String(prev.dependenciaId) !== String(next.dependenciaId)) return 'editado';
   if ((prev.estado || '') !== (next.estado || '')) return 'cambio_estado';
   return 'editado';
 }

@@ -1,0 +1,11 @@
+## v1.9.12
+
+### Matafuegos — Entregar (pantallas chicas)
+- Botón **Continuar** fijo al pie de la ventana en el paso 2; siempre visible aunque haya muchos matafuegos en el carrito.
+
+### Matafuegos — Entregados
+- En **Editar**, los administradores pueden cambiar el **destino de entrega** si se registró por error.
+
+### Cómo actualizar
+1. Cerrá la app y volvé a abrirla → debería aparecer el aviso de actualización.
+2. O descargá el instalador `.exe` de este release e instalá encima de la versión anterior.

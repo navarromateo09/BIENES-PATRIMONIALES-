@@ -1,6 +1,6 @@
 {
   "name": "control-stock-empresa",
-  "version": "1.9.11",
+  "version": "1.9.12",
   "description": "Sistema de control de stock - entradas y salidas",
   "main": "main.js",
   "scripts": {
