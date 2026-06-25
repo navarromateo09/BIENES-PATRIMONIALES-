@@ -1101,6 +1101,7 @@ body.app-institutional .mf-entrega-table-wrap--scroll,
   flex-direction: column;
   flex: 1;
   min-height: 0;
+  overflow: hidden;
   padding: 0.75rem 1.15rem 1rem;
 }
 
@@ -1113,16 +1114,28 @@ body.app-institutional .mf-entrega-table-wrap--scroll,
   overflow: hidden;
 }
 
+.mf-entrega-wizard-pick .mf-entrega-pick-card {
+  flex: 1;
+  min-height: 0;
+  max-height: min(calc(100dvh - 10.5rem), calc(100vh - 10.5rem));
+  overflow: hidden;
+}
+
 .mf-entrega-pick-head {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
+  gap: 0.75rem;
+  flex-wrap: nowrap;
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #edf1f5;
   background: linear-gradient(180deg, #f8fafc 0%, #fff 100%);
   flex-shrink: 0;
+}
+
+.mf-entrega-pick-head > div:first-child {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .mf-entrega-pick-grid {
@@ -1131,6 +1144,7 @@ body.app-institutional .mf-entrega-table-wrap--scroll,
   gap: 0;
   flex: 1;
   min-height: 0;
+  overflow: hidden;
   border-top: 1px solid #edf1f5;
 }
 
@@ -1145,6 +1159,48 @@ body.app-institutional .mf-entrega-table-wrap--scroll,
 .mf-entrega-pick-panel--cart {
   border-left: 1px solid #edf1f5;
   background: #fafbfc;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Paso 2: scroll interno por flex (sin altura fija en vh) */
+.mf-entrega-pick-grid .mf-entrega-catalog-scroll,
+.mf-entrega-pick-grid .mf-entrega-cart-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mf-entrega-cart-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.mf-entrega-cart-scroll .data-table {
+  margin: 0;
+}
+
+.mf-entrega-cart-scroll .data-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f8fafc;
+  box-shadow: 0 1px 0 #e2e8f0;
+}
+
+.mf-entrega-catalog-scroll .data-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f1f5f9;
+  box-shadow: 0 1px 0 #e2e8f0;
 }
 
 .mf-entrega-pick-panel-head {
@@ -1224,9 +1280,37 @@ body.app-institutional .mf-entrega-table-wrap--scroll,
 .mf-entrega-pick-footer {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   gap: 0.5rem;
   padding: 0.65rem 0.85rem;
   border-top: 1px solid #edf1f5;
+  flex-shrink: 0;
+  background: #fafbfc;
+}
+
+.mf-entrega-pick-footer--card {
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.55rem 0.85rem;
+  background: #fff;
+  box-shadow: 0 -4px 14px rgba(15, 23, 42, 0.07);
+  z-index: 4;
+}
+
+.mf-entrega-pick-footer-count {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #475569;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.mf-entrega-pick-footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   flex-shrink: 0;
 }
 
@@ -1239,16 +1323,21 @@ body.app-institutional .mf-entrega-table-wrap--scroll,
 @media (max-width: 900px) {
   .mf-entrega-pick-grid {
     grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) minmax(0, 0.9fr);
   }
 
   .mf-entrega-pick-panel--cart {
     border-left: none;
     border-top: 1px solid #edf1f5;
-    max-height: 220px;
   }
 
   .mf-entrega-pick-card {
     max-height: none;
+  }
+
+  .mf-entrega-pick-head {
+    flex-wrap: wrap;
+    align-items: flex-start;
   }
 }
 
@@ -1379,7 +1468,7 @@ body.app-institutional.page-matafuegos-entrega .inst-content-wrap {
 .mf-page--entrega .mf-entrega-pick-card {
   flex: 1;
   min-height: 0;
-  max-height: none;
+  max-height: min(calc(100dvh - 10.5rem), calc(100vh - 10.5rem));
 }
 
 .mf-page--entrega .mf-entrega-pick-head {
@@ -1395,14 +1484,12 @@ body.app-institutional.page-matafuegos-entrega .inst-content-wrap {
 .mf-page--entrega .mf-entrega-pick-panel--cart {
   display: flex;
   flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .mf-page--entrega .mf-entrega-pick-footer {
-  position: sticky;
-  bottom: 0;
-  background: #fafbfc;
-  z-index: 2;
-  box-shadow: 0 -4px 12px rgba(15, 23, 42, 0.06);
+  flex-shrink: 0;
 }
 
 .mf-page--entrega .mf-entrega-step:not(.mf-entrega-step--deps):not(.mf-entrega-step--pick) {
@@ -1411,22 +1498,36 @@ body.app-institutional.page-matafuegos-entrega .inst-content-wrap {
   padding: 0.65rem;
 }
 
-@media (max-height: 820px) {
-  body.app-institutional.page-matafuegos-entrega .inst-content-wrap {
-    padding: 0.35rem 0.75rem 0.45rem;
+@media (max-height: 760px) {
+  body.app-institutional.page-matafuegos-entrega .inst-header-strip {
+    display: none;
   }
 
-  .mf-page--entrega .mf-entrega-stepper-label {
-    font-size: 0.65rem;
+  body.app-institutional.page-matafuegos-entrega .dashboard-header {
+    padding: 0.4rem 0.85rem 0.35rem;
   }
 
-  .mf-page--entrega .mf-entrega-table-wrap--scroll {
-    min-height: 5.5rem;
+  .mf-page--entrega .mf-entrega-toolbar {
+    display: none;
   }
-}
 
-@media (max-width: 900px) {
-  .mf-page--entrega .mf-entrega-pick-panel--cart {
-    max-height: min(38vh, 240px);
+  .mf-page--entrega .mf-entrega-pick-head .mf-entrega-step-desc {
+    display: none;
+  }
+
+  .mf-page--entrega .mf-entrega-step--pick {
+    padding: 0.3rem 0.55rem 0.4rem;
+  }
+
+  .mf-entrega-wizard-pick .mf-entrega-pick-card {
+    max-height: min(calc(100dvh - 8.5rem), calc(100vh - 8.5rem));
+  }
+
+  .mf-entrega-pick-head {
+    padding: 0.45rem 0.65rem;
+  }
+
+  .mf-entrega-pick-footer--card {
+    padding: 0.45rem 0.65rem;
   }
 }

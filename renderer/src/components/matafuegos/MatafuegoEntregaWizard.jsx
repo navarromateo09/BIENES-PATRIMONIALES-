@@ -118,7 +118,7 @@ export default function MatafuegoEntregaWizard({
   }
 
   return (
-    <div className={`mf-entrega-wizard-root${step > 1 ? ' mf-entrega-wizard-active' : ''}`}>
+    <div className={`mf-entrega-wizard-root${step > 1 ? ' mf-entrega-wizard-active' : ''}${step === 2 ? ' mf-entrega-wizard-pick' : ''}`}>
       <header className="mf-entrega-head mf-entrega-head--inline">
         <div>
           <h2 id="mf-entrega-title" className="mf-entrega-title">Entregar matafuegos</h2>
@@ -331,7 +331,7 @@ export default function MatafuegoEntregaWizard({
                   <h4>Disponibles</h4>
                   <span>{catalogo.length}</span>
                 </div>
-                <div className="mf-entrega-pick-table-wrap mf-entrega-table-wrap--scroll">
+                <div className="mf-entrega-pick-table-wrap mf-entrega-catalog-scroll">
                   <table className="data-table data-table-compact">
                     <thead>
                       <tr>
@@ -380,55 +380,64 @@ export default function MatafuegoEntregaWizard({
                   <h4>En esta entrega</h4>
                   <span>{carrito.length}</span>
                 </div>
-                {carrito.length ? (
-                  <div className="mf-entrega-pick-table-wrap mf-entrega-table-wrap--scroll">
-                    <table className="data-table data-table-compact">
-                      <thead>
-                        <tr>
-                          <th>Matafuego</th>
-                          <th aria-label="Quitar" />
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {carrito.map((m) => {
-                          const { marca, serie, extra } = matafuegoCartLabel(m);
-                          return (
-                            <tr key={m.id}>
-                              <td className="mf-entrega-cart-label">
-                                <span className="mf-entrega-cart-name">{marca} · Nº {serie}</span>
-                                {extra && <span className="mf-entrega-cart-meta">{extra}</span>}
-                              </td>
-                              <td>
-                                <button type="button" className="btn btn-danger btn-sm" onClick={() => removeFromCarrito(m.id)}>×</button>
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                ) : (
-                  <p className="mf-entrega-cart-empty">
-                    Agregá matafuegos con el botón <strong>+</strong> de la lista.
-                  </p>
-                )}
-                <footer className="mf-entrega-pick-footer">
-                  {carrito.length > 0 && (
-                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => setCarrito([])}>
-                      Vaciar
-                    </button>
+                <div className="mf-entrega-cart-body">
+                  {carrito.length ? (
+                    <div className="mf-entrega-cart-scroll">
+                      <table className="data-table data-table-compact">
+                        <thead>
+                          <tr>
+                            <th>Matafuego</th>
+                            <th aria-label="Quitar" />
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {carrito.map((m) => {
+                            const { marca, serie, extra } = matafuegoCartLabel(m);
+                            return (
+                              <tr key={m.id}>
+                                <td className="mf-entrega-cart-label">
+                                  <span className="mf-entrega-cart-name">{marca} · Nº {serie}</span>
+                                  {extra && <span className="mf-entrega-cart-meta">{extra}</span>}
+                                </td>
+                                <td>
+                                  <button type="button" className="btn btn-danger btn-sm" onClick={() => removeFromCarrito(m.id)}>×</button>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <p className="mf-entrega-cart-empty">
+                      Agregá matafuegos con el botón <strong>+</strong> de la lista.
+                    </p>
                   )}
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    disabled={!carrito.length}
-                    onClick={() => setStep(3)}
-                  >
-                    Continuar →
-                  </button>
-                </footer>
+                </div>
               </aside>
             </div>
+            <footer className="mf-entrega-pick-footer mf-entrega-pick-footer--card">
+              <span className="mf-entrega-pick-footer-count" aria-live="polite">
+                {carrito.length > 0
+                  ? `${carrito.length} matafuego${carrito.length === 1 ? '' : 's'} seleccionado${carrito.length === 1 ? '' : 's'}`
+                  : 'Ningún matafuego seleccionado'}
+              </span>
+              <div className="mf-entrega-pick-footer-actions">
+                {carrito.length > 0 && (
+                  <button type="button" className="btn btn-secondary btn-sm" onClick={() => setCarrito([])}>
+                    Vaciar
+                  </button>
+                )}
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  disabled={!carrito.length}
+                  onClick={() => setStep(3)}
+                >
+                  Continuar →
+                </button>
+              </div>
+            </footer>
           </div>
         </div>
       )}

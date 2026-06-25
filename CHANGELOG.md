@@ -1,5 +1,17 @@
 # Historial de versiones
 
+## 1.9.11
+
+### Matafuegos — Entregar (pantallas chicas)
+- Botón **Continuar** fijo al pie del paso 2 (fuera del panel del carrito).
+- Lista de seleccionados con scroll interno; ya no desaparece el botón con 3+ matafuegos.
+- Modo ultra-compacto en monitores bajos (oculta franja superior y barra «Paso anterior»).
+
+### Técnico
+- Versión **1.9.11** (`package.json`).
+
+---
+
 ## 1.9.10
 
 ### TXT — Orden con punto de miles
