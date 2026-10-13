@@ -1,0 +1,33 @@
+name: Mantener Supabase activo
+
+on:
+  schedule:
+    # 12:00 UTC = 09:00 en Argentina. Una lectura por día.
+    - cron: "0 12 * * *"
+  workflow_dispatch:
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consultar la base
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SUPABASE_URL}" ] || [ -z "${SUPABASE_ANON_KEY}" ]; then
+            echo "Faltan los secretos SUPABASE_URL o SUPABASE_ANON_KEY."
+            exit 1
+          fi
+          code=$(curl -sS -o /tmp/supabase-keepalive.json -w "%{http_code}" \
+            --max-time 30 \
+            -H "apikey: ${SUPABASE_ANON_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
+            -H "Accept: application/json" \
+            "${SUPABASE_URL}/rest/v1/matafuegos?select=id&limit=1")
+          echo "HTTP ${code}"
+          if [ "${code}" -lt 200 ] || [ "${code}" -ge 300 ]; then
+            echo "La consulta no llegó a la base."
+            exit 1
+          fi
